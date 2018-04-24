@@ -1,8 +1,8 @@
 <%@page import="java.util.Map"%>
 <%@page import="java.util.TreeMap"%>
 <%@page import="java.util.TreeSet"%>
-<%@page import="model.Post"%>
 <%@page import="java.util.ArrayList"%>
+<%@page import="airbnb.model.Post"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -79,7 +79,7 @@
 <body>
 
 
-	<%@ include file="WEB-INF/jsp/header.jsp"%>
+	<%@ include file="header.jsp"%>
 
 	<%
 		ArrayList<Post> posts = (ArrayList) request.getAttribute("posts");
@@ -87,7 +87,7 @@
 
 	<div class="container">
 		<h2>Explore All The Great Places You Can Stay</h2>
-		
+
 		<!-- TYPE dropdown menu -->
 		<div class="dropdown" style="display: inline;">
 			<button class="btn btn-primary dropdown-toggle" type="button"
@@ -108,7 +108,7 @@
 					Cottage</button>
 			</ul>
 		</div>
-		
+
 		<%-- <!-- cities dropdown menu -->
 		<div class="dropdown" style="display: inline;">
 			<button class="btn btn-primary dropdown-toggle" type="button"
@@ -129,7 +129,7 @@
 				<% } %>
 			</ul>
 		</div> --%>
-		
+
 		<!-- POSTS -->
 		<div class="row" id="posts">
 			<%
@@ -137,7 +137,8 @@
 					for (Post post : posts) {
 			%>
 
-			<div class="col-md-4 filterDiv <%=post.getType()%> <%-- <%=post.getCity()%> --%>">
+			<div
+				class="col-md-4 filterDiv <%=post.getType()%> <%-- <%=post.getCity()%> --%>">
 				<div class="thumbnail">
 					<a href="post?id=<%=post.getPostID()%>"> <img
 						src="getThumbnail?id=<%=post.getPostID()%>" alt=""
@@ -154,10 +155,14 @@
 				</div>
 			</div>
 
-				
-				<% } %>
-			<% } %>
-			
+
+			<%
+				}
+			%>
+			<%
+				}
+			%>
+
 		</div>
 
 	</div>
@@ -176,7 +181,7 @@
 					+ document.getElementById("search").value, true);
 			req.onreadystatechange = function() {
 				if (req.readyState == 4 && req.status == 200) {
-					document.getElementById("body").innerHTML=req.responseText;
+					document.getElementById("body").innerHTML = req.responseText;
 				}
 			};
 

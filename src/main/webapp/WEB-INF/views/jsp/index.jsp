@@ -64,7 +64,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 	<!-- banner -->
 	<div class="banner1">
 
-		<%@ include file="WEB-INF/jsp/header.jsp"%>
+		<%@ include file="header.jsp"%>
 
 
 		<div class="w3layouts-banner-slider">

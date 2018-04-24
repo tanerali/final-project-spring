@@ -35,7 +35,7 @@
 	<!-- banner -->
 	<div id="top" class="banner">
 
-		<%@ include file="WEB-INF/jsp/header.jsp"%>
+		<%@ include file="header.jsp"%>
 		<div class="container">
 			<div class="slider">
 				<div class="callbacks_container">

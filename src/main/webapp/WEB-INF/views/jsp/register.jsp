@@ -57,7 +57,7 @@
 
   <body>
 
-	<%@ include file="WEB-INF/jsp/header.jsp" %>
+	<%@ include file="header.jsp" %>
 
     <div class="container">
       <form class="form-signin" action="register"  method="post" enctype = "multipart/form-data">

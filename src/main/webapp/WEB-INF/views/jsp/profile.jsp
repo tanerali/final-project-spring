@@ -1,16 +1,18 @@
-<%@page import="model.Review"%>
+<%@page import="airbnb.model.Review"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="model.User"%>
+<%@page import="airbnb.model.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <title>Airbnb</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
-<script type="application/x-javascript">	
+<script type="application/x-javascript">
+		
 	 addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
+
 </script>
 
 <!-- bootstrap-css -->
@@ -63,9 +65,8 @@
 		document.getElementById("editUser").style.display = "none";
 	}
 	function saveEdit() {
-		
+
 	}
-	
 </script>
 
 </head>
@@ -73,18 +74,21 @@
 
 <body>
 
-	
-	<%@ include file="WEB-INF/jsp/header.jsp" %>
+
+	<%@ include file="header.jsp"%>
 
 	<div class="container">
 		<div class="row">
-		
-			<% User user = (User)request.getAttribute("user"); %>
-		
+
+			<%
+				User user = (User) request.getAttribute("user");
+			%>
+
 			<div class="col-sm-3">
 				<h1>User details</h1>
 				<div style="width: 240px; height: 240px">
-					<img class="img-responsive" alt="" src="getPic?id=<%= user.getUserID() %>">
+					<img class="img-responsive" alt=""
+						src="getPic?id=<%=user.getUserID()%>">
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">Verified info</div>
@@ -96,17 +100,18 @@
 				</div>
 				<h2>Listings</h2>
 				<ul>
-					<li><img class="img-resposive" src="images/1.jpg" style="width: 320px; height: 100%"></li>
+					<li><img class="img-resposive" src="images/1.jpg"
+						style="width: 320px; height: 100%"></li>
 				</ul>
 			</div>
-			
-			
-			
+
+
+
 			<div class="col-sm-9">
-				
+
 				<div id="user" style="display: block;">
-					<h1><%=user.getFirstName()+ " "+ user.getLastName()%></h1>
-					
+					<h1><%=user.getFirstName() + " " + user.getLastName()%></h1>
+
 					<ul>
 						<li><%=user.getEmail()%></li>
 						<li><%=user.getGender()%></li>
@@ -117,62 +122,79 @@
 						<li><%=user.getTelNumber()%></li>
 					</ul>
 				</div>
-				
+
 				<%
-				Exception e = null; 
-				if(request.getAttribute("exception") != null) {
-					e = (Exception)request.getAttribute("exception"); %>
-					<p style="color: red"><%= e.getMessage() %></p>
-				<% } %>
-				
+					Exception e = null;
+					if (request.getAttribute("exception") != null) {
+						e = (Exception) request.getAttribute("exception");
+				%>
+				<p style="color: red"><%=e.getMessage()%></p>
+				<%
+					}
+				%>
+
 				<h1>Reviews from Hosts</h1>
-				
+
 				<%
-				if(request.getAttribute("reviewsFromHosts") != null) {
-					ArrayList<Review> reviews = ((ArrayList<Review>)request.getAttribute("reviewsFromHosts")); 
-					for(Review review: reviews) { %>
-						
-						<div class="panel panel-default">
-							<div class="panel-heading"><%=review.getReviewerName()%></div>
-							<div class="panel-body">
-								<%=review.getReview()%>
-							</div>
-							<div class="panel-body">
-								<%=review.getDate()%>
-							</div>
-						</div>
-						
-					
-				<% } %>
-			 <% } %>
-					
-				<h1>Reviews from Guests of <%=user.getFirstName()+ " "+ user.getLastName()%></h1>
-				
-				<% 	if(request.getAttribute("reviewsFromGuests") != null) {
-						ArrayList<Review> reviews = ((ArrayList<Review>)request.getAttribute("reviewsFromGuests")); 
-						for(Review review: reviews) { %>
-						
-						<div class="panel panel-default">
-							<div class="panel-heading"><%= review.getReviewerName() %></div>
-							<div class="panel-body">
-								<%= review.getReview() %>
-							</div>
-							<div class="panel-body" style="font-style: italic;">
-								
-								Reviewed Property: <%= review.getReviewedName() %>
-							</div>
-							<div class="panel-body">
-								<%= review.getDate() %>
-							</div>
-						</div>
-						
-					<% } %>
-				 <% } %>
-				
-				
+					if (request.getAttribute("reviewsFromHosts") != null) {
+						ArrayList<Review> reviews = ((ArrayList<Review>) request.getAttribute("reviewsFromHosts"));
+						for (Review review : reviews) {
+				%>
+
+				<div class="panel panel-default">
+					<div class="panel-heading"><%=review.getReviewerName()%></div>
+					<div class="panel-body">
+						<%=review.getReview()%>
+					</div>
+					<div class="panel-body">
+						<%=review.getDate()%>
+					</div>
+				</div>
+
+
+				<%
+					}
+				%>
+				<%
+					}
+				%>
+
+				<h1>
+					Reviews from Guests of
+					<%=user.getFirstName() + " " + user.getLastName()%></h1>
+
+				<%
+					if (request.getAttribute("reviewsFromGuests") != null) {
+						ArrayList<Review> reviews = ((ArrayList<Review>) request.getAttribute("reviewsFromGuests"));
+						for (Review review : reviews) {
+				%>
+
+				<div class="panel panel-default">
+					<div class="panel-heading"><%=review.getReviewerName()%></div>
+					<div class="panel-body">
+						<%=review.getReview()%>
+					</div>
+					<div class="panel-body" style="font-style: italic;">
+
+						Reviewed Property:
+						<%=review.getReviewedName()%>
+					</div>
+					<div class="panel-body">
+						<%=review.getDate()%>
+					</div>
+				</div>
+
+				<%
+					}
+				%>
+				<%
+					}
+				%>
+
+
 			</div>
 		</div>
-		
+
 	</div>
 
 

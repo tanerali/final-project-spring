@@ -61,7 +61,7 @@
 
   <body>
 
-	<%@ include file="WEB-INF/jsp/header.jsp" %>
+	<%@ include file="header.jsp" %>
 
     <div class="container">
 

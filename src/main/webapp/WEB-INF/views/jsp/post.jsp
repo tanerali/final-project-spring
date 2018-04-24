@@ -1,9 +1,9 @@
-<%@page import="model.Comment"%>
+<%@page import="airbnb.model.Comment"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@page import="model.Post"%>
-<%@page import="model.User"%>
+<%@page import="airbnb.model.Post"%>
+<%@page import="airbnb.model.User"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -37,79 +37,89 @@
 </head>
 <body>
 
-		<%@ include file="header.jsp"%>
+	<%@ include file="header.jsp"%>
 
-		<!-- single -->
-		<div class="single">
-			<div class="container">
-				<div class="agileits-single-img">
-					
-					<!-- POST'S PICTURE -->
-					<img id="placeImage" src="getThumbnail?id=<%= currPost.getPostID() %>">
-					<h4><%=currPost.getTitle()%></h4>
-					<div class="agileinfo-single-icons">
-						<ul>
-							<li><a href="profile?id=<%= postUser.getUserID() %>"><i class="fa fa-user" aria-hidden="true"></i>
-									<span>Host: <%=postUser.getFirstName()%> <%=postUser.getLastName()%></span></a></li>
-							<li><i class="fa fa-calendar" aria-hidden="true"></i><span>Date of posting: <%=currPost.getDateOfPosting().toString()%></span></li>
-							<li><a href="#"><i class="fa fa-heart"
-									aria-hidden="true"></i><span><%=currPost.getRating()%>/10
-										Rating</span></a></li>
-						</ul>
-						
-						<!-- BOOK -->
-						<% if(session.getAttribute("user") != null) { %>
-							<!-- BOOK BUTTON -->
-							<form action="book" method="post">
-								From<input type="date" name="dateFrom" required="required"><br>
-								To<input type="date" name="dateTo" required="required"><br>
-								
-								<input type="hidden" name="postID" value="<%= currPost.getPostID() %>">
-								<input type="submit" value="Request Booking" 
-									style="background-color: #4CAF50; 
-									border: none; color: white; padding: 15px 32px;">
-							</form>
-							
-						<% } %>
-						
-					</div>
-					<h3>Description</h3>
-					<p><%=currPost.getDescription()%></p>
-					<p>
-						Price: <b><%=currPost.getPrice()%></b>
-					</p>
+	<!-- single -->
+	<div class="single">
+		<div class="container">
+			<div class="agileits-single-img">
+
+				<!-- POST'S PICTURE -->
+				<img id="placeImage"
+					src="getThumbnail?id=<%=currPost.getPostID()%>">
+				<h4><%=currPost.getTitle()%></h4>
+				<div class="agileinfo-single-icons">
+					<ul>
+						<li><a href="profile?id=<%=postUser.getUserID()%>"><i
+								class="fa fa-user" aria-hidden="true"></i> <span>Host: <%=postUser.getFirstName()%>
+									<%=postUser.getLastName()%></span></a></li>
+						<li><i class="fa fa-calendar" aria-hidden="true"></i><span>Date
+								of posting: <%=currPost.getDateOfPosting().toString()%></span></li>
+						<li><a href="#"><i class="fa fa-heart" aria-hidden="true"></i><span><%=currPost.getRating()%>/10
+									Rating</span></a></li>
+					</ul>
+
+					<!-- BOOK -->
+					<%
+						if (session.getAttribute("user") != null) {
+					%>
+					<!-- BOOK BUTTON -->
+					<form action="book" method="post">
+						From<input type="date" name="dateFrom" required="required"><br>
+						To<input type="date" name="dateTo" required="required"><br>
+
+						<input type="hidden" name="postID"
+							value="<%=currPost.getPostID()%>"> <input type="submit"
+							value="Request Booking"
+							style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
+					</form>
+
+					<%
+						}
+					%>
+
 				</div>
-				
-				<%
-				
+				<h3>Description</h3>
+				<p><%=currPost.getDescription()%></p>
+				<p>
+					Price: <b><%=currPost.getPrice()%></b>
+				</p>
+			</div>
+
+			<%
 				ArrayList<Comment> comments = new ArrayList();
-				if(request.getAttribute("comments") != null) {
-					comments = (ArrayList<Comment>)request.getAttribute("comments");
+				if (request.getAttribute("comments") != null) {
+					comments = (ArrayList<Comment>) request.getAttribute("comments");
 				}
+			%>
+
+			<!-- comments -->
+			<div class="agileits_three_comments">
+				<h3>Comments</h3>
+				<%
+					for (Comment comment : comments) {
 				%>
-				
-				<!-- comments -->
-				<div class="agileits_three_comments">
-						<h3>Comments</h3>
-				<% for(Comment comment: comments) { %>
-					
-						<div class="agileits_three_comment_grid" id="comment<%= comment.getCommentID() %>">
-							<div class="agileits_tom">
-								<a href="profile?id=<%= comment.getUserID() %>">
-									<img src="getPic?id=<%= comment.getUserID() %>" class="img-responsive"></a>
-								<div class=""></div>
-							</div>
-							<div class="agileits_tom_right">
-								<div class="hardy">
-									<a href="profile?id=<%= comment.getUserID() %>"><h4><%= comment.getFullName() %></h4></a>
-									<p><%= comment.getDate() %></p>
-								</div>
-								<div class="clearfix"></div>
-								<p class="lorem"><%= comment.getContent() %></p>
-							</div>
-							<div class="clearfix">
-							<% if(session.getAttribute("user") != null) { %>
-								<%-- <form action="comment" method="delete">
+
+				<div class="agileits_three_comment_grid"
+					id="comment<%=comment.getCommentID()%>">
+					<div class="agileits_tom">
+						<a href="profile?id=<%=comment.getUserID()%>"> <img
+							src="getPic?id=<%=comment.getUserID()%>" class="img-responsive"></a>
+						<div class=""></div>
+					</div>
+					<div class="agileits_tom_right">
+						<div class="hardy">
+							<a href="profile?id=<%=comment.getUserID()%>"><h4><%=comment.getFullName()%></h4></a>
+							<p><%=comment.getDate()%></p>
+						</div>
+						<div class="clearfix"></div>
+						<p class="lorem"><%=comment.getContent()%></p>
+					</div>
+					<div class="clearfix">
+						<%
+							if (session.getAttribute("user") != null) {
+						%>
+						<%-- <form action="comment" method="delete">
 									<input type="hidden" name="commentID" value="<%= comment.getCommentID()%>">
 									<input type="hidden" name="postID" value="<%= currPost.getPostID() %>">
 									<input type="submit" value="DELETE COMMENT" 
@@ -117,37 +127,47 @@
 											border: none; color: white; padding: 15px 32px;">
 									
 								</form> --%>
-								<button onclick="deleteComment(<%= comment.getCommentID()%>, <%=currPost.getPostID() %>)" 
-									style="float: right; background-color: #4CAF50; border: none; 
-									color: white; padding: 15px 32px;">DELETE COMMENT</button>
-							<% } %>
-							</div>
-						</div>
-					
-				<% } %>
-				</div>
-				<!-- //comments -->
-				
-				
-				<!-- leave-comments -->
-				<% if(session.getAttribute("user") != null) { %>
-					<div class="w3_leave_comment">
-						<h3>Leave your comment</h3>
-						<form action="comment" method="post">
-							<textarea placeholder="Comment" name="comment" required></textarea>
-							<input type="hidden" name="postID" value="<%= currPost.getPostID() %>">
-							<input type="submit" value="Send">
-						</form>
+						<button
+							onclick="deleteComment(<%=comment.getCommentID()%>, <%=currPost.getPostID()%>)"
+							style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">DELETE
+							COMMENT</button>
+						<%
+							}
+						%>
 					</div>
-				<% } %>
-				
-				<!-- //leave-comments -->
-				
-				
+				</div>
+
+				<%
+					}
+				%>
 			</div>
+			<!-- //comments -->
+
+
+			<!-- leave-comments -->
+			<%
+				if (session.getAttribute("user") != null) {
+			%>
+			<div class="w3_leave_comment">
+				<h3>Leave your comment</h3>
+				<form action="comment" method="post">
+					<textarea placeholder="Comment" name="comment" required></textarea>
+					<input type="hidden" name="postID"
+						value="<%=currPost.getPostID()%>"> <input type="submit"
+						value="Send">
+				</form>
+			</div>
+			<%
+				}
+			%>
+
+			<!-- //leave-comments -->
+
+
 		</div>
-		
-		<script type="text/javascript">
+	</div>
+
+	<script type="text/javascript">
 
 			function postComment() {
 				 
