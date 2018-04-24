@@ -45,12 +45,12 @@
 								<%
 									if (session.getAttribute("user") == null) {
 								%>
-								<li><a href="login.jsp">Login</a></li>
-								<li><a href="register.jsp">Register</a></li>
+								<li><a href="login">Login</a></li>
+								<li><a href="register">Register</a></li>
 								<%
 									} else {
 								%>
-								<li><a href="host.jsp">Host</a></li>
+								<li><a href="host">Host</a></li>
 								<li><a href="personalProfile">Profile</a></li>
 								<li><a href="logout">Logout</a></li>
 								<%

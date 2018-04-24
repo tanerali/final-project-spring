@@ -60,7 +60,8 @@
 	<%@ include file="header.jsp" %>
 
     <div class="container">
-      <form class="form-signin" action="register"  method="post" enctype = "multipart/form-data">
+    <!-- enctype = "multipart/form-data" -->
+      <form class="form-signin" action="register"  method="post">
         <h2 class="form-signin-heading">Please sign up</h2>
         
         <% 

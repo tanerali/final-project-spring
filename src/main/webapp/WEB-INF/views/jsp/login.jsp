@@ -74,9 +74,7 @@
         	<h4 class="form-signin-heading" style="color: red">Wrong password</h4>
         <% }%>
         
-        <label for="inputEmail" class="sr-only">Email address</label>
         <input type="email" required name="email" id="inputEmail" class="form-control" placeholder="Email address" autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
         <input type="password" required name="password" id="inputPassword" class="form-control" placeholder="Password">
         <div class="checkbox">
           <label>
