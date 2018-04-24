@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ page isErrorPage="true" %>
+	pageEncoding="UTF-8"%>
+<%@ page isErrorPage="true"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="jstl"%>
 <!DOCTYPE html PUBLIC>
 <html lang="en">
 <head>
@@ -64,8 +65,6 @@
 <body>
 	<%@ include file="header.jsp"%>
 
-	<h1>
-		Error:
-		<%= ((Exception)request.getAttribute("exception")).getMessage() %></h1>
+	<h1>Error: ${error }</h1>
 </body>
 </html>
