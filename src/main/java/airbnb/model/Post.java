@@ -65,6 +65,9 @@ public class Post {
 		this.postID = postID;
 	}
 
+	public Post() {
+	}
+
 	public String getTitle() {
 		return title;
 	}
