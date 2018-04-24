@@ -3,6 +3,7 @@ package airbnb.controller;
 
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -14,11 +15,14 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import airbnb.manager.UserManager;
 import airbnb.model.Review;
@@ -139,9 +143,7 @@ public class UserController {
 		return "login";
 	}
 
-	/**
-	 * Utility method to get file name from HTTP header content-disposition
-	 */
+	//Utility method to get file name from HTTP header content-disposition
 	public static String getFileName(Part part) {
 		String contentDisp = part.getHeader("content-disposition");
 		String[] tokens = contentDisp.split(";");
@@ -153,5 +155,103 @@ public class UserController {
 		return "";
 	}
 	
+	@RequestMapping(value="/personalProfile", method=RequestMethod.GET)
+	public String profilePage(HttpSession session) {
+		User user = (User)session.getAttribute("user");
+		
+		if (user != null) {
+			return "personalProfile";
+		}
+		else {
+			return "login";
+		}
+	}
 	
+	@RequestMapping(value="/personalProfile", method=RequestMethod.POST)
+	public String editUser(HttpSession session, HttpServletRequest request) {
+		User user = (User)session.getAttribute("user");
+		
+		try {
+			LocalDate birthDate = null;
+			try {
+				 birthDate = LocalDate.parse(request.getParameter("birthDate"));
+			} catch (Exception e) {
+				throw new UserDataException("Invalid birth date entered");
+			}
+			if (user != null) {
+				user.setFirstName(request.getParameter("firstName"));
+				user.setLastName(request.getParameter("lastName"));
+				user.setEmail(request.getParameter("email"));
+				user.setGender(request.getParameter("gender"));
+				user.setCity(request.getParameter("city"));
+				user.setCountry(request.getParameter("country"));
+				user.setDescription(request.getParameter("description"));
+				user.setBirthDate(birthDate);
+				user.setTelNumber(request.getParameter("telNumber"));
+							
+				userManager.editUser(user);
+			}
+		} catch (UserDataException e) {
+			//this exception goes to personalProfile and gets displayed
+			//nicely to user in red font
+			request.setAttribute("exception", e.getMessage());
+		} catch (SQLException e) {
+			request.setAttribute("error", e.getMessage());
+			return "error";
+		}
+		return "personalProfile";
+	}
+	
+	@RequestMapping(value="/logout", method=RequestMethod.GET)
+	public String logout(HttpSession session) {
+		session.invalidate();
+		return "index";
+	}
+	
+	@RequestMapping(value="/getProfilePic", method=RequestMethod.GET)
+	public String getProfilePic(
+			HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") int userID) {
+
+		String path = null;
+		try {
+			path = userManager.getPhoto(userID);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		File file = new File(path);
+		try (InputStream filecontent = new FileInputStream(file);
+				OutputStream out = resp.getOutputStream()) {
+
+			byte[] bytes = new byte[1024];
+
+			while ((filecontent.read(bytes)) != -1) {
+				out.write(bytes);
+			}
+		} catch (IOException e) {
+			req.setAttribute("exception", e.getMessage());
+			return "error";
+		}
+		return null;
+	}
+	
+	@RequestMapping(value="/profile", method=RequestMethod.GET)
+	public String getProfilePic(HttpServletRequest request, @RequestParam("id") int userID) {
+		
+		try {
+			User user = userManager.getUserByID(userID);
+			ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(user.getEmail());
+			ArrayList<Review> reviewsFromGuests = userManager.getReviewsFromGuests(user.getEmail());
+			
+			request.setAttribute("user", user);
+			request.setAttribute("reviewsFromHosts", reviewsFromHosts);
+			request.setAttribute("reviewsFromGuests", reviewsFromGuests);
+		} catch (UserDataException | SQLException e) {
+			request.setAttribute("error", e.getMessage());
+			return "error";
+		}
+		
+		return "profile";
+	}
 }

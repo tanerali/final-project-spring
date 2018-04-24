@@ -88,7 +88,7 @@
 				<h1>User details</h1>
 				<div style="width: 240px; height: 240px">
 					<img class="img-responsive" alt=""
-						src="getPic?id=<%=user.getUserID()%>">
+						src="getProfilePic?id=<%=user.getUserID()%>">
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">Verified info</div>

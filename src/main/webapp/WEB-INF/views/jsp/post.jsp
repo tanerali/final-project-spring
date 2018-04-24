@@ -96,70 +96,53 @@
 			<!-- comments -->
 			<div class="agileits_three_comments">
 				<h3>Comments</h3>
-				<%
-					for (Comment comment : comments) {
-				%>
+				
+				<% for (Comment comment : comments) { %>
 
-				<div class="agileits_three_comment_grid"
-					id="comment<%=comment.getCommentID()%>">
-					<div class="agileits_tom">
-						<a href="profile?id=<%=comment.getUserID()%>"> <img
-							src="getPic?id=<%=comment.getUserID()%>" class="img-responsive"></a>
-						<div class=""></div>
-					</div>
-					<div class="agileits_tom_right">
-						<div class="hardy">
-							<a href="profile?id=<%=comment.getUserID()%>"><h4><%=comment.getFullName()%></h4></a>
-							<p><%=comment.getDate()%></p>
+					<div class="agileits_three_comment_grid"
+						id="comment<%=comment.getCommentID()%>">
+						<div class="agileits_tom">
+							<a href="profile?id=<%=comment.getUserID()%>"> <img
+								src="getProfilePic?id=<%=comment.getUserID()%>" class="img-responsive"></a>
+							<div class=""></div>
 						</div>
-						<div class="clearfix"></div>
-						<p class="lorem"><%=comment.getContent()%></p>
+						<div class="agileits_tom_right">
+							<div class="hardy">
+								<a href="profile?id=<%=comment.getUserID()%>"><h4><%=comment.getFullName()%></h4></a>
+								<p><%=comment.getDate()%></p>
+							</div>
+							<div class="clearfix"></div>
+							<p class="lorem"><%=comment.getContent()%></p>
+						</div>
+						<div class="clearfix">
+							
+							<% if (session.getAttribute("user") != null) { %>
+								<button
+									onclick="deleteComment(<%=comment.getCommentID()%>, <%=currPost.getPostID()%>)"
+									style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">DELETE
+									COMMENT</button>
+							<% } %>
+						</div>
 					</div>
-					<div class="clearfix">
-						<%
-							if (session.getAttribute("user") != null) {
-						%>
-						<%-- <form action="comment" method="delete">
-									<input type="hidden" name="commentID" value="<%= comment.getCommentID()%>">
-									<input type="hidden" name="postID" value="<%= currPost.getPostID() %>">
-									<input type="submit" value="DELETE COMMENT" 
-											style="float: right; background-color: #4CAF50; 
-											border: none; color: white; padding: 15px 32px;">
-									
-								</form> --%>
-						<button
-							onclick="deleteComment(<%=comment.getCommentID()%>, <%=currPost.getPostID()%>)"
-							style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">DELETE
-							COMMENT</button>
-						<%
-							}
-						%>
-					</div>
-				</div>
 
-				<%
-					}
-				%>
+				<% } %>
 			</div>
 			<!-- //comments -->
 
 
 			<!-- leave-comments -->
-			<%
-				if (session.getAttribute("user") != null) {
-			%>
-			<div class="w3_leave_comment">
-				<h3>Leave your comment</h3>
-				<form action="comment" method="post">
-					<textarea placeholder="Comment" name="comment" required></textarea>
-					<input type="hidden" name="postID"
-						value="<%=currPost.getPostID()%>"> <input type="submit"
-						value="Send">
-				</form>
-			</div>
-			<%
-				}
-			%>
+			<% if (session.getAttribute("user") != null) { %>
+				<div class="w3_leave_comment">
+					<h3>Leave your comment</h3>
+					<form action="comment" method="post">
+						<textarea placeholder="Comment" id="comment" required></textarea>
+						<input type="hidden" id="postID" value="<%=currPost.getPostID()%>"> 
+						<input  type="submit" style="background-color: #4CAF50; border: none; 
+							color: white; padding: 15px 32px;">
+						<!-- <button class="form-control" onclick="postComment()">SUBMIT</button> -->
+					</form>
+				</div>
+			<% } %>
 
 			<!-- //leave-comments -->
 
@@ -170,12 +153,32 @@
 	<script type="text/javascript">
 
 			function postComment() {
-				 
+				var req = new XMLHttpRequest();
+				
+				req.open("Post", "comment");
+				/* req.setRequestHeader("Content-Type", "application/json"); */
+				
+				/* req.send(JSON.stringify(
+						{
+							"postID": parseInt(document.getElementById("postID").value),
+							"content": document.getElementById("comment").value
+						}
+						)); */
+						
+				req.send("comment="+ document.getElementById("comment").value+ 
+						"&postID="+ parseInt(document.getElementById("postID").value));
+				
+				req.onreadystatechange = function() {
+					if (req.readyState == 4 && req.status == 200) {
+						
+					}
+				}
 			}
 			
 			function deleteComment(commentID, postID) {
 				var req = new XMLHttpRequest();
-				req.open("Delete", "comment?commentID="+ commentID+ "&postID="+ postID);
+				req.open("Delete", "comment/"+ commentID);
+				req.send();
 				
 				req.onreadystatechange = function() {
 					if (req.readyState == 4 && req.status == 200) {
@@ -183,8 +186,6 @@
 						element.parentNode.removeChild(element);
 					}
 				}
-				
-				req.send("commentID="+ commentID + "&postID="+ postID);
 			}
 			
 			

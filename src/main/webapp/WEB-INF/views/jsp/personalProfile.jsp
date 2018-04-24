@@ -84,7 +84,7 @@
 			<div class="col-sm-3">
 				<h1>User details</h1>
 				<div style="width: 240px; height: 240px">
-					<img class="img-responsive" alt="" src="getPic?id=<%= user.getUserID() %>">
+					<img class="img-responsive" alt="" src="getProfilePic?id=<%= user.getUserID() %>">
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading">Verified info</div>
@@ -130,7 +130,7 @@
 				
 				
 				<div id="editUser" style="display: none;">
-					<form action="profile" method="post">
+					<form action="personalProfile" method="post">
 						First Name<input type="text" name="firstName" value="<%=user.getFirstName()%>"><br>
 						Last Name<input type="text" name="lastName" value="<%=user.getLastName()%>"><br>
 						Email<input type="email" name="email" value="<%=user.getEmail()%>"><br>

@@ -5,7 +5,7 @@
 		<div class="header-left">
 			<div class="w3layouts-logo">
 				<h1>
-					<a href="index.jsp"><span>re </span> AIRBNB</a>
+					<a href="index"><span>re </span> AIRBNB</a>
 				</h1>
 			</div>
 		</div>

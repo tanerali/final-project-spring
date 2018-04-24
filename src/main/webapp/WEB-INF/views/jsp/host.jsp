@@ -66,8 +66,7 @@
 							</tr>
 							<tr>
 								<td>
-									<form method="post" action="upload"
-										enctype="multipart/form-data">
+									<form method="post" action="upload" enctype="multipart/form-data">
 										<input style="display: none;" class="form-control" type="file"
 											id="myFileField" accept="image/*" name="file"><br>
 										<div id="fc">ADD A PICTURE</div>

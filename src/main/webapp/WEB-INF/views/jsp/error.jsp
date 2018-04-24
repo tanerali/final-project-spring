@@ -65,6 +65,6 @@
 <body>
 	<%@ include file="header.jsp"%>
 
-	<h1>Error: ${error }</h1>
+	<h1>Error: ${ error }</h1>
 </body>
 </html>
