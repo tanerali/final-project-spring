@@ -19,7 +19,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
-@ComponentScan("airbnb")
+@ComponentScan("airbnb*") 
 public class SpringWebConfig extends WebMvcConfigurerAdapter {
 
 	@Override
@@ -28,6 +28,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 		registry.addResourceHandler("/images/**").addResourceLocations("/static/images/");
 		registry.addResourceHandler("/pdfs/**").addResourceLocations("/static/pdf/");
 		registry.addResourceHandler("/html/**").addResourceLocations("/static/html/");
+		registry.addResourceHandler("/js/**").addResourceLocations("/static/js/");
 	}
 
 	@Bean

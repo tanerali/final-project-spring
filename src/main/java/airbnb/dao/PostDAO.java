@@ -60,6 +60,7 @@ public enum PostDAO {
 		PreparedStatement statement = connection.prepareStatement(insertPost, Statement.RETURN_GENERATED_KEYS);
 		int postId = 0;
 		try {
+			System.out.println("TYPE ID IN DB : " + newPost.getTypeLikeID());
 			statement.setInt(1, newPost.getTypeLikeID());
 			statement.setString(2, newPost.getTitle());
 			statement.setInt(3, newPost.getPrice());
@@ -187,10 +188,8 @@ public enum PostDAO {
 	}
 
 	public String getThumbnailPath(int postID) throws SQLException {
-		String sql = "SELECT photo " + 
-				"FROM POSTS_PHOTOS " + 
-				"WHERE post_id=? LIMIT 1";
-		
+		String sql = "SELECT photo " + "FROM POSTS_PHOTOS " + "WHERE post_id=? LIMIT 1";
+
 		try (PreparedStatement ps = connection.prepareStatement(sql)) {
 			ps.setInt(1, postID);
 			ResultSet resultSet = ps.executeQuery();

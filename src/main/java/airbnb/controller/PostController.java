@@ -2,7 +2,6 @@ package airbnb.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.httpclient.HttpStatus;
-import org.opensaml.ws.transport.http.HttpServletResponseAdapter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,13 +27,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import airbnb.dao.LocationDao;
 import airbnb.exceptions.InvalidPostDataExcepetion;
+import airbnb.exceptions.UserDataException;
 import airbnb.manager.CommentManager;
 import airbnb.manager.PostManager;
 import airbnb.manager.UserManager;
+import airbnb.model.Comment;
 import airbnb.model.Post;
 import airbnb.model.User;
-import airbnb.exceptions.UserDataException;
-import airbnb.model.Comment;
 
 @Controller
 public class PostController {
@@ -66,42 +64,18 @@ public class PostController {
 
 	@RequestMapping(value = "/host", method = RequestMethod.GET)
 	public String createPostPage() {
+		// check session if logged to return to host
+		// otherwise to "login"
 		return "host";
 	}
 
-	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String savePost(HttpServletRequest request) {
-		User currUser = (User) request.getSession().getAttribute("user");
-		// not logged
-		// if (currUser == null) {
-		// System.out.println("not logged");
-		// return "login";
-		// } else {
-		System.out.println("logged");
-		// TODO UPLOAD PICTURE
-		String title = request.getParameter("title");
-		String description = request.getParameter("description");
-		// int price = Integer.valueOf(request.getParameter("price"));
-		String type = request.getParameter("type");
-		// int hostID = currUser.getUserID();
-
-		try {
-			Post newPost = new Post(title, description, 1, LocalDate.now(), Post.Type.getType(type), hostID);
-			postManager.insertPost(newPost);
-		} catch (InvalidPostDataExcepetion | SQLException e) {
-			e.printStackTrace();
-		}
-		// }
-		return "host";
-	}
-	
 	@RequestMapping(value = "/post", method = RequestMethod.GET)
 	public String specificPostPage(HttpServletRequest request, @RequestParam("id") int postID) {
-		
+
 		User hostUser = null;
 		Post currPost = postManager.getPostsByID().get(postID);
 		ArrayList<Comment> comments = new ArrayList<>();
-		
+
 		if (currPost != null) {
 			try {
 				hostUser = userManager.getUserByID(currPost.getHostID());
@@ -110,18 +84,17 @@ public class PostController {
 				request.setAttribute("exception", e.getMessage());
 				return "error";
 			}
-			
+
 			request.setAttribute("user", hostUser);
 			request.setAttribute("post", currPost);
 			request.setAttribute("comments", comments);
 		}
 		return "post";
 	}
-	
+
 	@RequestMapping(value = "/getThumbnail", method = RequestMethod.GET)
-	public String getPostThumbnail(
-			HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") int postID) {
-		
+	public String getPostThumbnail(HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") int postID) {
+
 		if (postID != 0) {
 			try {
 				String path = postManager.getThumbnail(postID);
@@ -145,43 +118,34 @@ public class PostController {
 		}
 		return null;
 	}
-	
+
 	@RequestMapping(value = "/comment", method = RequestMethod.POST)
-	public String leaveCommentOnPost(
-			HttpServletRequest request,
-			HttpSession session,
-			@RequestParam("comment") String commentText,
-			@RequestParam("postID") int postID) {
-		
+	public String leaveCommentOnPost(HttpServletRequest request, HttpSession session,
+			@RequestParam("comment") String commentText, @RequestParam("postID") int postID) {
+
 		User user = (User) session.getAttribute("user");
-		
+
 		if (commentText != null && !commentText.isEmpty() && user != null) {
-			Comment comment = new Comment(
-					user.getUserID(), 
-					(user.getFirstName()+ " "+ user.getLastName()), 
-					postID, 
-					commentText, 
-					LocalDate.now());
+			Comment comment = new Comment(user.getUserID(), (user.getFirstName() + " " + user.getLastName()), postID,
+					commentText, LocalDate.now());
 			try {
 				commentManager.addCommentToPost(comment);
-//				return ResponseEntity.status(HttpStatus.SC_OK).body(null);
-				
+				// return ResponseEntity.status(HttpStatus.SC_OK).body(null);
+
 			} catch (SQLException e) {
 				request.setAttribute("error", e.getMessage());
 				return "error";
 			}
 		}
-		return "redirect:post?id="+postID;
-//		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
+		return "redirect:post?id=" + postID;
+		// return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
 	}
-	
+
 	@RequestMapping(value = "/comment/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseEntity<Object> deleteCommentOnPost(
-			HttpServletRequest request,
-			HttpServletResponse response,
+	public ResponseEntity<Object> deleteCommentOnPost(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("id") int commentID) {
-		
+
 		try {
 			if (commentManager.deleteComment(commentID)) {
 				return ResponseEntity.status(HttpStatus.SC_OK).body(null);
@@ -190,7 +154,7 @@ public class PostController {
 			request.setAttribute("error", e.getMessage());
 		}
 		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
-		
+
 	}
-			
+
 }
