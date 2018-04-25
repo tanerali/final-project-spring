@@ -12,8 +12,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
 <!-- bootstrap-css -->
-<link href="css/bootstrap.css" rel="stylesheet" type="text/css"
-	media="all" />
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
 <!--// bootstrap-css -->
 
 <!-- css -->
@@ -36,10 +35,11 @@
 	rel='stylesheet' type='text/css'>
 <!-- //font -->
 
-<script src="js/jquery-1.11.1.min.js"></script>
-<script src="js/bootstrap.js"></script>
+<!-- <script src="js/jquery-1.11.1.min.js"></script>
+<script src="js/bootstrap.js"></script> -->
 
-
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
 <style>
 .filterDiv {
@@ -81,9 +81,7 @@
 
 	<%@ include file="header.jsp"%>
 
-	<%
-		ArrayList<Post> posts = (ArrayList) request.getAttribute("posts");
-	%>
+	<% ArrayList<Post> posts = (ArrayList) request.getAttribute("posts"); %>
 
 	<div class="container">
 		<h2>Explore All The Great Places You Can Stay</h2>
@@ -107,6 +105,7 @@
 				<button class="btn" onclick="filterSelection('COTTAGE')">
 					Cottage</button>
 			</ul>
+			
 		</div>
 
 		<%-- <!-- cities dropdown menu -->
@@ -132,10 +131,8 @@
 
 		<!-- POSTS -->
 		<div class="row" id="posts">
-			<%
-				if (posts != null) {
-					for (Post post : posts) {
-			%>
+			<% if (posts != null) {
+					for (Post post : posts) { %>
 
 			<div
 				class="col-md-4 filterDiv <%=post.getType()%> <%-- <%=post.getCity()%> --%>">
@@ -156,12 +153,8 @@
 			</div>
 
 
-			<%
-				}
-			%>
-			<%
-				}
-			%>
+			<% } %>
+		<% } %>
 
 		</div>
 

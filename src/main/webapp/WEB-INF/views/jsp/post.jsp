@@ -60,23 +60,19 @@
 					</ul>
 
 					<!-- BOOK -->
-					<%
-						if (session.getAttribute("user") != null) {
-					%>
+					<% if (session.getAttribute("user") != null) { %>
+					
 					<!-- BOOK BUTTON -->
 					<form action="book" method="post">
 						From<input type="date" name="dateFrom" required="required"><br>
 						To<input type="date" name="dateTo" required="required"><br>
 
-						<input type="hidden" name="postID"
-							value="<%=currPost.getPostID()%>"> <input type="submit"
-							value="Request Booking"
-							style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
+						<input type="hidden" name="postID" value="<%=currPost.getPostID()%>"> 
+						<input type="submit" value="Request Booking" style="background-color: #4CAF50; 
+								border: none; color: white; padding: 15px 32px;">
 					</form>
 
-					<%
-						}
-					%>
+					<% } %>
 
 				</div>
 				<h3>Description</h3>
@@ -135,8 +131,8 @@
 				<div class="w3_leave_comment">
 					<h3>Leave your comment</h3>
 					<form action="comment" method="post">
-						<textarea placeholder="Comment" id="comment" required></textarea>
-						<input type="hidden" id="postID" value="<%=currPost.getPostID()%>"> 
+						<textarea placeholder="Comment" name="comment" required></textarea>
+						<input type="hidden" name="postID" value="<%=currPost.getPostID()%>"> 
 						<input  type="submit" style="background-color: #4CAF50; border: none; 
 							color: white; padding: 15px 32px;">
 						<!-- <button class="form-control" onclick="postComment()">SUBMIT</button> -->

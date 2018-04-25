@@ -9,6 +9,7 @@ import java.io.OutputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -17,7 +18,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.httpclient.HttpStatus;
-import org.opensaml.ws.transport.http.HttpServletResponseAdapter;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,11 +31,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import airbnb.dao.LocationDao;
 import airbnb.exceptions.InvalidPostDataExcepetion;
+import airbnb.manager.BookingManager;
 import airbnb.manager.CommentManager;
 import airbnb.manager.PostManager;
 import airbnb.manager.UserManager;
 import airbnb.model.Post;
 import airbnb.model.User;
+import airbnb.model.Booking;
 import airbnb.exceptions.UserDataException;
 import airbnb.model.Comment;
 
@@ -44,6 +48,7 @@ public class PostController {
 	private LocationDao locationDao = LocationDao.instance;
 	private UserManager userManager = UserManager.instance;
 	private CommentManager commentManager = CommentManager.instance;
+	private BookingManager bookingManager = BookingManager.instance;
 
 	@RequestMapping(value = "/explore", method = RequestMethod.GET)
 	public String explore(Model m) {
@@ -192,5 +197,42 @@ public class PostController {
 		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
 		
 	}
+	
+	@RequestMapping(value = "/book", method = RequestMethod.POST)
+	public String bookPost(HttpSession session, HttpServletRequest request,
+			@RequestParam("postID") int postID,
+			@RequestParam("dateFrom") @DateTimeFormat(iso = ISO.DATE) LocalDate dateFrom,
+			@RequestParam("dateTo") @DateTimeFormat(iso = ISO.DATE) LocalDate dateTo) {
+				
+		User user = (User)session.getAttribute("user");
+		
+		Booking booking = new Booking(postID, user.getUserID(), dateFrom, dateTo);
+		
+		try {
+			bookingManager.requestBooking(booking);
+		} catch (SQLException e) {
+			request.setAttribute("error", e.getMessage());
+			return "error";
+		}
+		return "redirect:post?id="+ postID;
+	}
+	
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public String bookPost(HttpServletRequest request, @RequestParam("search") String search) {
+		
+		if (search != null) {
+			List<Post> result = PostManager.instance.searchPost(search);
+			if (!result.isEmpty()) {
+				System.out.println("not empty");
+				request.setAttribute("posts", result);
+			}
+			// String resultJSON = new Gson().toJson(result);
+			// response.setContentType("text/html");
+			// response.getWriter().write(resultJSON);
+			// System.out.println(resultJSON);
+		}
+		return "explore";
+	}
+	
 			
 }
