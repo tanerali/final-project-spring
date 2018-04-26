@@ -62,6 +62,21 @@ public class PostController {
 
 	}
 
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public String search(Model m, @RequestParam("search") String search, HttpServletRequest req,
+			HttpServletResponse resp) {
+		ArrayList<Post> posts = (ArrayList<Post>) postManager.searchPost(search);
+
+		Map<String, TreeSet<String>> locations = locationDao.getLocations();
+
+		if (posts != null) {
+			req.setAttribute("posts", posts);
+			req.setAttribute("locations", locations);
+		}
+		return "explore";
+
+	}
+
 	@RequestMapping(value = "/host", method = RequestMethod.GET)
 	public String createPostPage() {
 		// check session if logged to return to host
