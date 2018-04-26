@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,63 +41,63 @@
 			<div class="slider">
 				<div class="callbacks_container">
 					<div class="inputPost">
-						<table align="center"
-							style="border-collapse: separate; border-spacing: 0.5em; margin-top: 4%;">
-							<tr>
-								<td><input class="form-control" type="text" name="title"
-									id="title" placeholder="Title"></td>
-							</tr>
-							<tr>
-								<td><textarea rows="10" cols="135" class="form-control"
-										name="description" id="description" placeholder="description"></textarea></td>
-							</tr>
+						<form id="postForm">
+							<table align="center"
+								style="border-collapse: separate; border-spacing: 0.5em; margin-top: 4%;">
+								<tr>
+									<td><input class="form-control" type="text" name="title"
+										id="title" placeholder="Title"></td>
+								</tr>
+								<tr>
+									<td><textarea rows="10" cols="135" class="form-control"
+											name="description" id="description" placeholder="description"></textarea></td>
+								</tr>
 
-							<tr>
-								<td><input class="form-control" type="number" name="price"
-									id="price" placeholder="Price"></td>
-							</tr>
+								<tr>
+									<td><input class="form-control" type="number" name="price"
+										id="price" placeholder="Price"></td>
+								</tr>
 
-							<tr>
-								<td><select class="form-control" name="type" id="type">
-										<option id="opt1" value="Hotel">Hotel</option>
-										<option id="opt2" value="Hotel">Apartment</option>
-										<option id="opt3" value="Hotel">House</option>
-										<option id="opt4" value="Hotel">Cottage</option>
-								</select></td>
-							</tr>
-							<tr>
-								<td>
-									<form method="post" action="upload" enctype="multipart/form-data">
-										<input style="display: none;" class="form-control" type="file"
-											id="myFileField" accept="image/*" name="file"><br>
-										<div id="fc">ADD A PICTURE</div>
-										<div id="name"></div>
-									</form>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<button class="form-control" type="button" onclick="upload();">Upload</button>
-								</td>
-							</tr>
-						</table>
+								<tr>
+									<td><select class="form-control" name="type" id="type">
+											<option id="opt1" value="Hotel">Hotel</option>
+											<option id="opt2" value="Hotel">Apartment</option>
+											<option id="opt3" value="Hotel">House</option>
+											<option id="opt4" value="Hotel">Cottage</option>
+									</select></td>
+								</tr>
+								<tr>
+									<td>
+										<!--<form method="post" action="upload"
+											enctype="multipart/form-data">
+											<input style="display: none;" class="form-control"
+												type="file" id="myFileField" accept="image/*" name="file"><br>
+											<div id="fc">ADD A PICTURE</div>
+											<div id="name"></div>
+										</form>!-->
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<button id="upload" class="form-control" type="button"">Upload</button>
+									</td>
+								</tr>
+							</table>
+						</form>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-
 	<script>
 		var req = new XMLHttpRequest();
 		function openSearch() {
 			document.getElementById("myOverlay").style.display = "block";
 		}
-
 		function closeSearch() {
 			document.getElementById("myOverlay").style.display = "none";
 		}
-		function search() {
-			//true means - async requests
+		function search() { //true means - async requests
 			req.open("Get", "search?search="
 					+ document.getElementById("search").value, true);
 			req.onreadystatechange = proccesSearch;
@@ -120,24 +121,6 @@
 					cell.innerHTML = results[i++].title;
 				}
 			}
-
-		}
-		function upload() {
-
-			req.open("Post", "upload");
-			req.onreadystatechange = proccessUpload;
-			var formData = new FormData();
-			formData.append("file",
-					document.getElementById("myFileField").files[0]);
-			formData.append("title", document.getElementById("title").value);
-			formData.append("description", document
-					.getElementById("description").value);
-			formData.append("price", document.getElementById("price").value);
-			formData.append("type", document.getElementById("type").value);
-			req.send(formData);
-		}
-		function proccessUpload() {
-			alert("Arede");
 		}
 		$('#fc').click(function() {
 			$('#myFileField').click();
@@ -152,6 +135,42 @@
 								return fakePath[fakePath.length - 1];
 							});
 				});
+	</script>
+
+	<script>
+		jQuery(document).ready(function($) {
+
+			$("#upload").click(function(event) {
+
+				var data = {}
+				data["title"] = $("#title").val();
+				data["description"] = $("#description").val();
+				data["type"] = $("#type").val();
+				data["price"] = $("#price").val();
+				$("#upload").prop("disabled", true);
+
+				$.ajax({
+					type : "POST",
+					contentType : "application/json",
+					url : "upload",
+					data : JSON.stringify(data),
+					dataType : 'json',
+					timeout : 600000,
+					success : function(data) {
+						$("#upload").prop("disabled", false);
+						//...
+						alert("yes");
+					},
+					error : function(e) {
+						$("#upload").prop("disabled", false);
+						//...
+						alert("nooo");
+					}
+				});
+
+			});
+
+		});
 	</script>
 </body>
 </html>
