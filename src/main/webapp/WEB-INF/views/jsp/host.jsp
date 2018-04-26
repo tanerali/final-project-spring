@@ -156,16 +156,17 @@
 					data : JSON.stringify(data),
 					dataType : 'json',
 					timeout : 600000,
-					success : function(data) {
+					success : function(response) {
 						$("#upload").prop("disabled", false);
 						//...
-						alert("yes");
+						var obj = JSON.parse(response);
+
+						window.location.href = 'post?id=' + obj;
+
 					},
 					error : function(e) {
 						$("#upload").prop("disabled", false);
-						//...
-
-						alert(eval(e));
+						window.location.href = 'host';
 					}
 				});
 
