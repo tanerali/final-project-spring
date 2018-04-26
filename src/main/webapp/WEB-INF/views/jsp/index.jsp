@@ -28,7 +28,9 @@
 	href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300'
 	rel='stylesheet' type='text/css'>
 <!-- //font -->
-<script src="js/jquery-1.11.1.min.js"></script>
+
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 <script src="js/bootstrap.js"></script>
 <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -177,6 +179,47 @@
 
 			req.send(null);
 		}
+	</script>
+	<script>
+		//footer smooth scroll
+		$(window)
+				.scroll(
+						function(event) {
+							function footer() {
+								var scroll = $(window).scrollTop();
+								if (scroll > 50) {
+									$(
+											".page-footer font-small blue-grey lighten-5 pt-0")
+											.fadeIn("slow").addClass("show");
+								} else {
+									$(
+											".page-footer font-small blue-grey lighten-5 pt-0")
+											.fadeOut("slow")
+											.removeClass("show");
+								}
+
+								clearTimeout($.data(this, 'scrollTimer'));
+								$
+										.data(
+												this,
+												'scrollTimer',
+												setTimeout(
+														function() {
+															if ($(
+																	'.page-footer font-small blue-grey lighten-5 pt-0')
+																	.is(
+																			':hover')) {
+																footer();
+															} else {
+																$(
+																		".page-footer font-small blue-grey lighten-5 pt-0")
+																		.fadeOut(
+																				"slow");
+															}
+														}, 2000));
+							}
+							footer();
+						});
 	</script>
 </body>
 </html>

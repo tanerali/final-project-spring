@@ -94,7 +94,7 @@ public class PostController {
 		if (currPost != null) {
 			try {
 				hostUser = userManager.getUserByID(currPost.getHostID());
-				comments = commentManager.getCommentsForPost(postID);
+			//	comments = commentManager.getCommentsForPost(postID);
 			} catch (SQLException | UserDataException e) {
 				request.setAttribute("exception", e.getMessage());
 				return "error";
