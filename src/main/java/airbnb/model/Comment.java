@@ -12,7 +12,10 @@ public class Comment {
 	private int postID;
 	private String content;
 	private LocalDate date;
-
+	
+	public Comment() {
+	}
+	
 	public Comment(int userID, String fullName, int postID, String content, LocalDate date) {
 		this.userID = userID;
 		this.fullName = fullName;
@@ -64,6 +67,10 @@ public class Comment {
 		} else {
 			throw new InvalidCommentIDException();
 		}
+	}
+
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	public LocalDate getDate() {

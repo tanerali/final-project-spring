@@ -15,7 +15,7 @@ public enum CommentManager {
 		return commentDAO.getCommentsByPostId(postID);
 	}
 
-	public boolean addCommentToPost(Comment comment) throws SQLException {
+	public int addCommentToPost(Comment comment) throws SQLException {
 		return commentDAO.addCommentToPost(comment);
 	}
 

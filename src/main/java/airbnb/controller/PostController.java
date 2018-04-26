@@ -23,12 +23,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import airbnb.dao.LocationDao;
+import airbnb.exceptions.InvalidCommentIDException;
 import airbnb.exceptions.InvalidPostDataExcepetion;
 
 import airbnb.manager.BookingManager;
@@ -138,25 +140,38 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/comment", method = RequestMethod.POST)
-	public String leaveCommentOnPost(HttpServletRequest request, HttpSession session,
-			@RequestParam("comment") String commentText, @RequestParam("postID") int postID) {
+	@ResponseBody
+	public ResponseEntity<Object> leaveCommentOnPost(
+			HttpServletRequest request, 
+			HttpSession session,
+			@RequestBody Comment comment) {
 
 		User user = (User) session.getAttribute("user");
 
-		if (commentText != null && !commentText.isEmpty() && user != null) {
-			Comment comment = new Comment(user.getUserID(), (user.getFirstName() + " " + user.getLastName()), postID,
-					commentText, LocalDate.now());
+		if (comment.getContent() != null && !comment.getContent().isEmpty() && user != null) {
+			
 			try {
-				commentManager.addCommentToPost(comment);
-				// return ResponseEntity.status(HttpStatus.SC_OK).body(null);
+				comment.setUserID(user.getUserID());
+				comment.setFullName(user.getFirstName() + " " + user.getLastName());
+				comment.setDate(LocalDate.now());
+				
+				int commentID = commentManager.addCommentToPost(comment);
+				comment.setCommentID(commentID);
+				
+				if (commentID > 0) {
+					return ResponseEntity.status(HttpStatus.SC_OK).body(comment);
+				}
 
 			} catch (SQLException e) {
 				request.setAttribute("error", e.getMessage());
-				return "error";
+//				return "error";
+			} catch (InvalidCommentIDException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
-		return "redirect:post?id=" + postID;
-		// return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
+//		return "redirect:post?id=" + comment.getPostID();
+		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
 	}
 
 	@RequestMapping(value = "/comment/{id}", method = RequestMethod.DELETE)
@@ -192,22 +207,5 @@ public class PostController {
 			return "error";
 		}
 		return "redirect:post?id="+ postID;
-	}
-	
-//	@RequestMapping(value = "/search", method = RequestMethod.GET)
-//	public String search(HttpServletRequest request, @RequestParam("search") String search) {
-//		
-//		if (search != null) {
-//			List<Post> result = PostManager.instance.searchPost(search);
-//			if (!result.isEmpty()) {
-//				System.out.println("not empty");
-//				request.setAttribute("posts", result);
-//			}
-//			// String resultJSON = new Gson().toJson(result);
-//			// response.setContentType("text/html");
-//			// response.getWriter().write(resultJSON);
-//			// System.out.println(resultJSON);
-//		}
-//		return "explore";
-//	}
+	}	
 }

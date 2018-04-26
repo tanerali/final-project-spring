@@ -37,6 +37,7 @@
 	<div id="top" class="banner">
 
 		<%@ include file="header.jsp"%>
+		
 		<div class="container">
 			<div class="slider">
 				<div class="callbacks_container">

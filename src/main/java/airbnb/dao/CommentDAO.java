@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -58,14 +59,22 @@ public enum CommentDAO {
 		}
 	}
 
-	public boolean addCommentToPost(Comment comment) throws SQLException {
-		try(PreparedStatement ps = connection.prepareStatement(INSERT_COMMENT)) {
+	public int addCommentToPost(Comment comment) throws SQLException {
+		try(PreparedStatement ps = connection.prepareStatement(INSERT_COMMENT, Statement.RETURN_GENERATED_KEYS)) {
 			ps.setInt(1, comment.getUserID());
 			ps.setInt(2, comment.getPostID());
 			ps.setString(3, comment.getContent());
 			ps.setObject(4, comment.getDate());
+			ps.executeUpdate();
+
+			int commentID = 0;
+			ResultSet resultSet = ps.getGeneratedKeys();
+			if (resultSet.next()) {
+				commentID = resultSet.getInt(1);
+			}
 			
-			return ps.executeUpdate() > 0 ? true : false;
+//			return ps.executeUpdate() > 0 ? true : false;
+			return commentID;
 		}
 	}
 }
