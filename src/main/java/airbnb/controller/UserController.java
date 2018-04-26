@@ -40,19 +40,18 @@ public class UserController {
 	public String login(HttpServletRequest request) {
 		String email = request.getParameter("email");
 		String password = request.getParameter("password");
-
+		System.out.println(email + " " + password);
 		try {
 			User user = userManager.login(email, password);
 			if (user != null) {
 				request.getSession().setAttribute("user", user);
-
-				ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(email);
-				ArrayList<Review> reviewsFromGuests = userManager.getReviewsFromGuests(email);
-				if (reviewsFromHosts != null && !reviewsFromHosts.isEmpty()) {
-					request.getSession().setAttribute("reviewsFromHosts", reviewsFromHosts);
-					request.getSession().setAttribute("reviewsFromGuests", reviewsFromGuests);
-				}
-
+				// ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(email);
+				// ArrayList<Review> reviewsFromGuests =
+				// userManager.getReviewsFromGuests(email);
+				// if (reviewsFromHosts != null && !reviewsFromHosts.isEmpty()) {
+				// request.getSession().setAttribute("reviewsFromHosts", reviewsFromHosts);
+				// request.getSession().setAttribute("reviewsFromGuests", reviewsFromGuests);
+				// }
 				return "personalProfile";
 			} else {
 				request.setAttribute("wrong_password", new Object());
@@ -83,7 +82,6 @@ public class UserController {
 			try {
 				System.out.println(request.getParameter("birthDate"));
 				System.out.println(request.getParameter("firstName"));
-
 				birthDate = LocalDate.parse(request.getParameter("birthDate"));
 			} catch (Exception e) {
 				throw new UserDataException("Invalid birth date entered");
@@ -113,14 +111,11 @@ public class UserController {
 			// throw new UserDataException("You did not specify a photo to upload");
 			// }
 
-			user = new User(request.getParameter("firstName"),
-					request.getParameter("lastName"),
-					request.getParameter("email"),
-					request.getParameter("pass1"),
-					request.getParameter("gender"),
-					request.getParameter("city"),
-					request.getParameter("country"), null, // absoluteFilePath,
+			user = new User(request.getParameter("firstName"), request.getParameter("lastName"),
+					request.getParameter("email"), request.getParameter("pass1"), request.getParameter("gender"),
+					request.getParameter("city"), request.getParameter("country"), null, // absoluteFilePath,
 					request.getParameter("description"), birthDate, request.getParameter("telNumber"));
+			System.out.println(user.getPassword());
 			if (userManager.register(user)) {
 				return "login";
 			}

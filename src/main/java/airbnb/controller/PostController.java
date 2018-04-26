@@ -52,19 +52,29 @@ public class PostController {
 	private BookingManager bookingManager = BookingManager.instance;
 
 	@RequestMapping(value = "/explore", method = RequestMethod.GET)
-	public String explore(Model m) {
+	public String explore(HttpServletRequest request) {
 		ArrayList<Post> posts = null;
 		try {
 			posts = (ArrayList<Post>) postManager.getAllPosts();
-			Map<String, TreeSet<String>> locations = locationDao.getLocations();
 			System.out.println(posts.size());
 			if (posts != null) {
-				m.addAttribute("posts", posts);
-				m.addAttribute("locations", locations);
+				request.setAttribute("posts", posts);
 			}
 		} catch (SQLException | InvalidPostDataExcepetion e) {
-			m.addAttribute("error", e.getMessage());
+			request.setAttribute("error", e.getMessage());
 			return "error";
+		}
+		return "explore";
+
+	}
+
+	@RequestMapping(value = "/search", method = RequestMethod.GET)
+	public String search(Model m, @RequestParam("search") String search, HttpServletRequest req,
+			HttpServletResponse resp) {
+		ArrayList<Post> posts = (ArrayList<Post>) postManager.searchPost(search);
+
+		if (posts != null) {
+			req.setAttribute("posts", posts);
 		}
 		return "explore";
 
@@ -184,20 +194,20 @@ public class PostController {
 		return "redirect:post?id="+ postID;
 	}
 	
-	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public String bookPost(HttpServletRequest request, @RequestParam("search") String search) {
-		
-		if (search != null) {
-			List<Post> result = PostManager.instance.searchPost(search);
-			if (!result.isEmpty()) {
-				System.out.println("not empty");
-				request.setAttribute("posts", result);
-			}
-			// String resultJSON = new Gson().toJson(result);
-			// response.setContentType("text/html");
-			// response.getWriter().write(resultJSON);
-			// System.out.println(resultJSON);
-		}
-		return "explore";
-	}
+//	@RequestMapping(value = "/search", method = RequestMethod.GET)
+//	public String search(HttpServletRequest request, @RequestParam("search") String search) {
+//		
+//		if (search != null) {
+//			List<Post> result = PostManager.instance.searchPost(search);
+//			if (!result.isEmpty()) {
+//				System.out.println("not empty");
+//				request.setAttribute("posts", result);
+//			}
+//			// String resultJSON = new Gson().toJson(result);
+//			// response.setContentType("text/html");
+//			// response.getWriter().write(resultJSON);
+//			// System.out.println(resultJSON);
+//		}
+//		return "explore";
+//	}
 }
