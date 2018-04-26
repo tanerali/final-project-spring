@@ -7,20 +7,6 @@
 <title>Airbnb</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
-<meta name="keywords"
-	content="Njoy Travels Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template,
-Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
-<script type="application/x-javascript">
-	
-	
-	
-	
-	 addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
-
-
-
-
-</script>
 <!-- bootstrap-css -->
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"
 	media="all" />
@@ -44,16 +30,6 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 <!-- //font -->
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
-<script type="text/javascript">
-	jQuery(document).ready(function($) {
-		$(".scroll").click(function(event) {
-			event.preventDefault();
-			$('html,body').animate({
-				scrollTop : $(this.hash).offset().top
-			}, 1000);
-		});
-	});
-</script>
 <!--[if lt IE 9]>
   <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 <![endif]-->
@@ -62,34 +38,123 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 
 <body id="body">
 	<!-- banner -->
-	<div class="banner1">
 
-		<%@ include file="header.jsp"%>
+	<%@ include file="header.jsp"%>
+	<!-- <hr width="100%" style="border-color: #82b62d;"> !-->
 
-
-		<div class="w3layouts-banner-slider">
-			<div class="container">
-				<div class="slider">
-					<div class="callbacks_container">
-						<ul class="rslides callbacks callbacks1" id="slider4">
-							<table id="search-table"></table>
-						</ul>
+	<!--IMAGE SLIDER STARTS HERE!-->
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div id="myCarousel" class="carousel slide" data-ride="carousel">
+					<div class="carousel-inner">
+						<div class="item carousel-item active">
+							<img src="images/index3.jpg" alt="">
+						</div>
+						<div class="item carousel-item">
+							<img src="images/index2.jpg" alt="">
+							<div class="carousel-caption">
+								<div class="carousel-action"></div>
+							</div>
+						</div>
+						<div class="item carousel-item">
+							<img src="images/index1.jpg" alt="">
+							<div class="carousel-caption">
+								<div class="carousel-action"></div>
+							</div>
+						</div>
 					</div>
+					<!-- Carousel controls -->
+					<a class="carousel-control left carousel-control-prev"
+						href="#myCarousel" data-slide="prev"> <i
+						class="fa fa-angle-left"></i>
+					</a> <a class="carousel-control right carousel-control-next"
+						href="#myCarousel" data-slide="next"> <i
+						class="fa fa-angle-right"></i>
+					</a>
 				</div>
 			</div>
 		</div>
-
 	</div>
-	<!-- //banner -->
+	<br>
+	<!--IMAGE SLIDER ENDS HERE!-->
 
-	<!-- welcome -->
-	<!-- //services -->
-	<!-- copyright -->
-	<!-- //copyright -->
-	<script src="js/responsiveslides.min.js"></script>
-	<script src="js/SmoothScroll.min.js"></script>
-	<script type="text/javascript" src="js/move-top.js"></script>
-	<script type="text/javascript" src="js/easing.js"></script>
+	<!--Footer-->
+	<footer class="page-footer font-small blue-grey lighten-5 pt-0">
+	<div style="background-color: #82b62d; margin-top: 2%;">
+		<div class="container"
+			style="background-color: #82b62d; height: 0.5px;">
+			<!--Grid row-->
+			<div class="row py-4 d-flex align-items-center">
+
+				<!--Grid column-->
+				<div class="col-12 col-md-5 text-left mb-4 mb-md-0"></div>
+				<!--Grid column-->
+
+				<!--Grid column-->
+				<div class="col-12 col-md-7 text-center text-md-right">
+					<!--Facebook-->
+					<a class="fb-ic ml-0"> <i
+						class="fa fa-facebook white-text mr-lg-4"> </i>
+					</a>
+					<!--Twitter-->
+					<a class="tw-ic"> <i class="fa fa-twitter white-text mr-lg-4">
+					</i>
+					</a>
+					<!--Google +-->
+					<a class="gplus-ic"> <i
+						class="fa fa-google-plus white-text mr-lg-4"> </i>
+					</a>
+					<!--Linkedin-->
+					<a class="li-ic"> <i class="fa fa-linkedin white-text mr-lg-4">
+					</i>
+					</a>
+					<!--Instagram-->
+					<a class="ins-ic"> <i
+						class="fa fa-instagram white-text mr-lg-4"> </i>
+					</a>
+				</div>
+				<!--Grid column-->
+
+			</div>
+			<!--Grid row-->
+		</div>
+	</div>
+
+	<!--Footer Links-->
+	<div class="container mt-5 mb-4 text-center text-md-left">
+		<div class="row mt-3">
+			<!--First column-->
+			<div class="col-md-3 col-lg-4 col-xl-3 mb-4 dark-grey-text">
+				<a style="color: #82b62d;" href="index">Home</a>
+			</div>
+			<!--/.First column-->
+			<!--Second column-->
+			<div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4 dark-grey-text">
+				<a style="color: #82b62d;" href="explore">Explore</a>
+			</div>
+			<!--/.Second column-->
+			<!--Third column-->
+			<div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4 dark-grey-text">
+				<a style="color: #82b62d;" href="login">Login</a>
+			</div>
+			<!--/.Third column-->
+			<!--Fourth column-->
+			<div class="col-md-4 col-lg-3 col-xl-3">
+				<a style="color: #82b62d;" href="register">Register</a>
+			</div>
+			<!--/.Fourth column-->
+
+		</div>
+	</div>
+	<!--/.Footer Links--> <!-- Copyright-->
+	<div class="footer-copyright py-3 text-center">
+		<br> © 2018 Copyright: <a style="color: #82b62d;" href="index">
+			<strong> Airbnb</strong>
+		</a>
+	</div>
+	<!--/.Copyright --> </footer>
+	<!--/.Footer-->
 
 	<script>
 		var req = new XMLHttpRequest();
@@ -106,7 +171,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 					+ document.getElementById("search").value, true);
 			req.onreadystatechange = function() {
 				if (req.readyState == 4 && req.status == 200) {
-					  window.location = "explore.jsp";
+					window.location = "explore.jsp";
 				}
 			};
 
