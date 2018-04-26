@@ -164,7 +164,8 @@
 					error : function(e) {
 						$("#upload").prop("disabled", false);
 						//...
-						alert("nooo");
+
+						alert(eval(e));
 					}
 				});
 

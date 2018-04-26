@@ -19,7 +19,7 @@ public class AjaxController {
 	private PostManager postManager = PostManager.instance;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public String uploadPost(@RequestBody AddPostForm form) {
+	public void uploadPost(@RequestBody AddPostForm form) {
 		Post newPost;
 		try {
 			// Create new post From PostForm
@@ -31,6 +31,5 @@ public class AjaxController {
 		} catch (InvalidPostDataExcepetion | SQLException e) {
 			System.out.println(e.getMessage());
 		}
-		return "index";
 	}
 }
