@@ -35,6 +35,14 @@
 <!-- //font -->
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
+ 
+<!-- Include Date Range Picker -->
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/locales/bootstrap-datepicker.pt.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker3.css">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/js/bootstrap-datepicker.js"></script>
+
 </head>
 <body>
 
@@ -67,7 +75,7 @@
 					<form action="book" method="post">
 						From<input type="date" name="dateFrom" required="required"><br>
 						To<input type="date" name="dateTo" required="required"><br>
-
+						
 						<input type="hidden" name="postID" value="<%=currPost.getPostID()%>"> 
 						<input type="submit" value="Request Booking" style="background-color: #4CAF50; 
 								border: none; color: white; padding: 15px 32px;">
@@ -150,15 +158,9 @@
 						<input type="hidden" id="postID" value="<%=currPost.getPostID()%>"> 
 						
 						<button class="form-control" id="leaveComment" onclick="postComment()">SUBMIT</button>
-						
-						
-					
 				</div>
 			<% } %>
-
 			<!-- //leave-comments -->
-
-
 		</div>
 	</div>
 

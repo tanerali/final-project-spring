@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import airbnb.manager.DBManager;
 import airbnb.model.Booking;
 import airbnb.model.Notification;
+import airbnb.model.User;
 
 public enum BookingDAO {
 
@@ -85,4 +86,12 @@ public enum BookingDAO {
 			return ps.executeUpdate() > 0 ? true : false;
 		}
 	}
+
+//	public boolean userHasVisited(User user, int postID) {
+//		String sql = "SELECT pb.post_id, p.title, pb.customer_id, pb.date_from, pb.date_to " + 
+//				"FROM POSTS_BOOKINGS pb " + 
+//				"JOIN POSTS p " + 
+//				"ON pb.post_id = p.ID " + 
+//				"WHERE (SELECT NOW()) > date_to AND confirmed=true;";
+//	}
 }

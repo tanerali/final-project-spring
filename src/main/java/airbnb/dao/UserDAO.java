@@ -91,7 +91,7 @@ public enum UserDAO {
 	}
 
 	public ArrayList<Review> getReviewsFromGuestsByEmail(String email) throws SQLException {
-		String sql = "SELECT CONCAT(u.first_name, \" \", u.last_name), p.title, pc.content, date "
+		String sql = "SELECT CONCAT(u.first_name, \" \", u.last_name), p.title, pc.content, date, pc.post_id "
 				+ "FROM POST_COMMENTS pc " + "JOIN POSTS p ON pc.post_id = p.ID " + "JOIN USERS u ON pc.user_id = u.id "
 				+ "JOIN USERS h ON p.host_id = h.id " + "WHERE h.email = ?;";
 
@@ -100,8 +100,12 @@ public enum UserDAO {
 			ps.setString(1, email);
 			ResultSet resultSet = ps.executeQuery();
 			while (resultSet.next()) {
-				Review review = new Review(resultSet.getString(1), resultSet.getString("title"),
-						resultSet.getString("content"), LocalDate.parse(resultSet.getString("date")));
+				Review review = new Review(
+						resultSet.getString(1), 
+						resultSet.getString("title"),
+						resultSet.getString("content"), 
+						LocalDate.parse(resultSet.getString("date")),
+						resultSet.getInt("post_id"));
 
 				reviewsFromGuests.add(review);
 			}

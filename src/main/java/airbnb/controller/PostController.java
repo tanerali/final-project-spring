@@ -51,6 +51,7 @@ public class PostController {
 	private LocationDao locationDao = LocationDao.instance;
 	private UserManager userManager = UserManager.instance;
 	private CommentManager commentManager = CommentManager.instance;
+	private BookingManager bookingManager = BookingManager.instance;
 
 	@RequestMapping(value = "/explore", method = RequestMethod.GET)
 	public String explore(HttpServletRequest request) {
@@ -147,7 +148,9 @@ public class PostController {
 
 		User user = (User) session.getAttribute("user");
 
-		if (comment.getContent() != null && !comment.getContent().isEmpty() && user != null) {
+		if (comment.getContent() != null && !comment.getContent().isEmpty() && user != null
+				//&& bookingManager.userHasVisited(user, comment.getPostID())
+				) {
 			
 			try {
 				comment.setUserID(user.getUserID());

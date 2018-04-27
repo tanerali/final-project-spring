@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import airbnb.dao.BookingDAO;
 import airbnb.model.Booking;
 import airbnb.model.Notification;
+import airbnb.model.User;
 
 
 public enum BookingManager {
@@ -28,4 +29,8 @@ public enum BookingManager {
 	public boolean acceptBookingRequest(int notificationID) throws SQLException {
 		return bookingDao.acceptBookingRequest(notificationID);
 	}
+	
+//	public boolean userHasVisited(User user, int postID) {
+//		return bookingDao.userHasVisited(user, postID);
+//	}
 }

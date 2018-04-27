@@ -30,16 +30,19 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import airbnb.manager.BookingManager;
+import airbnb.manager.PostManager;
 import airbnb.manager.UserManager;
 import airbnb.model.Review;
 import airbnb.model.User;
 import airbnb.model.Notification;
+import airbnb.model.Post;
 import airbnb.exceptions.UserDataException;
 
 @Controller
 public class UserController {
 	private UserManager userManager = UserManager.instance;
 	private BookingManager bookingManager = BookingManager.instance;
+	private PostManager postManager = PostManager.instance;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String loginPage() {
@@ -66,6 +69,11 @@ public class UserController {
 				ArrayList<Review> reviewsFromGuests = userManager.getReviewsFromGuests(email);
 				if (reviewsFromGuests != null) {
 					session.setAttribute("reviewsFromGuests", reviewsFromGuests);
+				}
+				
+				ArrayList<Post> hostedPosts = (ArrayList<Post>) postManager.getPostsByUsers().get(user.getUserID());
+				if (hostedPosts != null) {
+					session.setAttribute("hostedPosts", hostedPosts);
 				}
 				
 				ArrayList<Notification> bookingRequestNotifications = bookingManager.checkNotifications(email);

@@ -86,39 +86,60 @@
 				<div style="width: 240px; height: 240px">
 					<img class="img-responsive" alt="" src="getProfilePic?id=<%= user.getUserID() %>">
 				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">Verified info</div>
-					<div class="panel-body">
-						<ul>
-							<li>Email</li>
-						</ul>
-					</div>
-				</div>
+				
 				<h2>Listings</h2>
-				<ul>
-					<li><img class="img-resposive" src="images/1.jpg" style="width: 320px; height: 100%"></li>
-				</ul>
+				<div class="list-group" >
+					<c:forEach var="listing" items="${ hostedPosts }">
+						<a href="post?id=${ listing.postID }" class="list-group-item">
+							<img class="img-responsive" src="getThumbnail?id=${ listing.postID }">
+							<p>${ listing.title }</p>
+						</a>
+					</c:forEach>
+				</div>
 			</div>
 			
-			
-			
 			<div class="col-sm-9">
-				
 				<div id="user" style="display: block;">
-					<h1><%=user.getFirstName()+ " "+ user.getLastName()%></h1>
-					<button style=
-						"float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
-						onclick="editUser()"
-					>Edit</button>
-					<ul>
-						<li><%=user.getEmail()%></li>
-						<li><%=user.getGender()%></li>
-						<li><%=user.getCountry()%></li>
-						<li><%=user.getCity()%></li>
-						<li><%=user.getDescription()%></li>
-						<li><%=user.getBirthDate()%></li>
-						<li><%=user.getTelNumber()%></li>
-					</ul>
+					
+					<h1 class="page-header"><%=user.getFirstName()+ " "+ user.getLastName()%></h1>
+					<div class="panel panel-default">
+						<div class="panel-heading">Verified info</div>
+						<div class="panel-body">
+							<table class="table table-hover">
+									<tr>
+										<td>Email</td>
+										<td><%=user.getEmail()%></td>
+									</tr>
+									<tr>
+										<td>Gender</td>
+										<td><%=user.getGender()%></td>
+									</tr>
+									<tr>
+										<td>Country</td>
+										<td><%=user.getCountry()%></td>
+									</tr>
+									<tr>
+										<td>City</td>
+										<td><%=user.getCity()%></td>
+									</tr>
+									<tr>
+										<td>Description</td>
+										<td><%=user.getDescription()%></td>
+									</tr>
+									<tr>
+										<td>Birth Date</td>
+										<td><%=user.getBirthDate()%></td>
+									</tr>
+									<tr>
+										<td>Telephone Number</td>
+										<td><%=user.getTelNumber()%></td>
+									</tr>
+							</table>
+							<button style="float: right; background-color: #4CAF50; border: none; 
+								color: white; padding: 15px 32px;"
+								onclick="editUser()">Edit</button>
+						</div>
+					</div>
 				</div>
 				
 				<%
@@ -128,24 +149,57 @@
 					<p style="color: red"><%= e.getMessage() %></p>
 				<% } %>
 				
-				
 				<div id="editUser" style="display: none;">
-					<form action="personalProfile" method="post">
-						First Name<input type="text" name="firstName" value="<%=user.getFirstName()%>"><br>
-						Last Name<input type="text" name="lastName" value="<%=user.getLastName()%>"><br>
-						Email<input type="email" name="email" value="<%=user.getEmail()%>"><br>
-						Gender<input type="text" name="gender" value="<%=user.getGender()%>"><br>
-						Country<input type="text" name="country" value="<%=user.getCountry()%>"><br>
-						City<input type="text" name="city" value="<%=user.getCity()%>"><br>
-						Description<input type="text" name="description" value="<%=user.getDescription()%>"><br>
-						Birth Date<input type="date" name="birthDate" value="<%=user.getBirthDate()%>"><br>
-						Telephone Number<input type="tel" name="telNumber" value="<%=user.getTelNumber()%>"><br>
-						<input type="submit" value="Save">
-					</form>
-					<button style=
-						"float: right; background-color: red; border: none; color: white; padding: 15px 32px;"
-						onclick="cancelEdit()"
-					>Cancel</button>
+				
+					<div class="panel panel-default">
+						<div class="panel-heading">Edit user details</div>
+						<div class="panel-body">
+							<form action="personalProfile" method="post">
+								<table class="table table-hover">
+									<tr>
+										<td>First Name</td>
+										<td><input type="text" name="firstName" value="<%=user.getFirstName()%>"></td>
+									</tr>
+									<tr>
+										<td>Last Name</td>
+										<td><input type="text" name="lastName" value="<%=user.getLastName()%>"></td>
+									</tr>
+									<tr>
+										<td>Email</td>
+										<td><input type="email" name="email" value="<%=user.getEmail()%>"></td>
+									</tr>
+									<tr>
+										<td>Gender</td>
+										<td><input type="text" name="gender" value="<%=user.getGender()%>"></td>
+									</tr>
+									<tr>
+										<td>Country</td>
+										<td><input type="text" name="country" value="<%=user.getCountry()%>"></td>
+									</tr>
+									<tr>
+										<td>City</td>
+										<td><input type="text" name="city" value="<%=user.getCity()%>"></td>
+									</tr>
+									<tr>
+										<td>Description</td>
+										<td><input type="text" name="description" value="<%=user.getDescription()%>"></td>
+									</tr>
+									<tr>
+										<td>Birth Date</td>
+										<td><input type="date" name="birthDate" value="<%=user.getBirthDate()%>"></td>
+									</tr>
+									<tr>
+										<td>Telephone Number</td>
+										<td><input type="tel" name="telNumber" value="<%=user.getTelNumber()%>"></td>
+									</tr>
+								</table>
+								<input style="float: left; background-color: #4CAF50; border: none; 
+											color: white; padding: 15px 32px;" type="submit" value="Save">
+							</form>
+							<button style="float: right; background-color: red; border: none; color: white; padding: 15px 32px;"
+										onclick="cancelEdit()">Cancel</button>
+						</div>
+					</div>
 					
 					<!-- <button style=
 						"float: right; background-color: red; border: none; color: white; padding: 15px 32px;"
@@ -154,60 +208,67 @@
 					
 				</div>
 				
-				<h1>Reviews from Hosts</h1>
-				
+				<h1 class="page-header">Reviews from Hosts</h1>
 				<%
-									if(session.getAttribute("reviewsFromHosts") != null) {
-																		ArrayList<Review> reviews = ((ArrayList<Review>)session.getAttribute("reviewsFromHosts")); 
-																		for(Review review: reviews) {
-								%>
+				if(session.getAttribute("reviewsFromHosts") != null) {
+					ArrayList<Review> reviews = ((ArrayList<Review>)session.getAttribute("reviewsFromHosts")); 
+					for(Review review: reviews) { %>
 						
 						<div class="panel panel-default">
-							<div class="panel-heading"><%=review.getReviewerName()%></div>
-							<div class="panel-body">
-								<%=review.getReview()%>
+							<div class="panel-heading">
+								<%= review.getReviewerName() %>
+								<span style="float:right"><%=review.getDate()%></span>
 							</div>
+							
 							<div class="panel-body">
-								<%=review.getDate()%>
-							</div>
-						</div>
-						
-					<%
-												}
-											%>
-				 <%
-				 	}
-				 %>
-					
-				<h1>Reviews from Guests of <%=user.getFirstName()+ " "+ user.getLastName()%></h1>
-				
-				<% 	if(session.getAttribute("reviewsFromGuests") != null) {
-						ArrayList<Review> reviews = ((ArrayList<Review>)session.getAttribute("reviewsFromGuests")); 
-						for(Review review: reviews) { %>
-						
-						<div class="panel panel-default">
-							<div class="panel-heading"><%= review.getReviewerName() %></div>
-							<div class="panel-body">
-								<%= review.getReview() %>
-							</div>
-							<div class="panel-body" style="font-style: italic;">
-								
-								Reviewed Property: <%= review.getReviewedName() %>
-							</div>
-							<div class="panel-body">
-								<%= review.getDate() %>
+								<div class="row">
+									<div class="col-md-6">
+										<div class="panel-body">
+											<%=review.getReview()%>
+										</div>
+									</div>
+									<div class="col-md-6">
+										
+									</div>
+								</div>
 							</div>
 						</div>
 						
 					<% } %>
 				 <% } %>
+					
+				<h1 class="page-header">Reviews from Guests of <%=user.getFirstName()+ " "+ user.getLastName()%></h1>
 				
-				
+				<% 	if(session.getAttribute("reviewsFromGuests") != null) {
+						ArrayList<Review> reviews = ((ArrayList<Review>)session.getAttribute("reviewsFromGuests")); 
+						for(Review review: reviews) { %>
+						
+							<div class="panel panel-default">
+								<div class="panel-heading">
+									<%= review.getReviewerName() %>
+									<span style="float:right"><%=review.getDate()%></span>
+								</div>
+									<div class="row">
+										<div class="col-md-6">
+											<div class="panel-body">
+												<%=review.getReview()%>
+											</div>
+										</div>
+										<div class="col-md-6">
+											<div class="panel-body">
+												Reviewed Property: <i><%= review.getReviewedName() %></i>
+												<a href="post?id=<%= review.getReviewedPropertyID() %>">
+													<img class="img-responsive" style="width:400px" 
+														src="getThumbnail?id=<%= review.getReviewedPropertyID() %>">
+												</a>
+											</div>
+										</div>
+									</div>
+							</div>
+					<% } %>
+				 <% } %>
 			</div>
 		</div>
-		
 	</div>
-
-
 </body>
 </html>
