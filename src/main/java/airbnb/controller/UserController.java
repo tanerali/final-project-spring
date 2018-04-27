@@ -127,9 +127,6 @@ public class UserController {
 			Path path = Paths.get(uploadFolder + file.getOriginalFilename());
 			Files.write(path, bytes);
 			
-			System.out.println(file.getOriginalFilename());
-			System.out.println(request.getParameter("lastName"));
-			
 			user = new User(request.getParameter("firstName"), 
 					request.getParameter("lastName"),
 					request.getParameter("email"), 

@@ -56,16 +56,12 @@ public class Post {
 		this.setType(type);
 		this.hostID = hostID;
 		comments = new ArrayList<>();
-		this.rating = 0;
 	}
 
 	public Post(int postID, String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID)
 			throws InvalidPostDataExcepetion {
 		this(title, description, price, dateOfPosting, type, hostID);
 		this.postID = postID;
-	}
-
-	public Post() {
 	}
 
 	public String getTitle() {
