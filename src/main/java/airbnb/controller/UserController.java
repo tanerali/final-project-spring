@@ -8,6 +8,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,6 +26,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import airbnb.manager.BookingManager;
 import airbnb.manager.UserManager;
@@ -90,7 +95,8 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String register(HttpServletRequest request) throws ServletException, IOException {
+	public String register(HttpServletRequest request, @RequestParam("photo") MultipartFile file) 
+			throws ServletException, IOException {
 		User user = null;
 		try {
 			// if date is empty, or not exactly as it has to be it
@@ -109,35 +115,38 @@ public class UserController {
 				throw new UserDataException("Password mismatch");
 			}
 
-			// // photo upload
-			//// String path = "/home/dnn";
-			// String path = "/Users/tanerali/Desktop/ServerUploads";
-			// // Part filePart = request.getPart("photo");
-			// // String fileName = getFileName(filePart);
-			// String absoluteFilePath = path + File.separator + fileName;
-			//
-			// // try (InputStream filecontent = filePart.getInputStream();
-			// OutputStream out = new FileOutputStream(absoluteFilePath)) {
-			//
-			// byte[] bytes = new byte[1024];
-			//
-			// while ((filecontent.read(bytes)) != -1) {
-			// out.write(bytes);
-			// }
-			// } catch (FileNotFoundException fne) {
-			// throw new UserDataException("You did not specify a photo to upload");
-			// }
-
-			user = new User(request.getParameter("firstName"), request.getParameter("lastName"),
-					request.getParameter("email"), request.getParameter("pass1"), request.getParameter("gender"),
-					request.getParameter("city"), request.getParameter("country"), null, // absoluteFilePath,
-					request.getParameter("description"), birthDate, request.getParameter("telNumber"));
-			System.out.println(user.getPassword());
+		    String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
+		    //String uploadFolder = "/home/dnn/";
+		    
+			if (file.isEmpty()) {
+	            throw new UserDataException("Please select a file to upload");
+	        }
+			
+			// Get the file and save it somewhere
+			byte[] bytes = file.getBytes();
+			Path path = Paths.get(uploadFolder + file.getOriginalFilename());
+			Files.write(path, bytes);
+			
+			System.out.println(file.getOriginalFilename());
+			System.out.println(request.getParameter("lastName"));
+			
+			user = new User(request.getParameter("firstName"), 
+					request.getParameter("lastName"),
+					request.getParameter("email"), 
+					request.getParameter("pass1"), 
+					request.getParameter("gender"),
+					request.getParameter("city"), 
+					request.getParameter("country"), 
+					path.toString(),
+					request.getParameter("description"), 
+					birthDate, 
+					request.getParameter("telNumber"));
+			
 			if (userManager.register(user)) {
 				return "login";
 			}
 
-		} catch (UserDataException e) {
+		} catch (UserDataException | IOException e ) {
 			System.out.println(e.getMessage());
 			request.setAttribute("exception", e);
 			return "register";

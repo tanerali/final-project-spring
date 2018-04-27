@@ -61,7 +61,7 @@
 
     <div class="container">
     <!-- enctype = "multipart/form-data" -->
-      <form class="form-signin" action="register"  method="post">
+      <form class="form-signin" action="register"  method="post" enctype="multipart/form-data">
         <h2 class="form-signin-heading">Please sign up</h2>
         
         <% 
@@ -86,8 +86,7 @@
 		Country<input type="text" class="form-control" name="country">
 		City<input type="text" class="form-control" name="city">
 		
-		<!-- Photo<input type="file" class="form-control" name="photo"> -->
-		Photo<input type = "file" class="form-control" name = "photo" accept="image/*" size = "50" />
+		Photo<input type = "file" class="form-control" name = "photo" accept="image/*" size = "50" required/>
 		
 		Description<input type="text" class="form-control" name="description">
 		Birth date<input type="date" class="form-control" name="birthDate" value="1990-01-01">
