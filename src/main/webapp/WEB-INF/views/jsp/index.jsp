@@ -17,6 +17,7 @@
 <!-- font-awesome icons -->
 <link href="css/font-awesome.css" rel="stylesheet">
 <!-- //font-awesome icons -->
+
 <!-- font -->
 <link
 	href="//fonts.googleapis.com/css?family=Crimson+Text:400,400i,600,600i,700,700i"
@@ -27,6 +28,8 @@
 <link
 	href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300'
 	rel='stylesheet' type='text/css'>
+	
+
 <!-- //font -->
 
 <script

@@ -238,11 +238,13 @@ ul.nav.navbar-nav {
 ul.dropdown-menu {
 	background: rgb(255, 255, 255);
 	box-shadow: 0 0 0;
-	border: none;
+	border: 5px solid;
 	margin: 0;
 	top: 3em;
 	left: 0;
 	min-width: 90px;
+	max-height:400px;
+	overflow:scroll;
 }
 
 .dropdown-menu>li>a {

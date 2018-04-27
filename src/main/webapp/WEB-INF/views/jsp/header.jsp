@@ -1,5 +1,8 @@
+<%@page import="airbnb.model.Notification"%>
+<%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <div class="header">
 	<div class="container">
 		<div class="header-left">
@@ -27,20 +30,21 @@
 						<div class="collapse navbar-collapse"
 							id="bs-example-navbar-collapse-1">
 							<ul class="nav navbar-nav">
-
-								<form action="search">
-									<div id="myOverlay" class="overlay">
-										<span class="closebtn" onclick="closeSearch()"
-											title="Close Overlay">X</span>
-										<div class="overlay-content">
-											<input type="text" id="search" placeholder="Search.."
-												name="search">
-											<button type="submit" id="searchButton" onclick="search()"></button>
+								<li>
+									<form action="search">
+										<div id="myOverlay" class="overlay">
+											<span class="closebtn" onclick="closeSearch()"
+												title="Close Overlay">X</span>
+											<div class="overlay-content">
+												<input type="text" id="search" placeholder="Search.."
+													name="search">
+												<button type="submit" id="searchButton" onclick="search()">Search</button>
+											</div>
 										</div>
-									</div>
-								</form>
+									</form>
+								</li>
 
-								<li><a id="openBtn" class="active" onclick="openSearch()">Search</a></li>
+								<li><a href="#" id="openBtn" class="active" onclick="openSearch()">Search</a></li>
 								<li><a href="explore" onclick="explore(this);">Explore</a></li>
 								<%
 									if (session.getAttribute("user") == null) {
@@ -51,6 +55,62 @@
 									} else {
 								%>
 								<li><a href="host">Host</a></li>
+								
+								<script type="text/javascript">
+									function rejectBookingRequest(notificationID) {
+										var req = new XMLHttpRequest();
+										req.open("Delete", "notification/"+ notificationID);
+										req.send();
+										
+										req.onreadystatechange = function() {
+											if (req.readyState == 4 && req.status == 200) {
+												var element = document.getElementById("notification"+ notificationID);
+												element.parentNode.removeChild(element);
+											}
+										}
+									}
+									
+									function acceptBookingRequest(notificationID) {
+										var req = new XMLHttpRequest();
+										req.open("Post", "notification/"+ notificationID);
+										req.send();
+										
+										req.onreadystatechange = function() {
+											if (req.readyState == 4 && req.status == 200) {
+												var element = document.getElementById("notification"+ notificationID);
+												element.parentNode.removeChild(element);
+											}
+										}
+									}
+								</script>
+								
+								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>
+									<ul class="dropdown-menu" style="width:270px;">
+										<c:forEach var="notification" items="${bookingRequests}">
+											<li id="notification${notification.notificationID }"><a href="post?id=${ notification.postID }">
+													<img class="img-responsive" src="getThumbnail?id=${ notification.postID }">
+														<h4>Booking request for <em>${ notification.title }</em></h4>
+												</a>
+												<p>
+													Customer name: ${ notification.fullName }<br>
+													Profile: <a href="profile?id=${ notification.customerID }">${ notification.email }</a>
+												</p>
+												<button
+													onclick="rejectBookingRequest(${notification.notificationID})"
+													style="float: left; margin-bottom: 5px; background-color: red; 
+													border: none; color: white; padding: 15px 32px;">REJECT
+												</button>
+												<button
+													onclick="acceptBookingRequest(${notification.notificationID})"
+													style="float: right; margin-bottom: 5px; background-color: #4CAF50; 
+													border: none; color: white; padding: 15px 32px;">ACCEPT
+												</button>
+											</li>
+														
+										</c:forEach>
+									
+									</ul>
+								</li>
 								<li><a href="personalProfile">Profile</a></li>
 								<li><a href="logout">Logout</a></li>
 								<%

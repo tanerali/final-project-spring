@@ -51,7 +51,6 @@ public class PostController {
 	private LocationDao locationDao = LocationDao.instance;
 	private UserManager userManager = UserManager.instance;
 	private CommentManager commentManager = CommentManager.instance;
-	private BookingManager bookingManager = BookingManager.instance;
 
 	@RequestMapping(value = "/explore", method = RequestMethod.GET)
 	public String explore(HttpServletRequest request) {
@@ -190,22 +189,4 @@ public class PostController {
 
 	}
 	
-	@RequestMapping(value = "/book", method = RequestMethod.POST)
-	public String bookPost(HttpSession session, HttpServletRequest request,
-			@RequestParam("postID") int postID,
-			@RequestParam("dateFrom") @DateTimeFormat(iso = ISO.DATE) LocalDate dateFrom,
-			@RequestParam("dateTo") @DateTimeFormat(iso = ISO.DATE) LocalDate dateTo) {
-				
-		User user = (User)session.getAttribute("user");
-		
-		Booking booking = new Booking(postID, user.getUserID(), dateFrom, dateTo);
-		
-		try {
-			bookingManager.requestBooking(booking);
-		} catch (SQLException e) {
-			request.setAttribute("error", e.getMessage());
-			return "error";
-		}
-		return "redirect:post?id="+ postID;
-	}	
 }

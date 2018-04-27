@@ -4711,8 +4711,7 @@ textarea.input-group-sm>.form-control, textarea.input-group-sm>.input-group-addo
 
 .navbar-nav>li>.dropdown-menu {
 	margin-top: 0;
-	border-top-left-radius: 0;
-	border-top-right-radius: 0;
+	border-radius:0;
 }
 
 .navbar-fixed-bottom .navbar-nav>li>.dropdown-menu {

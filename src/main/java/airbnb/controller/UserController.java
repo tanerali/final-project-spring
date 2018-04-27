@@ -1,5 +1,6 @@
 package airbnb.controller;
 
+import java.awt.List;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,18 +19,22 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import airbnb.manager.BookingManager;
 import airbnb.manager.UserManager;
 import airbnb.model.Review;
 import airbnb.model.User;
+import airbnb.model.Notification;
 import airbnb.exceptions.UserDataException;
 
 @Controller
 public class UserController {
 	private UserManager userManager = UserManager.instance;
+	private BookingManager bookingManager = BookingManager.instance;
 
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String loginPage() {
@@ -37,21 +42,33 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(HttpServletRequest request) {
-		String email = request.getParameter("email");
-		String password = request.getParameter("password");
-		System.out.println(email + " " + password);
+	public String login(
+			@RequestParam("email") String email,
+			@RequestParam("password") String password,
+			HttpServletRequest request,
+			HttpSession session) {
+		
 		try {
 			User user = userManager.login(email, password);
 			if (user != null) {
-				request.getSession().setAttribute("user", user);
-				// ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(email);
-				// ArrayList<Review> reviewsFromGuests =
-				// userManager.getReviewsFromGuests(email);
-				// if (reviewsFromHosts != null && !reviewsFromHosts.isEmpty()) {
-				// request.getSession().setAttribute("reviewsFromHosts", reviewsFromHosts);
-				// request.getSession().setAttribute("reviewsFromGuests", reviewsFromGuests);
-				// }
+				session.setAttribute("user", user);
+				
+				ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(email);
+				if (reviewsFromHosts != null) {
+					session.setAttribute("reviewsFromHosts", reviewsFromHosts);
+				}
+				
+				ArrayList<Review> reviewsFromGuests = userManager.getReviewsFromGuests(email);
+				if (reviewsFromGuests != null) {
+					session.setAttribute("reviewsFromGuests", reviewsFromGuests);
+				}
+				
+				ArrayList<Notification> bookingRequestNotifications = bookingManager.checkNotifications(email);
+				System.out.println(bookingRequestNotifications);
+				if (bookingRequestNotifications != null) {
+					session.setAttribute("bookingRequests", bookingRequestNotifications);
+				}
+				
 				return "personalProfile";
 			} else {
 				request.setAttribute("wrong_password", new Object());
@@ -145,7 +162,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/personalProfile", method = RequestMethod.GET)
-	public String profilePage(HttpSession session) {
+	public String personalProfilePage(HttpSession session) {
 		User user = (User) session.getAttribute("user");
 
 		if (user != null) {
@@ -208,7 +225,8 @@ public class UserController {
 		}
 
 		File file = new File(path);
-		try (InputStream filecontent = new FileInputStream(file); OutputStream out = resp.getOutputStream()) {
+		try (InputStream filecontent = new FileInputStream(file); 
+				OutputStream out = resp.getOutputStream()) {
 
 			byte[] bytes = new byte[1024];
 
@@ -223,7 +241,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
-	public String getProfilePic(HttpServletRequest request, @RequestParam("id") int userID) {
+	public String getProfilePage(HttpServletRequest request, @RequestParam("id") int userID) {
 
 		try {
 			User user = userManager.getUserByID(userID);
