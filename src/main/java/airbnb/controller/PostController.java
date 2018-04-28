@@ -56,12 +56,20 @@ public class PostController {
 	@RequestMapping(value = "/explore", method = RequestMethod.GET)
 	public String explore(HttpServletRequest request) {
 		ArrayList<Post> posts = null;
+//		Map<String, TreeSet<String>> locations = locationDao.getLocations();
+//		ArrayList<String> countries = new ArrayList<>(locations.keySet());
+//		System.out.println( countries);
+		
 		try {
 			posts = (ArrayList<Post>) postManager.getAllPosts();
-			System.out.println(posts.size());
+			
 			if (posts != null) {
 				request.setAttribute("posts", posts);
 			}
+//			if (locations != null) {
+//				request.setAttribute("locations", locations);
+//				request.setAttribute("countries", countries);
+//			}
 		} catch (SQLException | InvalidPostDataExcepetion e) {
 			request.setAttribute("error", e.getMessage());
 			return "error";
@@ -90,16 +98,29 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/post", method = RequestMethod.GET)
-	public String specificPostPage(HttpServletRequest request, @RequestParam("id") int postID) {
+	public String specificPostPage(HttpServletRequest request, HttpSession session, 
+			@RequestParam("id") int postID) {
 
-		User hostUser = null;
 		Post currPost = postManager.getPostsByID().get(postID);
+		User hostUser = null;
 		ArrayList<Comment> comments = new ArrayList<>();
+		ArrayList<LocalDate> unavailableDates = new ArrayList<>();
 
 		if (currPost != null) {
 			try {
 				hostUser = userManager.getUserByID(currPost.getHostID());
 				comments = commentManager.getCommentsForPost(postID);
+				
+				if (session.getAttribute("user") != null) {
+					unavailableDates = bookingManager.getUnavailableDates(postID);
+					
+					ArrayList<String> unavailableDatesString = new ArrayList<>();
+					for (LocalDate unavailableDate : unavailableDates) {
+						unavailableDatesString.add("\'"+ unavailableDate.toString()+ "\'");
+					}
+					
+					request.setAttribute("unavailableDatesString", unavailableDatesString);
+				}
 			} catch (SQLException | UserDataException e) {
 				request.setAttribute("exception", e.getMessage());
 				return "error";

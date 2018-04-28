@@ -31,7 +31,7 @@ public enum LocationDao {
 	}
 
 	private Map<String, TreeSet<String>> loadLocationsFromDB() throws SQLException {
-		String sql = "SELECT co.name, ci.name " + "FROM CITIES ci " + "JOIN COUNTRIES co "
+		String sql = "SELECT co.country_name, ci.city_name " + "FROM CITIES ci " + "JOIN COUNTRIES co "
 				+ "ON ci.country_code = co.code;";
 
 		TreeMap<String, TreeSet<String>> locationsMap = new TreeMap<>();

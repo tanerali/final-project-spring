@@ -87,7 +87,8 @@
 								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>
 									<ul class="dropdown-menu" style="width:270px;">
 										<c:forEach var="notification" items="${bookingRequests}">
-											<li id="notification${notification.notificationID }"><a href="post?id=${ notification.postID }">
+											<li id="notification${notification.notificationID }">
+												<a href="post?id=${ notification.postID }">
 													<img class="img-responsive" src="getThumbnail?id=${ notification.postID }">
 														<h4>Booking request for <em>${ notification.title }</em></h4>
 												</a>

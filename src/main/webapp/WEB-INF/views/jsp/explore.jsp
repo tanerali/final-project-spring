@@ -105,7 +105,16 @@
 			
 		</div>
 
-		<%-- <!-- cities dropdown menu -->
+		<%-- <div class="form-group" style="display: inline">
+			<label for="sel1" style="display:inline">Select list:</label> 
+			<select class="form-control" id="sel1">
+				<c:forEach var="country" items="countries">
+					<option>${ country }</option>
+				</c:forEach>
+			</select>
+		</div> --%>
+		
+<%-- <!-- cities dropdown menu -->
 		<div class="dropdown" style="display: inline;">
 			<button class="btn btn-primary dropdown-toggle" type="button"
 				data-toggle="dropdown">

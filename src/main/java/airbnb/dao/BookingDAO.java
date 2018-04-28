@@ -87,6 +87,32 @@ public enum BookingDAO {
 		}
 	}
 
+	public ArrayList<LocalDate> getUnavailableDates(int postID) throws SQLException {
+		String sql = "SELECT date_from, date_to FROM POSTS_BOOKINGS " + 
+				"WHERE confirmed=true " + 
+				"AND date_to > (SELECT date(NOW())) " + 
+				"AND post_id=?;";
+		ArrayList<LocalDate> unavailableDates = new ArrayList<>();
+		
+		try (PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, postID);
+			ResultSet resultSet = ps.executeQuery();
+			while (resultSet.next()) {
+				LocalDate dateFrom = LocalDate.parse(resultSet.getString("date_from"));
+				LocalDate dateTo = LocalDate.parse(resultSet.getString("date_to"));
+				unavailableDates.add(dateFrom);
+				
+				LocalDate nextDate = dateFrom.plusDays(1);
+				while (!nextDate.equals(dateTo)) {
+					unavailableDates.add(nextDate);
+					nextDate = nextDate.plusDays(1);
+				}
+				unavailableDates.add(dateTo);
+			}
+		}
+		return unavailableDates;
+	}
+
 //	public boolean userHasVisited(User user, int postID) {
 //		String sql = "SELECT pb.post_id, p.title, pb.customer_id, pb.date_from, pb.date_to " + 
 //				"FROM POSTS_BOOKINGS pb " + 

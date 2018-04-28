@@ -29,6 +29,10 @@ public enum BookingManager {
 	public boolean acceptBookingRequest(int notificationID) throws SQLException {
 		return bookingDao.acceptBookingRequest(notificationID);
 	}
+
+	public ArrayList<LocalDate> getUnavailableDates(int postID) throws SQLException {
+		return bookingDao.getUnavailableDates(postID);
+	}
 	
 //	public boolean userHasVisited(User user, int postID) {
 //		return bookingDao.userHasVisited(user, postID);

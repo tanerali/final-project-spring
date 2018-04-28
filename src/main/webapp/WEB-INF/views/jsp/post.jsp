@@ -36,12 +36,11 @@
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
  
-<!-- Include Date Range Picker -->
+<!-- Include Date Picker -->
 
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/locales/bootstrap-datepicker.pt.min.js"></script>
-
-<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/css/bootstrap-datepicker3.css">
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.0/js/bootstrap-datepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="css/bootstrap-datepicker.standalone.min.css">
+	
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 
 </head>
 <body>
@@ -70,19 +69,25 @@
 
 					<!-- BOOK -->
 					<% if (session.getAttribute("user") != null) { %>
-					
-					<!-- BOOK BUTTON -->
-					<form action="book" method="post">
-						From<input type="date" name="dateFrom" required="required"><br>
-						To<input type="date" name="dateTo" required="required"><br>
 						
-						<input type="hidden" name="postID" value="<%=currPost.getPostID()%>"> 
-						<input type="submit" value="Request Booking" style="background-color: #4CAF50; 
-								border: none; color: white; padding: 15px 32px;">
-					</form>
-
+						<form action="book" method="post">
+							<div class="input-group input-daterange">
+								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 
+									<span class="input-group-addon"> 
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span> 
+									<span class="input-group-addon">to</span> 
+								<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+							</div>
+							<input type="hidden" name="postID" value="<%=currPost.getPostID()%>"> 
+							<!-- BOOK BUTTON -->
+							<input type="submit" value="Request Booking" style="background-color: #4CAF50; 
+									border: none; color: white; padding: 15px 32px;">
+						</form>
 					<% } %>
-
 				</div>
 				<h3>Description</h3>
 				<p><%=currPost.getDescription()%></p>
@@ -113,8 +118,8 @@
 
 				<div class="agileits_three_comment_grid" id="comment<%= commentID %>">
 					<div class="agileits_tom" id="profilePic">
-						<a href="profile?id=<%= userID  %>"> <img
-							src="getProfilePic?id=<%= userID %>" class="img-responsive"></a>
+						<a href="profile?id=<%= userID  %>"> 
+						<img src="getProfilePic?id=<%= userID %>" class="img-responsive img-circle"></a>
 					</div>
 					<div class="agileits_tom_right">
 						<div class="hardy" id="commenterAndDate">
@@ -126,15 +131,13 @@
 					</div>
 					<div class="clearfix">
 						
-						<% if (session.getAttribute("user") != null) { %>
-							<button
-								onclick="deleteComment(<%= commentID %>, <%= postID %>)"
-								style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">DELETE
-								COMMENT</button>
+						<% if (session.getAttribute("user") != null && ((User)session.getAttribute("user")).getUserID() == userID) { %>
+							<button style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
+									onclick="deleteComment(<%= commentID %>, <%= postID %>)">DELETE COMMENT
+							</button>
 						<% } %>
 					</div>
 				</div>
-
 				<% } %>
 			</div>
 			<!-- //comments -->
@@ -144,95 +147,129 @@
 			<% if (session.getAttribute("user") != null) { %>
 				<div class="w3_leave_comment">
 					<h3>Leave your comment</h3>
-					<%-- <form action="comment" method="post">
-						<textarea placeholder="Comment" name="comment" required></textarea>
-						<input type="hidden" name="postID" value="<%=currPost.getPostID()%>"> 
-						<input  type="submit" style="background-color: #4CAF50; border: none; 
-							color: white; padding: 15px 32px;">
-						<!-- <button class="form-control" onclick="postComment()">SUBMIT</button> -->
-					</form> --%>
 					
 					<!-- AJAX -->
+					<textarea placeholder="Comment" id="comment" required></textarea>
+					<input type="hidden" id="postID" value="<%=currPost.getPostID()%>"> 
 					
-						<textarea placeholder="Comment" id="comment" required></textarea>
-						<input type="hidden" id="postID" value="<%=currPost.getPostID()%>"> 
-						
-						<button class="form-control" id="leaveComment" onclick="postComment()">SUBMIT</button>
+					<button class="form-control" id="leaveComment" onclick="postComment()">SUBMIT</button>
 				</div>
 			<% } %>
 			<!-- //leave-comments -->
 		</div>
 	</div>
-
+	
+	<template>
+		<div class="agileits_three_comment_grid" id="comment">
+			<div class="agileits_tom" id="profilePic">
+				<a href="profile?id="> 
+				<img src="getProfilePic?id=" class="img-responsive img-circle"></a>
+			</div>
+			<div class="agileits_tom_right">
+				<div class="hardy" id="commenterAndDate">
+					<a href="profile?id="><h4></h4></a>
+					<p></p>
+				</div>
+				<div class="clearfix"></div>
+				<p class="lorem"></p>
+			</div>
+			<div class="clearfix">
+				<button style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
+						onclick="deleteComment()">DELETE COMMENT
+				</button>
+			</div>
+		</div>
+	</template>
+	
 	<script type="text/javascript">
-
-			 function postComment() {
-				var req = new XMLHttpRequest();
-				
-				req.open("Post", "comment");
-				req.setRequestHeader("Content-Type", "application/json");
-				
-				req.send(JSON.stringify(
-						{
-							"postID": parseInt(document.getElementById("postID").value),
-							"content": document.getElementById("comment").value
-						}
-						));
-				
-				req.onreadystatechange = function() {
-					if (req.readyState == 4 && req.status == 200) {
-						/* get JSON response as object */ 
-						var responseJSON = JSON.parse(req.responseText);
-						var commentID = responseJSON.commentID;
-						var content = responseJSON.content;
-						var date = responseJSON.date;
-						var fullName = responseJSON.fullName;
-						var postID = responseJSON.postID;
-						var userID = responseJSON.userID;
-						
-						/* copy comment template */
-						var commentLayout = 
-							document.getElementsByClassName('agileits_three_comment_grid')[0];
-						/* create a new div element and copy the comment
-						template into it */
-						var newComment = document.createElement("div");
-						newComment.innerHTML = commentLayout.innerHTML;
-						
-						newComment.id = "comment"+ commentID;
-						newComment.childNodes[1].childNodes[1].href = "profile?id="+userID;
-						newComment.childNodes[1].childNodes[1].childNodes[1].src = "getProfilePic?id="+ userID;
-						
-						var firstElement = newComment.childNodes[1];
-						var secondElement = firstElement.nextSibling.nextSibling;
-						var thirdElement = secondElement.nextSibling.nextSibling;
-						
-						secondElement.childNodes[1].childNodes[1].href = "profile?id"+ userID;
-						secondElement.childNodes[1].childNodes[1].firstChild.innerHTML = fullName;
-						secondElement.childNodes[1].childNodes[3].innerHTML = date;
-						secondElement.childNodes[5].innerHTML = content;
-						thirdElement.childNodes[1].onclick = function() {deleteComment(commentID, postID)};
-						
-						/* attach new comment to comments section */
-						var comments = document.getElementById("comments");
-						comments.appendChild(newComment);
+		$(document).ready(function() {
+			var disabledDates = {};
+			disabledDates = ${unavailableDatesString};
+			
+			$('.input-daterange').datepicker({
+				format: 'yyyy-mm-dd',
+				datesDisabled: disabledDates,
+				startDate: new Date()
+			});
+		});
+	</script>
+	
+	<script type="text/javascript">
+		 function postComment() {
+			var req = new XMLHttpRequest();
+			
+			req.open("Post", "comment");
+			req.setRequestHeader("Content-Type", "application/json");
+			
+			req.send(JSON.stringify(
+					{
+						"postID": parseInt(document.getElementById("postID").value),
+						"content": document.getElementById("comment").value
 					}
+					));
+			
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					/* get JSON response as object */ 
+					var responseJSON = JSON.parse(req.responseText);
+
+					var commentID = responseJSON.commentID;
+					var content = responseJSON.content;
+					var date = responseJSON.date;
+					var fullName = responseJSON.fullName;
+					var postID = responseJSON.postID;
+					var userID = responseJSON.userID;
+					
+					
+					var template = document.getElementsByTagName("template")[0];
+			        var clone = template.content.cloneNode(true);
+					var newComment = clone.getElementById("comment");
+					
+			        /* copy comment template */
+					/* var commentLayout = 
+						document.getElementsByClassName('agileits_three_comment_grid')[0]; */
+					
+						/* create a new div element and copy the comment
+					template into it */
+					
+					/* var newComment = document.createElement("div");
+					newComment.innerHTML = commentLayout.innerHTML; */
+					
+					newComment.id = "comment"+ commentID;
+					newComment.childNodes[1].childNodes[1].href = "profile?id="+userID;
+					newComment.childNodes[1].childNodes[1].childNodes[1].src = "getProfilePic?id="+ userID;
+					
+					var firstElement = newComment.childNodes[1];
+					var secondElement = firstElement.nextSibling.nextSibling;
+					var thirdElement = secondElement.nextSibling.nextSibling;
+					
+					secondElement.childNodes[1].childNodes[1].href = "profile?id="+ userID;
+					secondElement.childNodes[1].childNodes[1].firstChild.innerHTML = fullName;
+					secondElement.childNodes[1].childNodes[3].innerHTML = date.year+ "-"+ date.monthValue+ "-"+ date.dayOfMonth;
+					secondElement.childNodes[5].innerHTML = content;
+					thirdElement.childNodes[1].onclick = function() {deleteComment(commentID, postID)};
+					
+					/* attach new comment to comments section */
+					var comments = document.getElementById("comments");
+					comments.appendChild(newComment);
 				}
 			}
+		}
 	 </script>
 
 	<script type="text/javascript">
-			function deleteComment(commentID, postID) {
-				var req = new XMLHttpRequest();
-				req.open("Delete", "comment/"+ commentID);
-				req.send();
-				
-				req.onreadystatechange = function() {
-					if (req.readyState == 4 && req.status == 200) {
-						var element = document.getElementById("comment"+ commentID);
-						element.parentNode.removeChild(element);
-					}
+		function deleteComment(commentID, postID) {
+			var req = new XMLHttpRequest();
+			req.open("Delete", "comment/"+ commentID);
+			req.send();
+			
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					var element = document.getElementById("comment"+ commentID);
+					element.parentNode.removeChild(element);
 				}
-			}		
+			}
+		}		
 	</script>
 </body>
 </html>
