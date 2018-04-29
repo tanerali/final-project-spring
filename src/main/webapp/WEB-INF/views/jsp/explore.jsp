@@ -12,7 +12,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
 <!-- bootstrap-css -->
-<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css"
+	media="all" />
 <!--// bootstrap-css -->
 
 <!-- css -->
@@ -58,7 +59,7 @@
 		<div class="form-group" id="types" style="display: inline">
 			<label for="typeSelector" style="display:inline">Select type:</label> 
 			<select class="form-control" id="typeSelector">
-				<option></option>
+				<option>Show all</option>
 				<option>HOUSE</option>
 				<option>APARTMENT</option>
 				<option>HOTEL</option>
@@ -69,14 +70,14 @@
 		<div class="form-group" id="countries" style="display: inline">
 			<label for="sel1" style="display:inline">Select country:</label> 
 			<select class="form-control" id="sel1">
-				<option></option>
+				<option>Show all</option>
 			</select>
 		</div>
 		
 		<div class="form-group" id="cities" style="display: none">
 			<label for="sel2" style="display:inline">Select city:</label> 
 			<select class="form-control" id="sel2">
-				<option></option>
+				<option>Show all</option>
 			</select>
 		</div>
 
@@ -111,22 +112,24 @@
 		<!-- /POSTS -->
 	</div>
 	
+	<%@ include file="footer.jsp"%>
+	
 	<script type="text/javascript">
 	var posts = document.getElementsByClassName("filterDiv");
 	
 	$('#sel1').click(function() {
-		$('#typeSelector').val("");
+		$('#typeSelector').val("Show all");
 	});
 	
 	$('#typeSelector').click(function() {
-		$('#sel2').val("");
+		$('#sel2').val("Show all");
 		document.getElementById('cities').style = 'display: none';
-		$('#sel1').val("");
+		$('#sel1').val("Show all");
 	});
 	
 	$('#sel2').change(function() {
 		for (div of posts) {
-			if($(this).val() == "") {
+			if($(this).val() == "Show all") {
 				div.classList.add("show");
 			} else {
 				div.classList.remove("show");
@@ -145,7 +148,7 @@
 	$('#typeSelector').change(function() {
 		
 		for (div of posts) {
-			if($(this).val() == "") {
+			if($(this).val() == "Show all") {
 				div.classList.add("show");
 			} else {
 				div.classList.remove("show");
@@ -161,13 +164,11 @@
 	});
 	</script>
 	
-	
-	
-	
 	<script type="text/javascript">
 		var responseJSON;
 		
 		$(document).ready(function() {
+			//get all locations
 			req.open("Get", "locations");
 			req.send();
 			req.onreadystatechange = function() {
@@ -177,6 +178,7 @@
 					
 					var select = document.getElementById('sel1');
 					
+					//load all countries into countries selector
 					for (var key in responseJSON) {
 						var opt = document.createElement("option");
 						opt.value = key;
@@ -187,9 +189,9 @@
 			}
 		});
 		
+		
 		$('#sel1').change(function() {
-			
-			if($(this).val() == "") {
+			if($(this).val() == "Show all") {
 				document.getElementById('cities').style = 'display: none';
 				
 				var posts = document.getElementsByClassName("filterDiv");
@@ -229,7 +231,6 @@
 		    //console.log(opt);
 		});
 	</script>
-	
 	
 	<script>
 		var req = new XMLHttpRequest();

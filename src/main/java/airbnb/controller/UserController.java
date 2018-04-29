@@ -1,10 +1,7 @@
 package airbnb.controller;
 
-import java.awt.List;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -22,21 +19,19 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import airbnb.exceptions.UserDataException;
 import airbnb.manager.BookingManager;
 import airbnb.manager.PostManager;
 import airbnb.manager.UserManager;
-import airbnb.model.Review;
-import airbnb.model.User;
 import airbnb.model.Notification;
 import airbnb.model.Post;
-import airbnb.exceptions.UserDataException;
+import airbnb.model.Review;
+import airbnb.model.User;
 
 @Controller
 public class UserController {
@@ -50,39 +45,36 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(
-			@RequestParam("email") String email,
-			@RequestParam("password") String password,
-			HttpServletRequest request,
-			HttpSession session) {
-		
+	public String login(@RequestParam("email") String email, @RequestParam("password") String password,
+			HttpServletRequest request, HttpSession session) {
+
 		try {
 			User user = userManager.login(email, password);
+			System.out.println("==========================" + user + "==========================");
 			if (user != null) {
 				session.setAttribute("user", user);
-				
+
 				ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(email);
 				if (reviewsFromHosts != null) {
 					session.setAttribute("reviewsFromHosts", reviewsFromHosts);
 				}
-				
+
 				ArrayList<Review> reviewsFromGuests = userManager.getReviewsFromGuests(email);
 				if (reviewsFromGuests != null) {
 					session.setAttribute("reviewsFromGuests", reviewsFromGuests);
 				}
-				
+
 				ArrayList<Post> hostedPosts = (ArrayList<Post>) postManager.getPostsByUsers().get(user.getUserID());
 				if (hostedPosts != null) {
 					session.setAttribute("hostedPosts", hostedPosts);
 				}
-				
+
 				ArrayList<Notification> bookingRequestNotifications = bookingManager.checkNotifications(email);
-				System.out.println(bookingRequestNotifications);
 				if (bookingRequestNotifications != null) {
 					session.setAttribute("bookingRequests", bookingRequestNotifications);
 				}
-				
-				return "personalProfile";
+
+				return "redirect:personalProfile";
 			} else {
 				request.setAttribute("wrong_password", new Object());
 				return "login";
@@ -103,7 +95,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String register(HttpServletRequest request, @RequestParam("photo") MultipartFile file) 
+	public String register(HttpServletRequest request, @RequestParam("photo") MultipartFile file)
 			throws ServletException, IOException {
 		User user = null;
 		try {
@@ -123,35 +115,35 @@ public class UserController {
 				throw new UserDataException("Password mismatch");
 			}
 
-		    String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
-		    //String uploadFolder = "/home/dnn/";
-		    
+			// String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
+
+			String uploadFolder = "/home/dnn/UPLOADAIRBNB";
+
 			if (file.isEmpty()) {
-	            throw new UserDataException("Please select a file to upload");
-	        }
-			
+				throw new UserDataException("Please select a file to upload");
+			}
+
 			// Get the file and save it somewhere
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get(uploadFolder + file.getOriginalFilename());
 			Files.write(path, bytes);
-			
+
 			user = new User(request.getParameter("firstName"), 
 					request.getParameter("lastName"),
-					request.getParameter("email"), 
-					request.getParameter("pass1"), 
+					request.getParameter("email"),
+					request.getParameter("pass1"),
 					request.getParameter("gender"),
-					request.getParameter("city"), 
-					request.getParameter("country"), 
+					request.getParameter("city"),
+					request.getParameter("country"),
 					path.toString(),
 					request.getParameter("description"), 
-					birthDate, 
+					birthDate,
 					request.getParameter("telNumber"));
-			
+
 			if (userManager.register(user)) {
 				return "login";
 			}
-
-		} catch (UserDataException | IOException e ) {
+		} catch (UserDataException | IOException e) {
 			System.out.println(e.getMessage());
 			request.setAttribute("exception", e);
 			return "register";
@@ -239,8 +231,7 @@ public class UserController {
 		}
 
 		File file = new File(path);
-		try (InputStream filecontent = new FileInputStream(file); 
-				OutputStream out = resp.getOutputStream()) {
+		try (InputStream filecontent = new FileInputStream(file); OutputStream out = resp.getOutputStream()) {
 
 			byte[] bytes = new byte[1024];
 

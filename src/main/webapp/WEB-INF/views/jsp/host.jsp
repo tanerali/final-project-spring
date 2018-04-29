@@ -37,12 +37,12 @@
 	<div id="top" class="banner">
 
 		<%@ include file="header.jsp"%>
-		
+
 		<div class="container">
 			<div class="slider">
 				<div class="callbacks_container">
 					<div class="inputPost">
-						<form id="postForm">
+						<form id="postForm" enctype='multipart/form-data' >
 							<table align="center"
 								style="border-collapse: separate; border-spacing: 0.5em; margin-top: 4%;">
 								<tr>
@@ -68,15 +68,10 @@
 									</select></td>
 								</tr>
 								<tr>
-									<td>
-										<!--<form method="post" action="upload"
-											enctype="multipart/form-data">
-											<input style="display: none;" class="form-control"
-												type="file" id="myFileField" accept="image/*" name="file"><br>
-											<div id="fc">ADD A PICTURE</div>
-											<div id="name"></div>
-										</form>!-->
-									</td>
+									<td><input style="display: none;" type="file" 
+										id="myFileField" accept="image/*" name="file"><br>
+										<div id="fc"><button>ADD A PICTURE</button></div>
+										<div id="name"></div></td>
 								</tr>
 								<tr>
 									<td>
@@ -106,6 +101,8 @@
 			</div>
 		</div>
 	</div>
+
+	<%@ include file="footer.jsp"%>
 	<script>
 		var req = new XMLHttpRequest();
 		function openSearch() {
@@ -143,15 +140,12 @@
 			$('#myFileField').click();
 		});
 
-		$('#myFileField').change(
-				function() {
-					$('#name').html(
-							function() {
-								var fakePath = $('#myFileField').attr('value')
-										.toString().split('\\');
-								return fakePath[fakePath.length - 1];
-							});
-				});
+		$('#myFileField').change(function() {
+			$('#name').html(function() {
+				var fakePath = ($('#myFileField').val() + "").split('\\');
+				return fakePath[fakePath.length - 1];
+			});
+		});
 	</script>
 
 	<script type="text/javascript">
@@ -212,22 +206,33 @@
 
 			$("#upload").click(function(event) {
 
-				var data = {}
-				data["title"] = $("#title").val();
-				data["description"] = $("#description").val();
-				data["type"] = $("#type").val();
-				data["price"] = $("#price").val();
-				data["country"] = $("#country").val();
-				data["city"] = $("#city").val();
+				var fd = new FormData();
+				fd.append('file', $('#myFileField')[0].files[0]);
+
+// 				var data = {}
+// 				data["title"] = $("#title").val();
+// 				data["description"] = $("#description").val();
+// 				data["type"] = $("#type").val();
+// 				data["price"] = $("#price").val();
+// 				data["image"] = fd;
+				var formData = new FormData();
+					formData.append("file",document.getElementById("myFileField").files[0]);
+					formData.append("title", document.getElementById("title").value);
+					formData.append("description", document.getElementById("description").value);
+					formData.append("price", document.getElementById("price").value);
+					formData.append("type", document.getElementById("type").value);
+					formData.append("country", document.getElementById("country").value);
+					formData.append("city", document.getElementById("city").value);
+
 				$("#upload").prop("disabled", true);
 
 				$.ajax({
 					type : "POST",
-					contentType : "application/json",
 					url : "upload",
-					data : JSON.stringify(data),
-					dataType : 'json',
-					timeout : 600000,
+					data : formData,
+					dataType: 'text',
+				    processData: false,
+				    contentType: false,
 					success : function(response) {
 						$("#upload").prop("disabled", false);
 						//...

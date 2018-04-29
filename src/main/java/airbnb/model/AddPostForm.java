@@ -1,5 +1,7 @@
 package airbnb.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class AddPostForm {
 
 	private String title;
@@ -9,6 +11,7 @@ public class AddPostForm {
 	private int price;
 	private String country;
 	private String city;
+	private MultipartFile image;
 
 	public String getTitle() {
 		return title;
@@ -56,5 +59,13 @@ public class AddPostForm {
 
 	public String getCity() {
 		return city;
+	}
+	
+	public MultipartFile getImage() {
+		return image;
+	}
+
+	public void setImage(MultipartFile image) {
+		this.image = image;
 	}
 }
