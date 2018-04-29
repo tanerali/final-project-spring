@@ -128,15 +128,21 @@ public class UserController {
 			Path path = Paths.get(uploadFolder + file.getOriginalFilename());
 			Files.write(path, bytes);
 
-			user = new User(request.getParameter("firstName"), request.getParameter("lastName"),
-					request.getParameter("email"), request.getParameter("pass1"), request.getParameter("gender"),
-					request.getParameter("city"), request.getParameter("country"), path.toString(),
-					request.getParameter("description"), birthDate, request.getParameter("telNumber"));
+			user = new User(request.getParameter("firstName"), 
+					request.getParameter("lastName"),
+					request.getParameter("email"),
+					request.getParameter("pass1"),
+					request.getParameter("gender"),
+					request.getParameter("city"),
+					request.getParameter("country"),
+					path.toString(),
+					request.getParameter("description"), 
+					birthDate,
+					request.getParameter("telNumber"));
 
 			if (userManager.register(user)) {
 				return "login";
 			}
-
 		} catch (UserDataException | IOException e) {
 			System.out.println(e.getMessage());
 			request.setAttribute("exception", e);

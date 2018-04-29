@@ -42,7 +42,7 @@
 			<div class="slider">
 				<div class="callbacks_container">
 					<div class="inputPost">
-						<form id="postForm">
+						<form id="postForm" enctype='multipart/form-data' >
 							<table align="center"
 								style="border-collapse: separate; border-spacing: 0.5em; margin-top: 4%;">
 								<tr>
@@ -68,7 +68,7 @@
 									</select></td>
 								</tr>
 								<tr>
-									<td><input style="display: none;" type="file"
+									<td><input style="display: none;" type="file" 
 										id="myFileField" accept="image/*" name="file"><br>
 										<div id="fc">ADD A PICTURE</div>
 										<div id="name"></div></td>
@@ -141,21 +141,27 @@
 				var fd = new FormData();
 				fd.append('file', $('#myFileField')[0].files[0]);
 
-				var data = {}
-				data["title"] = $("#title").val();
-				data["description"] = $("#description").val();
-				data["type"] = $("#type").val();
-				data["price"] = $("#price").val();
-				data["image"] = fd;
+// 				var data = {}
+// 				data["title"] = $("#title").val();
+// 				data["description"] = $("#description").val();
+// 				data["type"] = $("#type").val();
+// 				data["price"] = $("#price").val();
+// 				data["image"] = fd;
+				var formData = new FormData();
+					formData.append("file",document.getElementById("myFileField").files[0]);
+					formData.append("title", document.getElementById("title").value);
+					formData.append("description", document.getElementById("description").value);
+					formData.append("price", document.getElementById("price").value);
+					formData.append("type", document.getElementById("type").value);
 				$("#upload").prop("disabled", true);
 
 				$.ajax({
 					type : "POST",
-					contentType : "application/json",
 					url : "upload",
-					data : JSON.stringify(data),
-					dataType : 'json',
-					timeout : 600000,
+					data : formData,
+					dataType: 'text',
+				    processData: false,
+				    contentType: false,
 					success : function(response) {
 						$("#upload").prop("disabled", false);
 						//...
