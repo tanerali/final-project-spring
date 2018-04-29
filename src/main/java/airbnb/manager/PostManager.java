@@ -68,15 +68,7 @@ public enum PostManager {
 	public List<Post> getAllPosts() throws SQLException, InvalidPostDataExcepetion {
 		return PostDAO.instance.getAllPosts();
 	}
-
-	public List<Post> searchPostByCity(String city) throws SQLException, InvalidPostDataExcepetion {
-		return PostDAO.instance.getAllPostsByCity(city);
-	}
-
-	public List<Post> searchPostByCountry(String country) throws SQLException, InvalidPostDataExcepetion {
-		return PostDAO.instance.getAllPostsByCountry(country);
-	}
-
+	
 	public int insertPost(Post newPost) throws InvalidPostDataExcepetion, SQLException {
 		int postID = PostDAO.instance.insertPost(newPost);
 		newPost.setPostID(postID);

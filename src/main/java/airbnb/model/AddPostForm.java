@@ -7,6 +7,8 @@ public class AddPostForm {
 	private String type;
 	private String imgSrc;
 	private int price;
+	private String country;
+	private String city;
 
 	public String getTitle() {
 		return title;
@@ -46,5 +48,13 @@ public class AddPostForm {
 
 	public void setPrice(int price) {
 		this.price = price;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public String getCity() {
+		return city;
 	}
 }

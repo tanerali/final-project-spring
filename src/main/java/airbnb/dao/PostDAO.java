@@ -21,24 +21,19 @@ public enum PostDAO {
 	private Connection connection;
 
 	// Const. SQL statements
-	private static final String insertPost = "INSERT INTO POSTS(type_id,title,price,host_id,date_of_posting,description) "
-			+ "VALUES(?,?,?,?,?,?);";
+	private static final String insertPost = "INSERT INTO POSTS(type_id,title,price,host_id,date_of_posting, city_id, description) "
+			+ "VALUES(?,?,?,?,?, (SELECT ID FROM CITIES WHERE city_name=?), ?);";
 	private static final String deletePost = "DELETE FROM POSTS where ID=?;";
 
-	private static final String getAllPosts = "SELECT ID,type_id,title,description,host_id,price,date_of_posting FROM POSTS;";
-
-	private static final String getAllPostsByType = "SELECT ID,type_id,title,description,host_id,price,date_of_posting FROM POSTS WHERE type_id=?;";
-
+	private static final String getAllPosts = 
+			"SELECT p.ID, p.type_id, p.title, p.description, p.host_id, p.price, p.date_of_posting, co.country_name, ci.city_name " + 
+			"FROM POSTS p " + 
+			"JOIN CITIES ci " + 
+			"ON p.city_id = ci.ID " + 
+			"JOIN COUNTRIES co " + 
+			"ON ci.country_code = co.code";
+	
 	private static final String getAllPostsByUser = "SELECT * FROM POSTS\n" + "JOIN\n" + "USERS on USERS.ID = ?;";
-
-	private static final String getAllPostsByCountry = "SELECT * FROM POSTS\n" + "JOIN\n"
-			+ "USERS on USERS.country = ?;";
-
-	private static final String getAllPostsByCity = "SELECT POSTS.ID,POSTS.title,POSTS.description,POSTS.host_id,POSTS.price,POSTS.date_of_posting,POSTS.type_id FROM POSTS JOIN USERS on USERS.city = ?;";
-
-	private static final String getAllPostTypes = "SELECT ID,type FROM POST_TYPE;";
-
-	private static final String getAllRecentPosts = "SELECT POSTS.ID,POSTS.type_id,POSTS.title,POSTS.description,POSTS.host_id,POSTS.price,POSTS.date_of_posting FROM POSTS ORDER BY date_of_posting DESC;";
 
 	private PostDAO() {
 		connection = DBManager.INSTANCE.getConnection();
@@ -60,13 +55,13 @@ public enum PostDAO {
 		PreparedStatement statement = connection.prepareStatement(insertPost, Statement.RETURN_GENERATED_KEYS);
 		int postId = 0;
 		try {
-			System.out.println("TYPE ID IN DB : " + newPost.getTypeLikeID());
 			statement.setInt(1, newPost.getTypeLikeID());
 			statement.setString(2, newPost.getTitle());
 			statement.setInt(3, newPost.getPrice());
 			statement.setInt(4, newPost.getHostID());
 			statement.setDate(5, Date.valueOf(newPost.getDateOfPosting()));
-			statement.setString(6, newPost.getDescription());
+			statement.setString(6, newPost.getCity());
+			statement.setString(7, newPost.getDescription());
 			statement.executeUpdate();
 			ResultSet rs = statement.getGeneratedKeys();
 			if (rs.next()) {
@@ -77,85 +72,7 @@ public enum PostDAO {
 		}
 		return postId;
 	}
-
-	public List<Post> getAllPostsByUserID(int id) throws SQLException, InvalidPostDataExcepetion {
-		List<Post> posts = new ArrayList<>();
-		PreparedStatement st = connection.prepareStatement(getAllPostsByUser);
-		try {
-			st.setInt(1, id);
-			ResultSet result = st.executeQuery();
-			posts = this.getResult(result);
-		} finally {
-			st.close();
-		}
-		return posts;
-	}
-
-	public List<Post> getAllPostsByCountry(String country) throws InvalidPostDataExcepetion, SQLException {
-		List<Post> posts = new ArrayList<>();
-		PreparedStatement st = connection.prepareStatement(getAllPostsByCountry);
-		try {
-			st.setString(1, country);
-			ResultSet result = st.executeQuery();
-			posts = this.getResult(result);
-		} finally {
-			st.close();
-		}
-		return posts;
-	}
-
-	public List<Post> getAllPostsByCity(String city) throws SQLException, InvalidPostDataExcepetion {
-		List<Post> posts = new ArrayList<>();
-		PreparedStatement st = connection.prepareStatement(getAllPostsByCity);
-		try {
-			st.setString(1, city);
-			ResultSet result = st.executeQuery();
-			posts = this.getResult(result);
-		} finally {
-			st.close();
-		}
-		return posts;
-	}
-
-	public List<Post> getAllPostsByType(int typeID) throws InvalidPostDataExcepetion, SQLException {
-		List<Post> posts = new ArrayList<>();
-		PreparedStatement st = connection.prepareStatement(getAllPostsByType);
-		try {
-			st.setInt(1, typeID);
-			ResultSet result = st.executeQuery();
-			posts = this.getResult(result);
-		} finally {
-			st.close();
-		}
-		return posts;
-	}
-
-	public Map<Integer, String> getAllTypes() throws SQLException {
-		Map<Integer, String> types = new HashMap<>();
-		Statement st = connection.createStatement();
-		try {
-			ResultSet rs = st.executeQuery(getAllPostTypes);
-			while (rs.next()) {
-				types.put(rs.getInt("ID"), rs.getString("type"));
-			}
-		} finally {
-			st.close();
-		}
-		return types;
-	}
-
-	public List<Post> getAllRecentPosts() throws SQLException, InvalidPostDataExcepetion {
-		List<Post> posts = new ArrayList<Post>();
-		try {
-			Statement st = connection.createStatement();
-			ResultSet result = st.executeQuery(getAllRecentPosts);
-			posts = this.getResult(result);
-		} finally {
-			connection.close();
-		}
-		return posts;
-	}
-
+	
 	private List<Post> getResult(ResultSet result) throws InvalidPostDataExcepetion, SQLException {
 		List<Post> posts = new ArrayList<Post>();
 		while (result.next()) {
@@ -166,7 +83,9 @@ public enum PostDAO {
 					result.getInt("price"), 
 					result.getDate("date_of_posting").toLocalDate(),
 					Post.Type.getType(result.getInt("type_id")), 
-					result.getInt("host_id"));
+					result.getInt("host_id"),
+					result.getString("country_name"),
+					result.getString("city_name"));
 			posts.add(newPost);
 		}
 		return posts;
@@ -203,5 +122,18 @@ public enum PostDAO {
 			}
 			return null;
 		}
+	}
+	
+	public List<Post> getAllPostsByUserID(int id) throws SQLException, InvalidPostDataExcepetion {
+		List<Post> posts = new ArrayList<>();
+		PreparedStatement st = connection.prepareStatement(getAllPostsByUser);
+		try {
+			st.setInt(1, id);
+			ResultSet result = st.executeQuery();
+			posts = this.getResult(result);
+		} finally {
+			st.close();
+		}
+		return posts;
 	}
 }

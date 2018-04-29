@@ -43,7 +43,9 @@ public class AjaxController {
 						form.getPrice(), 
 						LocalDate.now(),
 						Post.Type.getType(form.getType()), 
-						user.getUserID());
+						user.getUserID(),
+						form.getCountry(),
+						form.getCity());
 				// insert new post in DB
 				ID = postManager.insertPost(newPost);
 			} catch (InvalidPostDataExcepetion | SQLException e) {

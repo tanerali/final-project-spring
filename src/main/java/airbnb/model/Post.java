@@ -45,20 +45,24 @@ public class Post {
 	private Type type;
 	private int hostID;
 	private int rating; // 0->5
+	private String country;
+	private String city;
 
-	public Post(String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID)
+	public Post(String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID, String country, String city)
 			throws InvalidPostDataExcepetion {
 		this.setTitle(title);
 		this.setDescription(description);
 		this.setPrice(price);
 		this.setDateOfPosting(dateOfPosting);
 		this.setType(type);
-		this.hostID = hostID;
+		this.setHostID(hostID);
+		setCountry(country);
+		setCity(city);
 	}
 
-	public Post(int postID, String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID)
+	public Post(int postID, String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID, String country, String city)
 			throws InvalidPostDataExcepetion {
-		this(title, description, price, dateOfPosting, type, hostID);
+		this(title, description, price, dateOfPosting, type, hostID, country, city);
 		this.postID = postID;
 	}
 
@@ -144,6 +148,22 @@ public class Post {
 
 	public int getRating() {
 		return rating;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	@Override
