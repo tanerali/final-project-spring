@@ -9,7 +9,7 @@
 <body>
 
 	<!--Footer-->
-	<footer class="page-footer font-small blue-grey lighten-5 pt-0">
+	<footer class="page-footer font-small blue-grey lighten-5 pt-0" style="margin-top:10%;">
 	<div style="background-color: #82b62d; margin-top: 2%;">
 		<div class="container"
 			style="background-color: #82b62d; height: 0.5px;">

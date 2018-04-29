@@ -73,7 +73,9 @@
 								<tr>
 									<td><input style="display: none;" type="file"
 										id="myFileField" accept="image/*" name="file"><br>
-										<div id="fc">ADD A PICTURE</div>
+										<div
+											style="border: 2px; color: palevioletred; border-style: outset; text-align: center;"
+											id="fc">ADD A PICTURE</div>
 										<div id="name"></div></td>
 								</tr>
 								<tr>

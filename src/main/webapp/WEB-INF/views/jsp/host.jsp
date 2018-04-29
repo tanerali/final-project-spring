@@ -42,7 +42,7 @@
 			<div class="slider">
 				<div class="callbacks_container">
 					<div class="inputPost">
-						<form id="postForm" enctype='multipart/form-data' >
+						<form id="postForm" enctype='multipart/form-data'>
 							<table align="center"
 								style="border-collapse: separate; border-spacing: 0.5em; margin-top: 4%;">
 								<tr>
@@ -68,23 +68,25 @@
 									</select></td>
 								</tr>
 								<tr>
-									<td><input style="display: none;" type="file" 
+									<td><input style="display: none;" type="file"
 										id="myFileField" accept="image/*" name="file"><br>
-										<div id="fc">ADD A PICTURE</div>
+										<div
+											style="border: 2px; color: palevioletred; border-style: outset; text-align: center;"
+											id="fc">CLICK TO ADD PICTURE</div>
 										<div id="name"></div></td>
 								</tr>
 								<tr>
 									<td>
 										<div class="form-group" id="countries" style="display: inline">
-											<label for="country" style="display:inline">Select country:</label> 
-											<select class="form-control" id="country">
+											<label for="country" style="display: inline">Select
+												country:</label> <select class="form-control" id="country">
 												<option></option>
 											</select>
 										</div>
-										
+
 										<div class="form-group" id="cities" style="display: none">
-											<label for="city" style="display:inline">Select city:</label> 
-											<select class="form-control" id="city">
+											<label for="city" style="display: inline">Select
+												city:</label> <select class="form-control" id="city">
 												<option></option>
 											</select>
 										</div>
