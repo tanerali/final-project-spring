@@ -41,7 +41,6 @@ import airbnb.model.User;
 public class PostController {
 
 	private PostManager postManager = PostManager.instance;
-	private LocationDao locationDao = LocationDao.instance;
 	private UserManager userManager = UserManager.instance;
 	private CommentManager commentManager = CommentManager.instance;
 	private BookingManager bookingManager = BookingManager.instance;

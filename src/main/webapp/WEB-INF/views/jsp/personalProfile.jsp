@@ -95,7 +95,7 @@
 
 				<h2>Listings</h2>
 				<div class="list-group">
-					<c:forEach var="listing" items="${ hostedPosts }">
+					<c:forEach var="listing" items="${ sessionScope.hostedPosts }">
 						<a href="post?id=${ listing.postID }" class="list-group-item">
 							<img class="img-responsive"
 							src="getThumbnail?id=${ listing.postID }">

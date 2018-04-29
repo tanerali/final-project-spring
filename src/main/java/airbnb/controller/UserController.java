@@ -74,7 +74,7 @@ public class UserController {
 					session.setAttribute("bookingRequests", bookingRequestNotifications);
 				}
 
-				return "personalProfile";
+				return "redirect:personalProfile";
 			} else {
 				request.setAttribute("wrong_password", new Object());
 				return "login";

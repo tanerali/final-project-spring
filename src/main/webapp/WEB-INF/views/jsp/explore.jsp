@@ -47,135 +47,191 @@
 .show {
 	display: block;
 }
-
-/* Style the buttons */
-.btn {
-	border: none;
-	outline: none;
-	padding: 12px 16px;
-	background-color: #f1f1f1;
-	cursor: pointer;
-}
-
-.btn:hover {
-	background-color: #ddd;
-}
-
-.btn.active {
-	background-color: #666;
-	color: white;
-}
-
-.dropdown-toggle {
-	background-color: #4fce18;
-}
-
-.dropdown-toggle:hover {
-	background-color: #3b9912;
-}
 </style>
 <body>
 
 
 	<%@ include file="header.jsp"%>
 
-	<%
-		ArrayList<Post> posts = (ArrayList) request.getAttribute("posts");
-	%>
-
 	<div class="container">
 		<h2>Explore All The Great Places You Can Stay</h2>
-
-		<!-- TYPE dropdown menu -->
-		<div class="dropdown" style="display: inline;">
-			<button class="btn btn-primary dropdown-toggle" type="button"
-				data-toggle="dropdown">
-				Type <span class="caret"><br></span>
-			</button>
-			<ul class="dropdown-menu" id="myBtnContainer">
-				<button class="btn active" onclick="filterSelection('all')">
-					Show all</button>
-				<br>
-				<button class="btn" onclick="filterSelection('HOUSE')">
-					House</button>
-				<button class="btn" onclick="filterSelection('APARTMENT')">
-					Apartment</button>
-				<button class="btn" onclick="filterSelection('HOTEL')">
-					Hotel</button>
-				<button class="btn" onclick="filterSelection('COTTAGE')">
-					Cottage</button>
-			</ul>
-
+		
+		<div class="form-group" id="types" style="display: inline">
+			<label for="typeSelector" style="display:inline">Select type:</label> 
+			<select class="form-control" id="typeSelector">
+				<option>Show all</option>
+				<option>HOUSE</option>
+				<option>APARTMENT</option>
+				<option>HOTEL</option>
+				<option>COTTAGE</option>
+			</select>
 		</div>
 
-		<%-- <div class="form-group" style="display: inline">
-			<label for="sel1" style="display:inline">Select list:</label> 
+		<div class="form-group" id="countries" style="display: inline">
+			<label for="sel1" style="display:inline">Select country:</label> 
 			<select class="form-control" id="sel1">
-				<c:forEach var="country" items="countries">
-					<option>${ country }</option>
-				</c:forEach>
+				<option>Show all</option>
 			</select>
-		</div> --%>
-
-		<%-- <!-- cities dropdown menu -->
-		<div class="dropdown" style="display: inline;">
-			<button class="btn btn-primary dropdown-toggle" type="button"
-				data-toggle="dropdown">
-				Countries <span class="caret"><br></span>
-			</button>
-			
-			<%			
-			Map<String, TreeSet<String>> locations = (Map)application.getAttribute("locations");
-			%>
-			<ul class="dropdown-menu">
-				<button class="btn active" onclick="filterSelection('all')">
-					Show all</button>
-				<br>
-				<% for (String country: locations.keySet()) { %>
-					<button class="btn" onclick="filterSelection('<%= country %>')">
-						<%= country %></button>
-				<% } %>
-			</ul>
-		</div> --%>
+		</div>
+		
+		<div class="form-group" id="cities" style="display: none">
+			<label for="sel2" style="display:inline">Select city:</label> 
+			<select class="form-control" id="sel2">
+				<option>Show all</option>
+			</select>
+		</div>
 
 		<!-- POSTS -->
 		<div class="row" id="posts">
-			<%
-				if (posts != null) {
-					for (Post post : posts) {
-			%>
-
-			<div
-				class="col-md-4 filterDiv <%=post.getType()%> <%-- <%=post.getCity()%> --%>">
-				<div class="thumbnail">
-					<a href="post?id=<%=post.getPostID()%>"> <img
-						src="getThumbnail?id=<%=post.getPostID()%>" alt=""
-						style="width: 100%">
-						<div class="caption">
-							<p><%=post.getTitle()%></p><%=post.getType()%>
-						</div>
-						<div class="caption">
-							<p>
-								Price:
-								<%=post.getPrice()%></p>
-						</div>
-					</a>
+			<c:forEach var="post" items="${ posts }">
+				<div class="col-md-4 filterDiv ${post.type} show" id="post${post.postID }">
+					<div class="thumbnail">
+						<a href="post?id=${post.postID}"> 
+							<img src="getThumbnail?id=${post.postID}" alt="" style="width: 100%">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="caption">
+										<p>${post.title}</p>
+										<p>${post.type}</p>
+									</div>
+									<div class="caption">
+										<p>Price: ${post.price}</p>
+									</div>	
+								</div>
+								<div class="col-md-6">
+									<div class="caption">
+										<p><span id="cityOfPost${post.postID}">${post.city}</span>, ${post.country}</p>
+									</div>
+								</div>
+							</div>
+						</a>
+					</div>
 				</div>
-			</div>
-
-
-			<%
-				}
-			%>
-			<%
-				}
-			%>
-
+			</c:forEach>
 		</div>
-
+		<!-- /POSTS -->
 	</div>
-
+	
 	<%@ include file="footer.jsp"%>
+	
+	<script type="text/javascript">
+	var posts = document.getElementsByClassName("filterDiv");
+	
+	$('#sel1').click(function() {
+		$('#typeSelector').val("Show all");
+	});
+	
+	$('#typeSelector').click(function() {
+		$('#sel2').val("Show all");
+		document.getElementById('cities').style = 'display: none';
+		$('#sel1').val("Show all");
+	});
+	
+	$('#sel2').change(function() {
+		for (div of posts) {
+			if($(this).val() == "Show all") {
+				div.classList.add("show");
+			} else {
+				div.classList.remove("show");
+				
+				var cityOfPost = div.firstChild.nextSibling.firstChild.nextSibling.childNodes[2].
+				nextSibling.childNodes[2].nextSibling.firstChild.nextSibling.firstChild.nextSibling.
+				firstChild.innerHTML;
+				
+			    if (cityOfPost == $(this).val() ) {
+			    	div.classList.add("show");
+			    }
+			}
+		}
+	});
+	
+	$('#typeSelector').change(function() {
+		
+		for (div of posts) {
+			if($(this).val() == "Show all") {
+				div.classList.add("show");
+			} else {
+				div.classList.remove("show");
+				
+				var postType = div.firstChild.nextSibling.firstChild.nextSibling.childNodes[2].
+				nextSibling.childNodes[1].firstChild.nextSibling.childNodes[2].nextSibling.innerHTML;
+				
+			    if (postType == $(this).val() ) {
+			    	div.classList.add("show");
+			    }
+			}
+		}
+	});
+	</script>
+	
+	<script type="text/javascript">
+		var responseJSON;
+		
+		$(document).ready(function() {
+			//get all locations
+			req.open("Get", "locations");
+			req.send();
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					/* get JSON response as object */ 
+					responseJSON = JSON.parse(req.responseText);
+					
+					var select = document.getElementById('sel1');
+					
+					//load all countries into countries selector
+					for (var key in responseJSON) {
+						var opt = document.createElement("option");
+						opt.value = key;
+					    opt.innerHTML = key;
+					    select.appendChild(opt);
+					}    			
+				}
+			}
+		});
+		
+		
+		$('#sel1').change(function() {
+			if($(this).val() == "Show all") {
+				document.getElementById('cities').style = 'display: none';
+				
+				var posts = document.getElementsByClassName("filterDiv");
+				
+				for (div of posts) {
+					div.classList.add("show");
+				}
+				
+			} else {
+				var cities;
+				
+				var select = document.getElementById('sel2');
+				select.innerHTML = null;
+				select.appendChild(document.createElement("option"));
+				
+				for (var key in responseJSON) {
+				    if (!responseJSON.hasOwnProperty(key)) continue;
+				    
+				    if (key == $(this).val()) {
+				    	cities = responseJSON[key];
+				    	break;
+				    }
+				}
+				/* console.log(cities); */
+				
+				for (var city of cities) {
+					var opt = document.createElement("option");
+					opt.value = city;
+				    opt.innerHTML = city;
+				    select.appendChild(opt);
+				}
+				document.getElementById('cities').style = 'display: inline';
+			}
+
+		    // if you want to do stuff based on the OPTION element:
+		    //var opt = $(this).find('option:selected')[0];
+		    //console.log(opt);
+		});
+	</script>
+	
 	<script>
 		var req = new XMLHttpRequest();
 		function openSearch() {
@@ -216,56 +272,6 @@
 				}
 			}
 
-		}
-
-		filterSelection("all")
-		function filterSelection(c) {
-			var x, i;
-			x = document.getElementsByClassName("filterDiv");
-			if (c == "all")
-				c = "";
-			for (i = 0; i < x.length; i++) {
-				w3RemoveClass(x[i], "show");
-				if (x[i].className.indexOf(c) > -1)
-					w3AddClass(x[i], "show");
-			}
-		}
-
-		function w3AddClass(element, name) {
-			var i, arr1, arr2;
-			arr1 = element.className.split(" ");
-			arr2 = name.split(" ");
-			for (i = 0; i < arr2.length; i++) {
-				if (arr1.indexOf(arr2[i]) == -1) {
-					element.className += " " + arr2[i];
-				}
-			}
-		}
-
-		function w3RemoveClass(element, name) {
-			var i, arr1, arr2;
-			arr1 = element.className.split(" ");
-			arr2 = name.split(" ");
-			for (i = 0; i < arr2.length; i++) {
-				while (arr1.indexOf(arr2[i]) > -1) {
-					arr1.splice(arr1.indexOf(arr2[i]), 1);
-				}
-			}
-			element.className = arr1.join(" ");
-		}
-
-		// Add active class to the current button (highlight it)
-		var btnContainer = document.getElementById("myBtnContainer");
-		var btns = btnContainer.getElementsByClassName("btn");
-		for (var i = 0; i < btns.length; i++) {
-			btns[i].addEventListener("click", function() {
-				var current = document.getElementsByClassName("active");
-				for (var j = 0; j < current.length; j++) {
-					current[j].className = current[j].className.replace(
-							" active", "");
-				}
-				this.className += " active";
-			});
 		}
 	</script>
 

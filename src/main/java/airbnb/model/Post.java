@@ -1,8 +1,6 @@
 package airbnb.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import airbnb.exceptions.InvalidPostDataExcepetion;
 import airbnb.exceptions.InvalidPostDateException;
@@ -41,8 +39,9 @@ public class Post {
 	private LocalDate dateOfPosting;
 	private Type type;
 	private int hostID;
-	private List<Comment> comments;
 	private int rating; // 0->5
+	private String country;
+	private String city;
 
 	public Post() {
 
@@ -55,13 +54,26 @@ public class Post {
 		this.setPrice(price);
 		this.setDateOfPosting(dateOfPosting);
 		this.setType(type);
-		this.hostID = hostID;
-		comments = new ArrayList<>();
+		this.setHostID(hostID);
 	}
 
-	public Post(int postID, String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID)
+	public Post(String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID,
+			String country, String city)
+
 			throws InvalidPostDataExcepetion {
-		this(title, description, price, dateOfPosting, type, hostID);
+		this.setTitle(title);
+		this.setDescription(description);
+		this.setPrice(price);
+		this.setDateOfPosting(dateOfPosting);
+		this.setType(type);
+		this.setHostID(hostID);
+		setCountry(country);
+		setCity(city);
+	}
+
+	public Post(int postID, String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID,
+			String country, String city) throws InvalidPostDataExcepetion {
+		this(title, description, price, dateOfPosting, type, hostID, country, city);
 		this.postID = postID;
 	}
 
@@ -145,21 +157,28 @@ public class Post {
 		return hostID;
 	}
 
-	public List<Comment> getComments() {
-		return comments;
-	}
-
-	public void addComment(Comment m) {
-		this.comments.add(m);
-	}
-
 	public int getRating() {
 		return rating;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city = city;
 	}
 
 	@Override
 	public String toString() {
 		return this.title + " " + this.description + " " + this.price + " " + this.type + " " + this.dateOfPosting;
 	}
-
 }

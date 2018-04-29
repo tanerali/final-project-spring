@@ -9,6 +9,8 @@ public class AddPostForm {
 	private String type;
 	private String imgSrc;
 	private int price;
+	private String country;
+	private String city;
 	private MultipartFile image;
 
 	public String getTitle() {
@@ -51,6 +53,14 @@ public class AddPostForm {
 		this.price = price;
 	}
 
+	public String getCountry() {
+		return country;
+	}
+
+	public String getCity() {
+		return city;
+	}
+	
 	public MultipartFile getImage() {
 		return image;
 	}

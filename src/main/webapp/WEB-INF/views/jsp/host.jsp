@@ -70,9 +70,25 @@
 								<tr>
 									<td><input style="display: none;" type="file" 
 										id="myFileField" accept="image/*" name="file"><br>
-										<div id="fc">ADD A PICTURE</div>
+										<div id="fc"><button>ADD A PICTURE</button></div>
 										<div id="name"></div></td>
 								</tr>
+								<tr>
+									<td>
+										<div class="form-group" id="countries" style="display: inline">
+											<label for="country" style="display:inline">Select country:</label> 
+											<select class="form-control" id="country">
+												<option></option>
+											</select>
+										</div>
+										
+										<div class="form-group" id="cities" style="display: none">
+											<label for="city" style="display:inline">Select city:</label> 
+											<select class="form-control" id="city">
+												<option></option>
+											</select>
+										</div>
+									</td>
 								<tr>
 									<td>
 										<button id="upload" class="form-control" type="button"">Upload</button>
@@ -132,6 +148,58 @@
 		});
 	</script>
 
+	<script type="text/javascript">
+		var responseJSON;
+		
+		$(document).ready(function() {
+			req.open("Get", "locations");
+			req.send();
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					/* get JSON response as object */ 
+					responseJSON = JSON.parse(req.responseText);
+					console.log(responseJSON);
+					var select = document.getElementById('country');
+					
+					for (var key in responseJSON) {
+						var opt = document.createElement("option");
+						opt.value = key;
+					    opt.innerHTML = key;
+					    select.appendChild(opt);
+					}    			
+				}
+			}
+		});
+		
+		$('#country').change(function() {
+			var cities;
+			
+			for (var key in responseJSON) {
+			    if (!responseJSON.hasOwnProperty(key)) continue;
+			    
+			    if (key == $(this).val()) {
+			    	cities = responseJSON[key];
+			    	break;
+			    }
+			}
+			/* console.log(cities); */
+			
+			var select = document.getElementById('city');
+			select.innerHTML = null;
+			
+			for (var city of cities) {
+				var opt = document.createElement("option");
+				opt.value = city;
+			    opt.innerHTML = city;
+			    select.appendChild(opt);
+			}
+			document.getElementById('cities').style = 'display: inline';
+
+		    // if you want to do stuff based on the OPTION element:
+		    //var opt = $(this).find('option:selected')[0];
+		    //console.log(opt);
+		});
+	</script>
 
 	<script>
 		jQuery(document).ready(function($) {
@@ -153,6 +221,9 @@
 					formData.append("description", document.getElementById("description").value);
 					formData.append("price", document.getElementById("price").value);
 					formData.append("type", document.getElementById("type").value);
+					formData.append("country", document.getElementById("country").value);
+					formData.append("city", document.getElementById("city").value);
+
 				$("#upload").prop("disabled", true);
 
 				$.ajax({

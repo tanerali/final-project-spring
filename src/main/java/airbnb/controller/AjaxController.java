@@ -7,6 +7,10 @@ import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeSet;
+
 import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import airbnb.dao.LocationDao;
 import airbnb.dao.PostDAO;
 import airbnb.exceptions.InvalidPostDataExcepetion;
 import airbnb.manager.PostManager;
@@ -30,6 +36,7 @@ import airbnb.model.User;
 public class AjaxController {
 
 	private PostManager postManager = PostManager.instance;
+	private LocationDao locationDao = LocationDao.instance;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<String> uploadPost(HttpServletRequest request, HttpSession session,
@@ -39,15 +46,25 @@ public class AjaxController {
 		int price = Integer.valueOf(request.getParameter("price"));
 		String type = request.getParameter("type");
 		User user = (User) session.getAttribute("user");
-		int hostID = user.getUserID();
+		String country = request.getParameter("country");
+		String city = request.getParameter("city");
+		
 		Post newPost;
 		int ID = -1;
 		String uploadFolder = "/home/dnn/UPLOADAIRBNB";
 		if (user != null) {
 			try {
 				// Create new post From PostForm
-				newPost = new Post(title, description, price, LocalDate.now(), Post.Type.getType(type),
-						user.getUserID());
+				newPost = new Post(
+						title, 
+						description, 
+						price, 
+						LocalDate.now(),
+						Post.Type.getType(type), 
+						user.getUserID(),
+						country,
+						city);
+						
 				// insert new post in DB and cached
 				ID = postManager.insertPost(newPost);
 				postManager.addPostToCache(newPost);
@@ -64,5 +81,13 @@ public class AjaxController {
 
 		return new ResponseEntity<String>(Integer.toString(ID), HttpStatus.OK);
 	}
-
+	
+	@RequestMapping(value = "/locations", method = RequestMethod.GET)
+	public Map<String, TreeSet<String>> getLocations() {
+		Map<String, TreeSet<String>> locations = locationDao.getLocations();
+		ArrayList<String> countries = new ArrayList<>(locations.keySet());
+		System.out.println( countries);
+		
+		return locations;
+	}
 }

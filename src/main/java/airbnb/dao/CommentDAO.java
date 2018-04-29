@@ -24,7 +24,7 @@ public enum CommentDAO {
 			"FROM POST_COMMENTS pc " + 
 			"JOIN USERS u " + 
 			"ON pc.user_id = u.ID " + 
-			"WHERE post_id =?;";
+			"WHERE post_id =? ORDER BY ID;";
 	
 	private static final String ALL_COMMENTS_BY_USER = 
 			"SELECT ID,user_id,post_id,content,date FROM POST_COMMENTS WHERE user_id =?;";
