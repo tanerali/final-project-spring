@@ -77,6 +77,11 @@ public class Post {
 		this.postID = postID;
 	}
 
+	public Post(int postID, String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID) throws InvalidPostDataExcepetion {
+		this(title, description, price, dateOfPosting, type, hostID);
+		this.postID = postID;
+	}
+
 	public void setType(Type type) {
 		this.type = type;
 	}

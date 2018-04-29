@@ -70,7 +70,7 @@
 								<tr>
 									<td><input style="display: none;" type="file" 
 										id="myFileField" accept="image/*" name="file"><br>
-										<div id="fc"><button>ADD A PICTURE</button></div>
+										<div id="fc">ADD A PICTURE</div>
 										<div id="name"></div></td>
 								</tr>
 								<tr>
