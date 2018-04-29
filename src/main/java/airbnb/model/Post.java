@@ -1,6 +1,5 @@
 package airbnb.model;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +9,6 @@ import airbnb.exceptions.InvalidPostDateException;
 import airbnb.exceptions.InvalidPostDescriptionException;
 import airbnb.exceptions.InvalidPostPriceException;
 import airbnb.exceptions.InvalidPostTitleException;
-import airbnb.exceptions.InvalidPostTypeException;
-import airbnb.manager.PostManager;
 
 public class Post {
 	// In DB IDs (HOTEL-1)(APARTMENT-2)(HOUSE-3)(COTTAGE-4)
@@ -47,6 +44,10 @@ public class Post {
 	private List<Comment> comments;
 	private int rating; // 0->5
 
+	public Post() {
+
+	}
+
 	public Post(String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID)
 			throws InvalidPostDataExcepetion {
 		this.setTitle(title);
@@ -62,6 +63,14 @@ public class Post {
 			throws InvalidPostDataExcepetion {
 		this(title, description, price, dateOfPosting, type, hostID);
 		this.postID = postID;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
+	}
+
+	public Type getType() {
+		return type;
 	}
 
 	public String getTitle() {
@@ -113,16 +122,8 @@ public class Post {
 		this.dateOfPosting = dateOfPosting;
 	}
 
-	public Type getType() {
-		return type;
-	}
-
-	public void setType(Type type) throws InvalidPostTypeException {
-		this.type = type;
-	}
-
 	public int getTypeLikeID() {
-		switch (this.getType()) {
+		switch (this.type) {
 		case HOTEL:
 			return 1;
 		case APARTMENT:

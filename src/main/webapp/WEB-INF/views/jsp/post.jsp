@@ -11,6 +11,8 @@
 <%
 	Post currPost = (Post) request.getAttribute("post");
 	User postUser = (User) request.getAttribute("user");
+	User currUser = (User) session.getAttribute("user");
+	boolean myPost = (currPost.getHostID() == currUser.getUserID()) ? true : false;
 %>
 <title><%=currPost.getTitle()%></title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"
@@ -32,6 +34,9 @@
 <link
 	href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300'
 	rel='stylesheet' type='text/css'>
+	
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- //font -->
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
@@ -91,6 +96,11 @@
 						<input type="submit" value="Request Booking"
 							style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
 					</form>
+					<%if(myPost) {%>
+					<br><a  href="edit?id=<%=currPost.getPostID()%>" style="background-color: #4CAF50; border: none; color: white;" >EDIT POST</a>
+					<a href="delete?id=<%=currPost.getPostID()%>"><i class="fa fa-trash" ></i></a>
+					<%} 
+					%>
 					<%
 						}
 					%>
@@ -123,8 +133,7 @@
 						int postID = comment.getPostID();
 				%>
 
-				<div class="agileits_three_comment_grid"
-					id="comment<%=commentID%>">
+				<div class="agileits_three_comment_grid" id="comment<%=commentID%>">
 					<div class="agileits_tom" id="profilePic">
 						<a href="profile?id=<%=userID%>"> <img
 							src="getProfilePic?id=<%=userID%>"

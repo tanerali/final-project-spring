@@ -43,7 +43,6 @@ public class AjaxController {
 		Post newPost;
 		int ID = -1;
 		String uploadFolder = "/home/dnn/UPLOADAIRBNB";
-		System.out.println(title + " " + description + " " + price + " " + type + " " + hostID);
 		if (user != null) {
 			try {
 				// Create new post From PostForm
@@ -65,4 +64,5 @@ public class AjaxController {
 
 		return new ResponseEntity<String>(Integer.toString(ID), HttpStatus.OK);
 	}
+
 }
