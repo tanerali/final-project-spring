@@ -35,12 +35,14 @@
 <!-- //font -->
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
- 
+
 <!-- Include Date Picker -->
 
-<link rel="stylesheet" type="text/css" href="css/bootstrap-datepicker.standalone.min.css">
-	
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
+<link rel="stylesheet" type="text/css"
+	href="css/bootstrap-datepicker.standalone.min.css">
+
+<script
+	src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.4/js/bootstrap-datepicker.js"></script>
 
 </head>
 <body>
@@ -53,8 +55,7 @@
 			<div class="agileits-single-img">
 
 				<!-- POST'S PICTURE -->
-				<img id="placeImage"
-					src="getThumbnail?id=<%=currPost.getPostID()%>">
+				<img id="placeImage" src="getThumbnail?id=<%=currPost.getPostID()%>">
 				<h4><%=currPost.getTitle()%></h4>
 				<div class="agileinfo-single-icons">
 					<ul>
@@ -68,26 +69,31 @@
 					</ul>
 
 					<!-- BOOK -->
-					<% if (session.getAttribute("user") != null) { %>
-						
-						<form action="book" method="post">
-							<div class="input-group input-daterange">
-								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 
-									<span class="input-group-addon"> 
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span> 
-									<span class="input-group-addon">to</span> 
-								<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
-									<span class="input-group-addon">
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span>
-							</div>
-							<input type="hidden" name="postID" value="<%=currPost.getPostID()%>"> 
-							<!-- BOOK BUTTON -->
-							<input type="submit" value="Request Booking" style="background-color: #4CAF50; 
-									border: none; color: white; padding: 15px 32px;">
-						</form>
-					<% } %>
+					<%
+						if (session.getAttribute("user") != null) {
+					%>
+
+					<form action="book" method="post">
+						<div class="input-group input-daterange">
+							<input id="startDate1" name="dateFrom" type="text"
+								class="form-control" readonly="readonly"> <span
+								class="input-group-addon"> <span
+								class="glyphicon glyphicon-calendar"></span>
+							</span> <span class="input-group-addon">to</span> <input id="endDate1"
+								name="dateTo" type="text" class="form-control"
+								readonly="readonly"> <span class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar"></span>
+							</span>
+						</div>
+						<input type="hidden" name="postID"
+							value="<%=currPost.getPostID()%>">
+						<!-- BOOK BUTTON -->
+						<input type="submit" value="Request Booking"
+							style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
+					</form>
+					<%
+						}
+					%>
 				</div>
 				<h3>Description</h3>
 				<p><%=currPost.getDescription()%></p>
@@ -106,81 +112,98 @@
 			<!-- comments -->
 			<div class="agileits_three_comments" id="comments">
 				<h3>Comments</h3>
-				
-				<% for (Comment comment : comments) { 
-					int commentID = comment.getCommentID();
-					int userID = comment.getUserID();
-					String fullName = comment.getFullName();
-					LocalDate date = comment.getDate();
-					String content = comment.getContent();
-					int postID = comment.getPostID();
+
+				<%
+					for (Comment comment : comments) {
+						int commentID = comment.getCommentID();
+						int userID = comment.getUserID();
+						String fullName = comment.getFullName();
+						LocalDate date = comment.getDate();
+						String content = comment.getContent();
+						int postID = comment.getPostID();
 				%>
 
-				<div class="agileits_three_comment_grid" id="comment<%= commentID %>">
+				<div class="agileits_three_comment_grid"
+					id="comment<%=commentID%>">
 					<div class="agileits_tom" id="profilePic">
-						<a href="profile?id=<%= userID  %>"> 
-						<img src="getProfilePic?id=<%= userID %>" class="img-responsive img-circle"></a>
+						<a href="profile?id=<%=userID%>"> <img
+							src="getProfilePic?id=<%=userID%>"
+							class="img-responsive img-circle"></a>
 					</div>
 					<div class="agileits_tom_right">
 						<div class="hardy" id="commenterAndDate">
-							<a href="profile?id=<%= userID %>"><h4><%= fullName %></h4></a>
-							<p><%= date %></p>
+							<a href="profile?id=<%=userID%>"><h4><%=fullName%></h4></a>
+							<p><%=date%></p>
 						</div>
 						<div class="clearfix"></div>
-						<p class="lorem"><%= content %></p>
+						<p class="lorem"><%=content%></p>
 					</div>
 					<div class="clearfix">
-						
-						<% if (session.getAttribute("user") != null && ((User)session.getAttribute("user")).getUserID() == userID) { %>
-							<button style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
-									onclick="deleteComment(<%= commentID %>, <%= postID %>)">DELETE COMMENT
-							</button>
-						<% } %>
+
+						<%
+							if (session.getAttribute("user") != null
+										&& ((User) session.getAttribute("user")).getUserID() == userID) {
+						%>
+						<button
+							style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
+							onclick="deleteComment(<%=commentID%>, <%=postID%>)">DELETE
+							COMMENT</button>
+						<%
+							}
+						%>
 					</div>
 				</div>
-				<% } %>
+				<%
+					}
+				%>
 			</div>
 			<!-- //comments -->
 
 
 			<!-- leave-comments -->
-			<% if (session.getAttribute("user") != null) { %>
-				<div class="w3_leave_comment">
-					<h3>Leave your comment</h3>
-					
-					<!-- AJAX -->
-					<textarea placeholder="Comment" id="comment" required></textarea>
-					<input type="hidden" id="postID" value="<%=currPost.getPostID()%>"> 
-					
-					<button class="form-control" id="leaveComment" onclick="postComment()">SUBMIT</button>
-				</div>
-			<% } %>
+			<%
+				if (session.getAttribute("user") != null) {
+			%>
+			<div class="w3_leave_comment">
+				<h3>Leave your comment</h3>
+
+				<!-- AJAX -->
+				<textarea placeholder="Comment" id="comment" required></textarea>
+				<input type="hidden" id="postID" value="<%=currPost.getPostID()%>">
+
+				<button class="form-control" id="leaveComment"
+					onclick="postComment()">SUBMIT</button>
+			</div>
+			<%
+				}
+			%>
 			<!-- //leave-comments -->
 		</div>
 	</div>
-	
+
 	<template>
-		<div class="agileits_three_comment_grid" id="comment">
-			<div class="agileits_tom" id="profilePic">
-				<a href="profile?id="> 
-				<img src="getProfilePic?id=" class="img-responsive img-circle"></a>
-			</div>
-			<div class="agileits_tom_right">
-				<div class="hardy" id="commenterAndDate">
-					<a href="profile?id="><h4></h4></a>
-					<p></p>
-				</div>
-				<div class="clearfix"></div>
-				<p class="lorem"></p>
-			</div>
-			<div class="clearfix">
-				<button style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
-						onclick="deleteComment()">DELETE COMMENT
-				</button>
-			</div>
+	<div class="agileits_three_comment_grid" id="comment">
+		<div class="agileits_tom" id="profilePic">
+			<a href="profile?id="> <img src="getProfilePic?id="
+				class="img-responsive img-circle"></a>
 		</div>
+		<div class="agileits_tom_right">
+			<div class="hardy" id="commenterAndDate">
+				<a href="profile?id="><h4></h4></a>
+				<p></p>
+			</div>
+			<div class="clearfix"></div>
+			<p class="lorem"></p>
+		</div>
+		<div class="clearfix">
+			<button
+				style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
+				onclick="deleteComment()">DELETE COMMENT</button>
+		</div>
+	</div>
 	</template>
-	
+
+	<%@ include file="footer.jsp"%>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			var disabledDates = {};
@@ -193,7 +216,7 @@
 			});
 		});
 	</script>
-	
+
 	<script type="text/javascript">
 		 function postComment() {
 			var req = new XMLHttpRequest();

@@ -12,7 +12,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
 <!-- bootstrap-css -->
-<link href="css/bootstrap.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css"
+	media="all" />
 <!--// bootstrap-css -->
 
 <!-- css -->
@@ -78,7 +79,9 @@
 
 	<%@ include file="header.jsp"%>
 
-	<% ArrayList<Post> posts = (ArrayList) request.getAttribute("posts"); %>
+	<%
+		ArrayList<Post> posts = (ArrayList) request.getAttribute("posts");
+	%>
 
 	<div class="container">
 		<h2>Explore All The Great Places You Can Stay</h2>
@@ -102,7 +105,7 @@
 				<button class="btn" onclick="filterSelection('COTTAGE')">
 					Cottage</button>
 			</ul>
-			
+
 		</div>
 
 		<%-- <div class="form-group" style="display: inline">
@@ -113,8 +116,8 @@
 				</c:forEach>
 			</select>
 		</div> --%>
-		
-<%-- <!-- cities dropdown menu -->
+
+		<%-- <!-- cities dropdown menu -->
 		<div class="dropdown" style="display: inline;">
 			<button class="btn btn-primary dropdown-toggle" type="button"
 				data-toggle="dropdown">
@@ -137,8 +140,10 @@
 
 		<!-- POSTS -->
 		<div class="row" id="posts">
-			<% if (posts != null) {
-					for (Post post : posts) { %>
+			<%
+				if (posts != null) {
+					for (Post post : posts) {
+			%>
 
 			<div
 				class="col-md-4 filterDiv <%=post.getType()%> <%-- <%=post.getCity()%> --%>">
@@ -159,12 +164,18 @@
 			</div>
 
 
-			<% } %>
-		<% } %>
+			<%
+				}
+			%>
+			<%
+				}
+			%>
 
 		</div>
 
 	</div>
+
+	<%@ include file="footer.jsp"%>
 	<script>
 		var req = new XMLHttpRequest();
 		function openSearch() {

@@ -2,15 +2,19 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="airbnb.model.User"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <title>Airbnb</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
-<script type="application/x-javascript">	
+<script type="application/x-javascript">
+	
+		
 	 addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
+
+
 </script>
 
 <!-- bootstrap-css -->
@@ -63,9 +67,8 @@
 		document.getElementById("editUser").style.display = "none";
 	}
 	function saveEdit() {
-		
+
 	}
-	
 </script>
 
 </head>
@@ -73,84 +76,91 @@
 
 <body>
 
-	
-	<%@ include file="header.jsp" %>
+
+	<%@ include file="header.jsp"%>
 
 	<div class="container">
 		<div class="row">
-		
-			<% User user = (User)session.getAttribute("user"); %>
-		
+
+			<%
+				User user = (User) session.getAttribute("user");
+			%>
+
 			<div class="col-sm-3">
 				<h1>User details</h1>
 				<div style="width: 240px; height: 240px">
-					<img class="img-responsive" alt="" src="getProfilePic?id=<%= user.getUserID() %>">
+					<img class="img-responsive" alt=""
+						src="getProfilePic?id=<%=user.getUserID()%>">
 				</div>
-				
+
 				<h2>Listings</h2>
-				<div class="list-group" >
+				<div class="list-group">
 					<c:forEach var="listing" items="${ hostedPosts }">
 						<a href="post?id=${ listing.postID }" class="list-group-item">
-							<img class="img-responsive" src="getThumbnail?id=${ listing.postID }">
+							<img class="img-responsive"
+							src="getThumbnail?id=${ listing.postID }">
 							<p>${ listing.title }</p>
 						</a>
 					</c:forEach>
 				</div>
 			</div>
-			
+
 			<div class="col-sm-9">
 				<div id="user" style="display: block;">
-					
-					<h1 class="page-header"><%=user.getFirstName()+ " "+ user.getLastName()%></h1>
+
+					<h1 class="page-header"><%=user.getFirstName() + " " + user.getLastName()%></h1>
 					<div class="panel panel-default">
 						<div class="panel-heading">Verified info</div>
 						<div class="panel-body">
 							<table class="table table-hover">
-									<tr>
-										<td>Email</td>
-										<td><%=user.getEmail()%></td>
-									</tr>
-									<tr>
-										<td>Gender</td>
-										<td><%=user.getGender()%></td>
-									</tr>
-									<tr>
-										<td>Country</td>
-										<td><%=user.getCountry()%></td>
-									</tr>
-									<tr>
-										<td>City</td>
-										<td><%=user.getCity()%></td>
-									</tr>
-									<tr>
-										<td>Description</td>
-										<td><%=user.getDescription()%></td>
-									</tr>
-									<tr>
-										<td>Birth Date</td>
-										<td><%=user.getBirthDate()%></td>
-									</tr>
-									<tr>
-										<td>Telephone Number</td>
-										<td><%=user.getTelNumber()%></td>
-									</tr>
+								<tr>
+									<td>Email</td>
+									<td><%=user.getEmail()%></td>
+								</tr>
+								<tr>
+									<td>Gender</td>
+									<td><%=user.getGender()%></td>
+								</tr>
+								<tr>
+									<td>Country</td>
+									<td><%=user.getCountry()%></td>
+								</tr>
+								<tr>
+									<td>City</td>
+									<td><%=user.getCity()%></td>
+								</tr>
+								<tr>
+									<td>Description</td>
+									<td><%=user.getDescription()%></td>
+								</tr>
+								<tr>
+									<td>Birth Date</td>
+									<td><%=user.getBirthDate()%></td>
+								</tr>
+								<tr>
+									<td>Telephone Number</td>
+									<td><%=user.getTelNumber()%></td>
+								</tr>
 							</table>
-							<button style="float: right; background-color: #4CAF50; border: none; 
-								color: white; padding: 15px 32px;"
+							<button
+								style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
 								onclick="editUser()">Edit</button>
 						</div>
 					</div>
 				</div>
-				
+
 				<%
-				Exception e = null; 
-				if(request.getAttribute("exception") != null) {
-					e = (Exception)request.getAttribute("exception"); %>
-					<p style="color: red"><%= e.getMessage() %></p>
-				<% } %>
-				
+					Exception e = null;
+					if (request.getAttribute("exception") != null) {
+						e = (Exception) request.getAttribute("exception");
+				%>
+				<p style="color: red"><%=e.getMessage()%></p>
+				<%
+					}
+				%>
+
 				<div id="editUser" style="display: none;">
-				
+
 					<div class="panel panel-default">
 						<div class="panel-heading">Edit user details</div>
 						<div class="panel-body">
@@ -158,117 +168,140 @@
 								<table class="table table-hover">
 									<tr>
 										<td>First Name</td>
-										<td><input type="text" name="firstName" value="<%=user.getFirstName()%>"></td>
+										<td><input type="text" name="firstName"
+											value="<%=user.getFirstName()%>"></td>
 									</tr>
 									<tr>
 										<td>Last Name</td>
-										<td><input type="text" name="lastName" value="<%=user.getLastName()%>"></td>
+										<td><input type="text" name="lastName"
+											value="<%=user.getLastName()%>"></td>
 									</tr>
 									<tr>
 										<td>Email</td>
-										<td><input type="email" name="email" value="<%=user.getEmail()%>"></td>
+										<td><input type="email" name="email"
+											value="<%=user.getEmail()%>"></td>
 									</tr>
 									<tr>
 										<td>Gender</td>
-										<td><input type="text" name="gender" value="<%=user.getGender()%>"></td>
+										<td><input type="text" name="gender"
+											value="<%=user.getGender()%>"></td>
 									</tr>
 									<tr>
 										<td>Country</td>
-										<td><input type="text" name="country" value="<%=user.getCountry()%>"></td>
+										<td><input type="text" name="country"
+											value="<%=user.getCountry()%>"></td>
 									</tr>
 									<tr>
 										<td>City</td>
-										<td><input type="text" name="city" value="<%=user.getCity()%>"></td>
+										<td><input type="text" name="city"
+											value="<%=user.getCity()%>"></td>
 									</tr>
 									<tr>
 										<td>Description</td>
-										<td><input type="text" name="description" value="<%=user.getDescription()%>"></td>
+										<td><input type="text" name="description"
+											value="<%=user.getDescription()%>"></td>
 									</tr>
 									<tr>
 										<td>Birth Date</td>
-										<td><input type="date" name="birthDate" value="<%=user.getBirthDate()%>"></td>
+										<td><input type="date" name="birthDate"
+											value="<%=user.getBirthDate()%>"></td>
 									</tr>
 									<tr>
 										<td>Telephone Number</td>
-										<td><input type="tel" name="telNumber" value="<%=user.getTelNumber()%>"></td>
+										<td><input type="tel" name="telNumber"
+											value="<%=user.getTelNumber()%>"></td>
 									</tr>
 								</table>
-								<input style="float: left; background-color: #4CAF50; border: none; 
-											color: white; padding: 15px 32px;" type="submit" value="Save">
+								<input
+									style="float: left; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
+									type="submit" value="Save">
 							</form>
-							<button style="float: right; background-color: red; border: none; color: white; padding: 15px 32px;"
-										onclick="cancelEdit()">Cancel</button>
+							<button
+								style="float: right; background-color: red; border: none; color: white; padding: 15px 32px;"
+								onclick="cancelEdit()">Cancel</button>
 						</div>
 					</div>
-					
+
 					<!-- <button style=
 						"float: right; background-color: red; border: none; color: white; padding: 15px 32px;"
 						onclick="saveEdit()"
 					>Save</button> -->
-					
+
 				</div>
-				
+
 				<h1 class="page-header">Reviews from Hosts</h1>
 				<%
-				if(session.getAttribute("reviewsFromHosts") != null) {
-					ArrayList<Review> reviews = ((ArrayList<Review>)session.getAttribute("reviewsFromHosts")); 
-					for(Review review: reviews) { %>
-						
-						<div class="panel panel-default">
-							<div class="panel-heading">
-								<%= review.getReviewerName() %>
-								<span style="float:right"><%=review.getDate()%></span>
-							</div>
-							
-							<div class="panel-body">
-								<div class="row">
-									<div class="col-md-6">
-										<div class="panel-body">
-											<%=review.getReview()%>
-										</div>
-									</div>
-									<div class="col-md-6">
-										
-									</div>
+					if (session.getAttribute("reviewsFromHosts") != null) {
+						ArrayList<Review> reviews = ((ArrayList<Review>) session.getAttribute("reviewsFromHosts"));
+						for (Review review : reviews) {
+				%>
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<%=review.getReviewerName()%>
+						<span style="float: right"><%=review.getDate()%></span>
+					</div>
+
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="panel-body">
+									<%=review.getReview()%>
 								</div>
+							</div>
+							<div class="col-md-6"></div>
+						</div>
+					</div>
+				</div>
+
+				<%
+					}
+				%>
+				<%
+					}
+				%>
+
+				<h1 class="page-header">
+					Reviews from Guests of
+					<%=user.getFirstName() + " " + user.getLastName()%></h1>
+
+				<%
+					if (session.getAttribute("reviewsFromGuests") != null) {
+						ArrayList<Review> reviews = ((ArrayList<Review>) session.getAttribute("reviewsFromGuests"));
+						for (Review review : reviews) {
+				%>
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<%=review.getReviewerName()%>
+						<span style="float: right"><%=review.getDate()%></span>
+					</div>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel-body">
+								<%=review.getReview()%>
 							</div>
 						</div>
-						
-					<% } %>
-				 <% } %>
-					
-				<h1 class="page-header">Reviews from Guests of <%=user.getFirstName()+ " "+ user.getLastName()%></h1>
-				
-				<% 	if(session.getAttribute("reviewsFromGuests") != null) {
-						ArrayList<Review> reviews = ((ArrayList<Review>)session.getAttribute("reviewsFromGuests")); 
-						for(Review review: reviews) { %>
-						
-							<div class="panel panel-default">
-								<div class="panel-heading">
-									<%= review.getReviewerName() %>
-									<span style="float:right"><%=review.getDate()%></span>
-								</div>
-									<div class="row">
-										<div class="col-md-6">
-											<div class="panel-body">
-												<%=review.getReview()%>
-											</div>
-										</div>
-										<div class="col-md-6">
-											<div class="panel-body">
-												Reviewed Property: <i><%= review.getReviewedName() %></i>
-												<a href="post?id=<%= review.getReviewedPropertyID() %>">
-													<img class="img-responsive" style="width:400px" 
-														src="getThumbnail?id=<%= review.getReviewedPropertyID() %>">
-												</a>
-											</div>
-										</div>
-									</div>
+						<div class="col-md-6">
+							<div class="panel-body">
+								Reviewed Property: <i><%=review.getReviewedName()%></i> <a
+									href="post?id=<%=review.getReviewedPropertyID()%>"> <img
+									class="img-responsive" style="width: 400px"
+									src="getThumbnail?id=<%=review.getReviewedPropertyID()%>">
+								</a>
 							</div>
-					<% } %>
-				 <% } %>
+						</div>
+					</div>
+				</div>
+				<%
+					}
+				%>
+				<%
+					}
+				%>
 			</div>
 		</div>
 	</div>
+	<%@ include file="footer.jsp"%>
 </body>
 </html>
