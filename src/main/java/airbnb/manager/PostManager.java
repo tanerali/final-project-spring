@@ -22,7 +22,6 @@ public enum PostManager {
 	private Map<Integer, Post> postsByID;
 
 	private PostManager() {
-
 		postsByUsers = new ConcurrentHashMap<>();
 		postsByID = new ConcurrentHashMap<>();
 
@@ -35,14 +34,6 @@ public enum PostManager {
 				postsByUsers.get(p.getHostID()).add(p);
 				postsByID.put(p.getPostID(), p);
 			}
-
-			for (Entry<Integer, Post> e : postsByID.entrySet()) {
-				System.out.println(e.getKey() + " " + e.getValue());
-			}
-			// Now lets load all comments for posts
-			// for (Comment c : CommentDAO.instance.getAllComments()) {
-			// postsByID.get(c.getPostID()).addComment(c);
-			// }
 		} catch (SQLException | InvalidPostDataExcepetion e) {
 			System.out.println("Oops,smth went terribly wrong!");
 		}

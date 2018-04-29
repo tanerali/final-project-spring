@@ -3,6 +3,8 @@ package airbnb.controller;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeSet;
 
 import javax.servlet.http.HttpSession;
 
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import airbnb.dao.LocationDao;
 import airbnb.exceptions.InvalidPostDataExcepetion;
 import airbnb.manager.PostManager;
 import airbnb.model.AddPostForm;
@@ -23,6 +26,7 @@ import airbnb.model.User;
 public class AjaxController {
 
 	private PostManager postManager = PostManager.instance;
+	private LocationDao locationDao = LocationDao.instance;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<String> uploadPost(@RequestBody AddPostForm form, HttpSession session) {
@@ -48,5 +52,14 @@ public class AjaxController {
 		}
 		
 		return new ResponseEntity<String>(Integer.toString(ID), HttpStatus.OK);
+	}
+	
+	@RequestMapping(value = "/locations", method = RequestMethod.GET)
+	public Map<String, TreeSet<String>> getLocations() {
+		Map<String, TreeSet<String>> locations = locationDao.getLocations();
+		ArrayList<String> countries = new ArrayList<>(locations.keySet());
+		System.out.println( countries);
+		
+		return locations;
 	}
 }

@@ -78,8 +78,6 @@
 
 	<%@ include file="header.jsp"%>
 
-	<% ArrayList<Post> posts = (ArrayList) request.getAttribute("posts"); %>
-
 	<div class="container">
 		<h2>Explore All The Great Places You Can Stay</h2>
 
@@ -105,66 +103,107 @@
 			
 		</div>
 
-		<%-- <div class="form-group" style="display: inline">
-			<label for="sel1" style="display:inline">Select list:</label> 
+		<div class="form-group" id="countries" style="display: inline">
+			<label for="sel1" style="display:inline">Select country:</label> 
 			<select class="form-control" id="sel1">
-				<c:forEach var="country" items="countries">
-					<option>${ country }</option>
-				</c:forEach>
+				<option></option>
 			</select>
-		</div> --%>
+		</div>
 		
-<%-- <!-- cities dropdown menu -->
-		<div class="dropdown" style="display: inline;">
-			<button class="btn btn-primary dropdown-toggle" type="button"
-				data-toggle="dropdown">
-				Countries <span class="caret"><br></span>
-			</button>
-			
-			<%			
-			Map<String, TreeSet<String>> locations = (Map)application.getAttribute("locations");
-			%>
-			<ul class="dropdown-menu">
-				<button class="btn active" onclick="filterSelection('all')">
-					Show all</button>
-				<br>
-				<% for (String country: locations.keySet()) { %>
-					<button class="btn" onclick="filterSelection('<%= country %>')">
-						<%= country %></button>
-				<% } %>
-			</ul>
-		</div> --%>
+		<div class="form-group" id="cities" style="display: none">
+			<label for="sel2" style="display:inline">Select city:</label> 
+			<select class="form-control" id="sel2">
+				<option></option>
+			</select>
+		</div>
 
 		<!-- POSTS -->
 		<div class="row" id="posts">
-			<% if (posts != null) {
-					for (Post post : posts) { %>
-
-			<div
-				class="col-md-4 filterDiv <%=post.getType()%> <%-- <%=post.getCity()%> --%>">
-				<div class="thumbnail">
-					<a href="post?id=<%=post.getPostID()%>"> <img
-						src="getThumbnail?id=<%=post.getPostID()%>" alt=""
-						style="width: 100%">
-						<div class="caption">
-							<p><%=post.getTitle()%></p><%=post.getType()%>
-						</div>
-						<div class="caption">
-							<p>
-								Price:
-								<%=post.getPrice()%></p>
-						</div>
-					</a>
+			<c:forEach var="post" items="${ posts }">
+				<div class="col-md-4 filterDiv ${post.type}">
+					<div class="thumbnail">
+						<a href="post?id=${post.postID}"> 
+							<img src="getThumbnail?id=${post.postID}" alt="" style="width: 100%">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="caption">
+										<p>${post.title}</p>
+										<p>${post.type}</p>
+									</div>
+									<div class="caption">
+										<p>Price: ${post.price}</p>
+									</div>	
+								</div>
+								<div class="col-md-6">
+									<%-- <div class="caption">
+										<p>${post.city}</p>
+										<p>${post.country}</p>
+									</div> --%>
+								</div>
+							</div>
+							
+						</a>
+					</div>
 				</div>
-			</div>
-
-
-			<% } %>
-		<% } %>
-
+			</c:forEach>
 		</div>
-
+		<!-- /POSTS -->
 	</div>
+	
+	<script type="text/javascript">
+		var responseJSON;
+		
+		$(document).ready(function() {
+			req.open("Get", "locations");
+			req.send();
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					/* get JSON response as object */ 
+					responseJSON = JSON.parse(req.responseText);
+					console.log(responseJSON);
+					var select = document.getElementById('sel1');
+					
+					for (var key in responseJSON) {
+						var opt = document.createElement("option");
+						opt.value = key;
+					    opt.innerHTML = key;
+					    select.appendChild(opt);
+					}    			
+				}
+			}
+		});
+		
+		$('#sel1').change(function() {
+			var cities;
+			
+			for (var key in responseJSON) {
+			    if (!responseJSON.hasOwnProperty(key)) continue;
+			    
+			    if (key == $(this).val()) {
+			    	cities = responseJSON[key];
+			    	break;
+			    }
+			}
+			/* console.log(cities); */
+			
+			var select = document.getElementById('sel2');
+			select.innerHTML = null;
+			
+			for (var city of cities) {
+				var opt = document.createElement("option");
+				opt.value = city;
+			    opt.innerHTML = city;
+			    select.appendChild(opt);
+			}
+			document.getElementById('cities').style = 'display: inline';
+
+		    // if you want to do stuff based on the OPTION element:
+		    //var opt = $(this).find('option:selected')[0];
+		    //console.log(opt);
+		});
+	</script>
+	
+	
 	<script>
 		var req = new XMLHttpRequest();
 		function openSearch() {
@@ -206,7 +245,7 @@
 			}
 
 		}
-
+		
 		filterSelection("all")
 		function filterSelection(c) {
 			var x, i;

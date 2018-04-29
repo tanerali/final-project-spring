@@ -98,11 +98,11 @@
     cursor: pointer}
 
 .datepicker table tr td.new,.datepicker table tr td.old {
-    color: #999}
+    color:#999
+    }
 
 .datepicker table tr td.disabled,.datepicker table tr td.disabled:hover {
     background: 0 0;
-    color: #999;
     text-decoration: line-through;
     cursor: default}
 

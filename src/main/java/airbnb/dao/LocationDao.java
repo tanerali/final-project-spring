@@ -40,8 +40,8 @@ public enum LocationDao {
 			ResultSet resultSet = statement.executeQuery(sql);
 
 			while (resultSet.next()) {
-				String country = resultSet.getString("name");
-				String city = resultSet.getString("name");
+				String country = resultSet.getString("country_name");
+				String city = resultSet.getString("city_name");
 
 				if (!locationsMap.containsKey(country)) {
 					locationsMap.put(country, new TreeSet<>());

@@ -44,7 +44,6 @@ public class Post {
 	private LocalDate dateOfPosting;
 	private Type type;
 	private int hostID;
-	private List<Comment> comments;
 	private int rating; // 0->5
 
 	public Post(String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID)
@@ -55,7 +54,6 @@ public class Post {
 		this.setDateOfPosting(dateOfPosting);
 		this.setType(type);
 		this.hostID = hostID;
-		comments = new ArrayList<>();
 	}
 
 	public Post(int postID, String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID)
@@ -144,14 +142,6 @@ public class Post {
 		return hostID;
 	}
 
-	public List<Comment> getComments() {
-		return comments;
-	}
-
-	public void addComment(Comment m) {
-		this.comments.add(m);
-	}
-
 	public int getRating() {
 		return rating;
 	}
@@ -160,5 +150,4 @@ public class Post {
 	public String toString() {
 		return this.title + " " + this.description + " " + this.price + " " + this.type + " " + this.dateOfPosting;
 	}
-
 }

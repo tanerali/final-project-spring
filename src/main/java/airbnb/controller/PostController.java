@@ -48,7 +48,6 @@ import airbnb.model.Booking;
 public class PostController {
 
 	private PostManager postManager = PostManager.instance;
-	private LocationDao locationDao = LocationDao.instance;
 	private UserManager userManager = UserManager.instance;
 	private CommentManager commentManager = CommentManager.instance;
 	private BookingManager bookingManager = BookingManager.instance;
@@ -56,9 +55,6 @@ public class PostController {
 	@RequestMapping(value = "/explore", method = RequestMethod.GET)
 	public String explore(HttpServletRequest request) {
 		ArrayList<Post> posts = null;
-//		Map<String, TreeSet<String>> locations = locationDao.getLocations();
-//		ArrayList<String> countries = new ArrayList<>(locations.keySet());
-//		System.out.println( countries);
 		
 		try {
 			posts = (ArrayList<Post>) postManager.getAllPosts();
@@ -66,10 +62,6 @@ public class PostController {
 			if (posts != null) {
 				request.setAttribute("posts", posts);
 			}
-//			if (locations != null) {
-//				request.setAttribute("locations", locations);
-//				request.setAttribute("countries", countries);
-//			}
 		} catch (SQLException | InvalidPostDataExcepetion e) {
 			request.setAttribute("error", e.getMessage());
 			return "error";

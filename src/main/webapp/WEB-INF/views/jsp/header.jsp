@@ -93,6 +93,8 @@
 														<h4>Booking request for <em>${ notification.title }</em></h4>
 												</a>
 												<p>
+													From: ${ notification.dateFrom }<br>
+													To: ${ notification.dateTo }<br>
 													Customer name: ${ notification.fullName }<br>
 													Profile: <a href="profile?id=${ notification.customerID }">${ notification.email }</a>
 												</p>
