@@ -79,10 +79,10 @@
 											<!-- Drag and Drop container-->
 											<div class="upload-area" id="uploadfile"
 												style="width: 70%; height: 200px; border: 2px solid lightgray; border-radius: 3px; margin: 0 auto; margin-top: 0px; text-align: center; overflow: auto;">
-												<h1
+												<h2
 													style="text-align: center; font-weight: normal; font-family: sans-serif; line-height: 50px; color: darkslategray;">
 													Drag and Drop images here<br />Or<br />Click to select
-												</h1>
+												</h2>
 											</div>
 										</div>
 									</td>
@@ -241,7 +241,7 @@
 			$("html").on("dragover", function(e) {
 				e.preventDefault();
 				e.stopPropagation();
-				$("h1").text("Drag here");
+				$("h2").text("Drag here");
 			});
 
 			$("html").on("drop", function(e) {
@@ -253,14 +253,14 @@
 			$('.upload-area').on('dragenter', function(e) {
 				e.stopPropagation();
 				e.preventDefault();
-				$("h1").text("Drop");
+				$("h2").text("Drop");
 			});
 
 			// Drag over
 			$('.upload-area').on('dragover', function(e) {
 				e.stopPropagation();
 				e.preventDefault();
-				$("h1").text("Drop");
+				$("h2").text("Drop");
 			});
 
 			// Drop
@@ -268,7 +268,7 @@
 				e.stopPropagation();
 				e.preventDefault();
 
-				$("h1").text("Upload");
+				$("h2").text("Upload");
 
 				var file = e.originalEvent.dataTransfer.files;
 				var fd = new FormData();
