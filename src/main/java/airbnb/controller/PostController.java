@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import airbnb.dao.PostDAO;
@@ -227,8 +226,9 @@ public class PostController {
 		return "editPost";
 	}
 
+	@ResponseBody
 	@RequestMapping(value = "/multipleUpload", method = RequestMethod.POST)
-	public void uploadMultipleImgs(@RequestParam("file") MultipartFile file, @RequestParam("ID") int ID,
+	public String uploadMultipleImgs(@RequestParam("file") MultipartFile file, @RequestParam("ID") int ID,
 			HttpServletRequest req) {
 		System.out.println("================" + file.getOriginalFilename() + "================");
 		String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
@@ -239,7 +239,9 @@ public class PostController {
 			PostDAO.instance.insertImageToPost(fileOnDisk.toPath().toString(), ID);
 		} catch (SQLException | IOException e) {
 			req.setAttribute("error", e);
+			return "forward:error";
 		}
+		return fileOnDisk.toString();
 	}
 
 	@RequestMapping(value = "/editPost", method = RequestMethod.POST)

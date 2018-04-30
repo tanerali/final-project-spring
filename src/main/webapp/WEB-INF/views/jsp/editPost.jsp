@@ -49,17 +49,17 @@
 								style="border-collapse: separate; border-spacing: 0.5em; margin-top: 4%;">
 								<tr>
 									<td><input class="form-control" type="text" name="title"
-										id="title" placeholder="${post.title} "></td>
+										id="title" value="${post.title} "></td>
 								</tr>
 								<tr>
 									<td><textarea rows="10" cols="135" class="form-control"
 											name="description" id="description"
-											placeholder="${post.description}"></textarea></td>
+											value="${post.description}"></textarea></td>
 								</tr>
 
 								<tr>
 									<td><input class="form-control" type="number" name="price"
-										id="price" placeholder="${post.price}"></td>
+										id="price" value="${post.price}"></td>
 								</tr>
 
 								<tr>
@@ -166,11 +166,6 @@
 												var formData = new FormData();
 												formData
 														.append(
-																"file",
-																document
-																		.getElementById("myFileField").files[0]);
-												formData
-														.append(
 																"title",
 																document
 																		.getElementById("title").value);
@@ -223,11 +218,7 @@
 																				"disabled",
 																				false);
 																//...
-																var obj = JSON
-																		.parse(response);
-
-																window.location.href = 'post?id='
-																		+ obj;
+										
 
 															},
 															error : function(e) {
