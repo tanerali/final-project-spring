@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,8 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
-import airbnb.dao.LocationDao;
 import airbnb.dao.PostDAO;
 import airbnb.exceptions.InvalidCommentIDException;
 import airbnb.exceptions.InvalidPostDataExcepetion;
@@ -222,6 +225,21 @@ public class PostController {
 		Post currPost = postManager.getPostsByID().get(postID);
 		m.addAttribute("post", currPost);
 		return "editPost";
+	}
+
+	@RequestMapping(value = "/multipleUpload", method = RequestMethod.POST)
+	public void uploadMultipleImgs(@RequestParam("file") MultipartFile file, @RequestParam("ID") int ID,
+			HttpServletRequest req) {
+		System.out.println("================" + file.getOriginalFilename() + "================");
+		String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
+		System.out.println("ID = " + ID);
+		File fileOnDisk = new File(uploadFolder + file.getOriginalFilename());
+		try {
+			Files.copy(file.getInputStream(), fileOnDisk.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			PostDAO.instance.insertImageToPost(fileOnDisk.toPath().toString(), ID);
+		} catch (SQLException | IOException e) {
+			req.setAttribute("error", e);
+		}
 	}
 
 	@RequestMapping(value = "/editPost", method = RequestMethod.POST)

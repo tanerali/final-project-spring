@@ -71,12 +71,21 @@
 									</select></td>
 								</tr>
 								<tr>
-									<td><input style="display: none;" type="file"
-										id="myFileField" accept="image/*" name="file"><br>
-										<div
-											style="border: 2px; color: palevioletred; border-style: outset; text-align: center;"
-											id="fc">ADD A PICTURE</div>
-										<div id="name"></div></td>
+									<td>
+										<div class="container">
+											<input type="file" name="file" id="file"
+												style="display: none">
+
+											<!-- Drag and Drop container-->
+											<div class="upload-area" id="uploadfile"
+												style="width: 70%; height: 200px; border: 2px solid lightgray; border-radius: 3px; margin: 0 auto; margin-top: 0px; text-align: center; overflow: auto;">
+												<h1
+													style="text-align: center; font-weight: normal; font-family: sans-serif; line-height: 50px; color: darkslategray;">
+													Drag and Drop images here<br />Or<br />Click to select
+												</h1>
+											</div>
+										</div>
+									</td>
 								</tr>
 								<tr>
 									<td>
@@ -154,18 +163,6 @@
 									.click(
 											function(event) {
 
-												var fd = new FormData();
-												fd
-														.append(
-																'file',
-																$('#myFileField')[0].files[0]);
-
-												// 				var data = {}
-												// 				data["title"] = $("#title").val();
-												// 				data["description"] = $("#description").val();
-												// 				data["type"] = $("#type").val();
-												// 				data["price"] = $("#price").val();
-												// 				data["image"] = fd;
 												var formData = new FormData();
 												formData
 														.append(
@@ -245,6 +242,115 @@
 											});
 
 						});
+	</script>
+	<script>
+		$(function() {
+
+			// preventing page from redirecting
+			$("html").on("dragover", function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+				$("h1").text("Drag here");
+			});
+
+			$("html").on("drop", function(e) {
+				e.preventDefault();
+				e.stopPropagation();
+			});
+
+			// Drag enter
+			$('.upload-area').on('dragenter', function(e) {
+				e.stopPropagation();
+				e.preventDefault();
+				$("h1").text("Drop");
+			});
+
+			// Drag over
+			$('.upload-area').on('dragover', function(e) {
+				e.stopPropagation();
+				e.preventDefault();
+				$("h1").text("Drop");
+			});
+
+			// Drop
+			$('.upload-area').on('drop', function(e) {
+				e.stopPropagation();
+				e.preventDefault();
+
+				$("h1").text("Upload");
+
+				var file = e.originalEvent.dataTransfer.files;
+				var fd = new FormData();
+
+				fd.append('file', file[0]);
+
+				fd.append('ID',document.getElementById("postid").value);
+				uploadData(fd);
+			});
+
+			// Open file selector on div click
+			$("#uploadfile").click(function() {
+				$("#file").click();
+			});
+
+			// file selected
+			$("#file").change(function() {
+				var fd = new FormData();
+
+				var files = $('#file')[0].files[0];
+
+				fd.append('file', files);
+				fd.append('ID',document.getElementById("postid").value);
+				uploadData(fd);
+			});
+		});
+
+		// Sending AJAX request and upload file
+		function uploadData(formdata) {
+
+			$.ajax({
+				url : 'multipleUpload',
+				type : 'post',
+				data : formdata,
+				contentType : false,
+				processData : false,
+				dataType : 'json',
+				success : function(response) {
+					addThumbnail(response);
+				}
+			});
+		}
+
+		// Added thumbnail
+		function addThumbnail(data) {
+			$("#uploadfile h1").remove();
+			var len = $("#uploadfile div.thumbnail").length;
+
+			var num = Number(len);
+			num = num + 1;
+
+			var name = data.name;
+			var size = convertSize(data.size);
+			var src = data.src;
+
+			// Creating an thumbnail
+			$("#uploadfile").append(
+					'<div id="thumbnail_'+num+'" class="thumbnail"></div>');
+			$("#thumbnail_" + num).append(
+					'<img src="' + src + '" width="100%" height="78%">');
+			$("#thumbnail_" + num).append(
+					'<span class="size">' + size + '<span>');
+
+		}
+
+		// Bytes conversion
+		function convertSize(size) {
+			var sizes = [ 'Bytes', 'KB', 'MB', 'GB', 'TB' ];
+			if (size == 0)
+				return '0 Byte';
+			var i = parseInt(Math.floor(Math.log(size) / Math.log(1024)));
+			return Math.round(size / Math.pow(1024, i), 2) + ' ' + sizes[i];
+		}
 	</script>
 </body>
 </html>
