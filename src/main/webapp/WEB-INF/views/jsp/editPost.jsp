@@ -53,8 +53,7 @@
 								</tr>
 								<tr>
 									<td><textarea rows="10" cols="135" class="form-control"
-											name="description" id="description"
-											value="${post.description}"></textarea></td>
+											name="description" id="description">${post.description}</textarea></td>
 								</tr>
 
 								<tr>
@@ -155,84 +154,51 @@
 
 
 	<script>
-		jQuery(document)
-				.ready(
-						function($) {
+		jQuery(document).ready(
+				function($) {
 
-							$("#upload")
-									.click(
-											function(event) {
+					$("#upload").click(
+							function(event) {
 
-												var formData = new FormData();
-												formData
-														.append(
-																"title",
-																document
-																		.getElementById("title").value);
-												formData
-														.append(
-																"description",
-																document
-																		.getElementById("description").value);
-												formData
-														.append(
-																"price",
-																document
-																		.getElementById("price").value);
-												formData
-														.append(
-																"type",
-																document
-																		.getElementById("type").value);
+								var formData = new FormData();
+								formData.append("title", document
+										.getElementById("title").value);
+								formData.append("description", document
+										.getElementById("description").value);
+								formData.append("price", document
+										.getElementById("price").value);
+								formData.append("type", document
+										.getElementById("type").value);
 
-												formData
-														.append(
-																"ID",
-																document
-																		.getElementById("postid").value);
-												formData
-														.append(
-																"userID",
-																document
-																		.getElementById("posthostid").value);
-												formData
-														.append(
-																"date",
-																document
-																		.getElementById("postdate").value);
-												$("#upload").prop("disabled",
-														true);
+								formData.append("ID", document
+										.getElementById("postid").value);
+								formData.append("userID", document
+										.getElementById("posthostid").value);
+								formData.append("date", document
+										.getElementById("postdate").value);
+								$("#upload").prop("disabled", true);
 
-												$
-														.ajax({
-															type : "POST",
-															url : "editPost",
-															data : formData,
-															dataType : 'text',
-															processData : false,
-															contentType : false,
-															success : function(
-																	response) {
-																$("#upload")
-																		.prop(
-																				"disabled",
-																				false);
-																//...
-										
+								$.ajax({
+									type : "POST",
+									url : "editPost",
+									data : formData,
+									dataType : 'text',
+									processData : false,
+									contentType : false,
+									success : function(response) {
+										$("#upload").prop("disabled", false);
+										//...
 
-															},
-															error : function(e) {
-																$("#upload")
-																		.prop(
-																				"disabled",
-																				false);
-																window.location.href = 'host';
-															}
-														});
+									},
+									error : function(e) {
+										$("#upload").prop("disabled", false);
+										window.location.href = 'host';
+									}
+								});
 
-											});
+							});
 
-						});
+				});
 	</script>
 	<script>
 		$(function() {
@@ -275,7 +241,7 @@
 
 				fd.append('file', file[0]);
 
-				fd.append('ID',document.getElementById("postid").value);
+				fd.append('ID', document.getElementById("postid").value);
 				uploadData(fd);
 			});
 
@@ -291,7 +257,7 @@
 				var files = $('#file')[0].files[0];
 
 				fd.append('file', files);
-				fd.append('ID',document.getElementById("postid").value);
+				fd.append('ID', document.getElementById("postid").value);
 				uploadData(fd);
 			});
 		});
