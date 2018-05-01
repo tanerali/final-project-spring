@@ -4,18 +4,15 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
-import org.springframework.scheduling.annotation.Scheduled;
-
 import airbnb.dao.BookingDAO;
 import airbnb.model.Booking;
 import airbnb.model.Notification;
-import airbnb.model.User;
 
 
 public enum BookingManager {
 	instance;
 	private BookingDAO bookingDao = BookingDAO.instance;
-
+	
 	public boolean requestBooking(Booking booking) throws SQLException {
 		return bookingDao.createBooking(booking);
 	}
@@ -34,5 +31,9 @@ public enum BookingManager {
 
 	public ArrayList<LocalDate> getUnavailableDates(int postID) throws SQLException {
 		return bookingDao.getUnavailableDates(postID);
+	}
+
+	public boolean ratePost(int postID, int userID, int rating) throws SQLException {
+		return bookingDao.ratePost(postID, userID, rating);
 	}
 }

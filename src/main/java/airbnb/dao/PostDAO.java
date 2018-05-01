@@ -136,4 +136,19 @@ public enum PostDAO {
 		}
 		return posts;
 	}
+
+	public double getPostRating(int postID) throws SQLException {
+		String sql = "SELECT ROUND(AVG(rating), 1) FROM POSTS_RATING " + 
+				"WHERE post_id = ?;";
+		
+		try (PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, postID);
+			ResultSet resultSet = ps.executeQuery();
+			if (resultSet.next()) {
+				return resultSet.getDouble(1);
+			} else {
+				return 0;
+			}
+		}
+	}
 }

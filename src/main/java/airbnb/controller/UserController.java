@@ -50,16 +50,15 @@ public class UserController {
 
 		try {
 			User user = userManager.login(email, password);
-			System.out.println("==========================" + user + "==========================");
 			if (user != null) {
 				session.setAttribute("user", user);
-
-				ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(email);
+				
+				ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(user.getEmail());
 				if (reviewsFromHosts != null) {
 					session.setAttribute("reviewsFromHosts", reviewsFromHosts);
 				}
 
-				ArrayList<Review> reviewsFromGuests = userManager.getReviewsFromGuests(email);
+				ArrayList<Review> reviewsFromGuests = userManager.getReviewsFromGuests(user.getEmail());
 				if (reviewsFromGuests != null) {
 					session.setAttribute("reviewsFromGuests", reviewsFromGuests);
 				}
@@ -69,11 +68,11 @@ public class UserController {
 					session.setAttribute("hostedPosts", hostedPosts);
 				}
 
-				ArrayList<Notification> bookingRequestNotifications = bookingManager.checkNotifications(email);
+				ArrayList<Notification> bookingRequestNotifications = bookingManager.checkNotifications(user.getEmail());
 				if (bookingRequestNotifications != null) {
 					session.setAttribute("bookingRequests", bookingRequestNotifications);
 				}
-
+				
 				return "redirect:personalProfile";
 			} else {
 				request.setAttribute("wrong_password", new Object());
@@ -172,6 +171,7 @@ public class UserController {
 		User user = (User) session.getAttribute("user");
 
 		if (user != null) {
+			
 			return "personalProfile";
 		} else {
 			return "login";

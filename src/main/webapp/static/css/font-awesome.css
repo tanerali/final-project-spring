@@ -197,6 +197,7 @@
 }
 .fa-star:before {
   content: "\f005";
+  font-size: 30px;
 }
 .fa-star-o:before {
   content: "\f006";

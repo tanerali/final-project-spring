@@ -79,4 +79,8 @@ public enum PostManager {
 	public String getThumbnail(int postID) throws SQLException {
 		return PostDAO.instance.getThumbnailPath(postID);
 	}
+
+	public double getPostRating(int postID) throws SQLException {
+		return PostDAO.instance.getPostRating(postID);
+	}
 }

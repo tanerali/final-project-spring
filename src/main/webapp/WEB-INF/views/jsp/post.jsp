@@ -64,36 +64,41 @@
 									<%=postUser.getLastName()%></span></a></li>
 						<li><i class="fa fa-calendar" aria-hidden="true"></i><span>Date
 								of posting: <%=currPost.getDateOfPosting().toString()%></span></li>
-						<li><a href="#"><i class="fa fa-heart" aria-hidden="true"></i><span><%=currPost.getRating()%>/10
-									Rating</span></a></li>
+						<li><i class="fa fa-heart" aria-hidden="true"></i><span>${rating}/5
+									Rating</span></li>
 					</ul>
 
 					<!-- BOOK -->
-					<%
-						if (session.getAttribute("user") != null) {
-					%>
+					<% if (session.getAttribute("user") != null) { %>
 
 					<form action="book" method="post">
 						<div class="input-group input-daterange">
-							<input id="startDate1" name="dateFrom" type="text"
-								class="form-control" readonly="readonly"> <span
-								class="input-group-addon"> <span
-								class="glyphicon glyphicon-calendar"></span>
-							</span> <span class="input-group-addon">to</span> <input id="endDate1"
-								name="dateTo" type="text" class="form-control"
-								readonly="readonly"> <span class="input-group-addon">
-								<span class="glyphicon glyphicon-calendar"></span>
-							</span>
+							<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 
+								<span class="input-group-addon"> 
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span> 
+								<span class="input-group-addon">to</span> 
+								<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
 						</div>
-						<input type="hidden" name="postID"
-							value="<%=currPost.getPostID()%>">
+						<input type="hidden" name="postID" value="<%=currPost.getPostID()%>">
 						<!-- BOOK BUTTON -->
 						<input type="submit" value="Request Booking"
 							style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
 					</form>
-					<%
-						}
-					%>
+					
+					<div class="input-group" id="ratingStars">
+						<h1>Rate property by clicking on star</h1>
+						<button onclick="rate(1, ${post.postID})" class="btn"> <span id="rate1" class="fa fa-star checked"></span> </button>
+						<button onclick="rate(2, ${post.postID})" class="btn"> <span id="rate2" class="fa fa-star checked"></span> </button>
+						<button onclick="rate(3, ${post.postID})" class="btn"> <span id="rate3" class="fa fa-star checked"></span> </button>
+						<button onclick="rate(4, ${post.postID})" class="btn"> <span id="rate4" class="fa fa-star checked"></span> </button>
+						<button onclick="rate(5, ${post.postID})" class="btn"> <span id="rate5" class="fa fa-star checked"></span> </button>
+					</div>
+					<% } %>
+					
 				</div>
 				<h3>Description</h3>
 				<p><%=currPost.getDescription()%></p>
@@ -139,23 +144,16 @@
 						<p class="lorem"><%=content%></p>
 					</div>
 					<div class="clearfix">
-
 						<%
-							if (session.getAttribute("user") != null
-										&& ((User) session.getAttribute("user")).getUserID() == userID) {
-						%>
+						if (session.getAttribute("user") != null
+										&& ((User) session.getAttribute("user")).getUserID() == userID) { %>
 						<button
 							style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
-							onclick="deleteComment(<%=commentID%>, <%=postID%>)">DELETE
-							COMMENT</button>
-						<%
-							}
-						%>
+							onclick="deleteComment(<%=commentID%>, <%=postID%>)">DELETE COMMENT</button>
+						<% } %>
 					</div>
 				</div>
-				<%
-					}
-				%>
+				<% } %>
 			</div>
 			<!-- //comments -->
 
@@ -292,7 +290,33 @@
 					element.parentNode.removeChild(element);
 				}
 			}
-		}		
+		}
+		
+		function rate(rating, postID){
+			var req = new XMLHttpRequest();
+			
+			req.open("Post", "rate");
+			/* req.setRequestHeader("Content-Type", "application/json"); */
+			
+			var formData = new FormData();
+			formData.append("rating", rating);
+			formData.append("postID", postID);
+			
+			req.send(formData);
+			
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					var stars = document.getElementsByClassName("fa-star");
+					var ratedStar = document.getElementById("rate"+rating); 
+					ratedStar.style = "color:green";
+					for (star of stars) {
+						if(star.id == ("rate"+rating)) continue;
+						star.style = "";
+					}
+				}
+			}
+		}
+				
 	</script>
 </body>
 </html>

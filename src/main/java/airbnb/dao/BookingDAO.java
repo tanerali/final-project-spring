@@ -119,8 +119,39 @@ public enum BookingDAO {
 				"SET visited=true " + 
 				"WHERE (SELECT CURDATE()) = date_to AND confirmed=true AND visited=false;";
 		
-		try (Statement statement = connection.prepareStatement(sql)) {
+		try (Statement statement = connection.createStatement()) {
 			statement.executeUpdate(sql);
+		}
+	}
+
+	public ArrayList<String> askUsersToRatePlaceAfterVisit() throws SQLException {
+		String sql = "SELECT u.email FROM POSTS_BOOKINGS pb " + 
+				"JOIN USERS u " + 
+				"ON pb.customer_id = u.ID " + 
+				"WHERE (SELECT CURDATE()) = date_to AND confirmed=true AND visited=true;";
+		
+		ArrayList<String> usersToAskForRating = new ArrayList<>(); 
+		try (Statement statement = connection.createStatement()) {
+			ResultSet resultSet = statement.executeQuery(sql);
+			while (resultSet.next()) {
+				usersToAskForRating.add(resultSet.getString("email"));
+			}
+		}
+		return usersToAskForRating;
+	}
+
+	public boolean ratePost(int postID, int userID, int rating) throws SQLException {
+		String sql = "INSERT INTO POSTS_RATING (post_id, user_id, rating)\n" + 
+				"VALUES (?, ?, ?) " + 
+				"ON DUPLICATE KEY UPDATE " + 
+				"rating = ?;";
+		
+		try (PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, postID);
+			ps.setInt(2, userID);
+			ps.setInt(3, rating);
+			ps.setInt(4, rating);
+			return ps.executeUpdate() > 0 ? true : false;
 		}
 	}
 }

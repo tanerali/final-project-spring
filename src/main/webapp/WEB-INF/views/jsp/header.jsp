@@ -84,10 +84,15 @@
 									}
 								</script>
 								
-								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>
-									<ul class="dropdown-menu" style="width:270px;">
+								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" 
+												aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>
+									
+									
+									<ul class="dropdown-menu">
 										<c:forEach var="notification" items="${bookingRequests}">
-											<li id="notification${notification.notificationID }">
+										
+											<li style="padding-top:5px" id="notification${notification.notificationID }">
+												<div style="width: 300px">
 												<a href="post?id=${ notification.postID }">
 													<img class="img-responsive" src="getThumbnail?id=${ notification.postID }">
 														<h4>Booking request for <em>${ notification.title }</em></h4>
@@ -108,11 +113,13 @@
 													style="float: right; margin-bottom: 5px; background-color: #4CAF50; 
 													border: none; color: white; padding: 15px 32px;">ACCEPT
 												</button>
+												</div>
 											</li>
-														
+										
 										</c:forEach>
-									
 									</ul>
+									
+									
 								</li>
 								<li><a href="personalProfile">Profile</a></li>
 								<li><a href="logout">Logout</a></li>

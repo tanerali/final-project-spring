@@ -1,19 +1,26 @@
 package airbnb.controller;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.ListIterator;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.httpclient.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +38,9 @@ import airbnb.model.User;
 @Controller
 public class BookingController {
 	private BookingManager bookingManager = BookingManager.instance;
+	
+	@Autowired
+	private JavaMailSenderImpl mailSender;
 
 	@RequestMapping(value = "/book", method = RequestMethod.POST)
 	public String bookPost(HttpSession session, HttpServletRequest request,
@@ -116,5 +126,48 @@ public class BookingController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	//after checkout ask users to rate
+	//@Scheduled(cron="*/10 * * * * *")
+	@Scheduled(cron="0 30 12 * * *")
+	public void askUsersToRatePlaceAfterVisit() throws SQLException {
+		ArrayList<String> emails = BookingDAO.instance.askUsersToRatePlaceAfterVisit();
+		
+		for (String email : emails) {
+			MimeMessage mimeMessage = mailSender.createMimeMessage();
+			
+			try {
+				MimeMessageHelper mailMsg = new MimeMessageHelper(mimeMessage, true);
+				mailMsg.setFrom("ittalents.airbnb@gmail.com");
+				mailMsg.setTo(email);
+				mailMsg.setSubject("Test mail");
+				mailMsg.setText("Dear User, now you can rate the place you stayed at", true);
+				String logoPath = "/Users/tanerali/Desktop/finalProject Photos/logo.png";
+				FileSystemResource file = new FileSystemResource(new File(logoPath));
+				mailMsg.addAttachment("myPic.jpg", file);
+				mailSender.send(mimeMessage);
+			} catch (MessagingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@RequestMapping(value = "/rate", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<Object> ratePost(HttpSession session,
+			@RequestParam("rating") int rating,
+			@RequestParam("postID") int postID) {
+		User user = (User) session.getAttribute("user");
+		try {
+			if (bookingManager.ratePost(postID, user.getUserID(), rating)) {
+				return ResponseEntity.status(HttpStatus.SC_OK).body(null);
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
 	}
 }

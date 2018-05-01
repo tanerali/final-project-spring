@@ -95,7 +95,7 @@
 
 				<h2>Listings</h2>
 				<div class="list-group">
-					<c:forEach var="listing" items="${ sessionScope.hostedPosts }">
+					<c:forEach var="listing" items="${ hostedPosts }">
 						<a href="post?id=${ listing.postID }" class="list-group-item">
 							<img class="img-responsive"
 							src="getThumbnail?id=${ listing.postID }">
@@ -150,14 +150,11 @@
 				</div>
 
 				<%
-					Exception e = null;
-					if (request.getAttribute("exception") != null) {
-						e = (Exception) request.getAttribute("exception");
-				%>
-				<p style="color: red"><%=e.getMessage()%></p>
-				<%
-					}
-				%>
+				Exception e = null;
+				if (request.getAttribute("exception") != null) {
+					e = (Exception) request.getAttribute("exception"); %>
+					<p style="color: red"><%=e.getMessage()%></p>
+				<% } %>
 
 				<div id="editUser" style="display: none;">
 
@@ -230,75 +227,52 @@
 				</div>
 
 				<h1 class="page-header">Reviews from Hosts</h1>
-				<%
-					if (session.getAttribute("reviewsFromHosts") != null) {
-						ArrayList<Review> reviews = ((ArrayList<Review>) session.getAttribute("reviewsFromHosts"));
-						for (Review review : reviews) {
-				%>
-
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<%=review.getReviewerName()%>
-						<span style="float: right"><%=review.getDate()%></span>
+				
+				<c:forEach var="reviewFromHost" items="${reviewsFromHosts}">
+					<div class="panel panel-default">
+						<div class="panel-heading">${reviewFromHost.reviewerName}
+							<span style="float: right">${reviewFromHost.date }</span>
+						</div>
+						<div class="panel-body">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="panel-body">
+										${reviewFromHost.review}
+									</div>
+								</div>
+								<div class="col-md-6"></div>
+							</div>
+						</div>
 					</div>
+				</c:forEach>
 
-					<div class="panel-body">
+				<h1 class="page-header">Reviews from Guests of
+					<%=user.getFirstName() + " " + user.getLastName()%></h1>
+								
+				<c:forEach var="reviewFromGuest" items="${reviewsFromGuests}">
+					<div class="panel panel-default">
+						<div class="panel-heading">${reviewFromGuest.reviewerName }
+							<span style="float: right">${reviewFromGuest.date }</span>
+						</div>
 						<div class="row">
 							<div class="col-md-6">
 								<div class="panel-body">
-									<%=review.getReview()%>
+									${reviewFromGuest.review }
 								</div>
 							</div>
-							<div class="col-md-6"></div>
-						</div>
-					</div>
-				</div>
-
-				<%
-					}
-				%>
-				<%
-					}
-				%>
-
-				<h1 class="page-header">
-					Reviews from Guests of
-					<%=user.getFirstName() + " " + user.getLastName()%></h1>
-
-				<%
-					if (session.getAttribute("reviewsFromGuests") != null) {
-						ArrayList<Review> reviews = ((ArrayList<Review>) session.getAttribute("reviewsFromGuests"));
-						for (Review review : reviews) {
-				%>
-
-				<div class="panel panel-default">
-					<div class="panel-heading">
-						<%=review.getReviewerName()%>
-						<span style="float: right"><%=review.getDate()%></span>
-					</div>
-					<div class="row">
-						<div class="col-md-6">
-							<div class="panel-body">
-								<%=review.getReview()%>
-							</div>
-						</div>
-						<div class="col-md-6">
-							<div class="panel-body">
-								Reviewed Property: <i><%=review.getReviewedName()%></i> <a
-									href="post?id=<%=review.getReviewedPropertyID()%>"> <img
-									class="img-responsive" style="width: 400px"
-									src="getThumbnail?id=<%=review.getReviewedPropertyID()%>">
-								</a>
+							<div class="col-md-6">
+								<div class="panel-body">
+									Reviewed Property: <i>${reviewFromGuest.reviewedName }</i> <a
+										href="post?id=${reviewFromGuest.reviewedPropertyID }"> <img
+										class="img-responsive" style="width: 400px"
+										src="getThumbnail?id=${reviewFromGuest.reviewedPropertyID }">
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<%
-					}
-				%>
-				<%
-					}
-				%>
+				</c:forEach>
+				
 			</div>
 		</div>
 	</div>

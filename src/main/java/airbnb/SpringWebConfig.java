@@ -1,12 +1,15 @@
 package airbnb;
 
 import java.util.Locale;
+import java.util.Properties;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -80,5 +83,22 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 	    commonsMultipartResolver.setDefaultEncoding("utf-8");
 	    commonsMultipartResolver.setMaxUploadSize(50000000);
 	    return commonsMultipartResolver;
+	}
+	
+	@Bean
+	public JavaMailSenderImpl mailSender() {
+		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+		mailSender.setHost("smtp.gmail.com");
+		mailSender.setPort(587);
+		//Set gmail email id
+		mailSender.setUsername("ittalents.airbnb@gmail.com");
+		//Set gmail email password
+		mailSender.setPassword("Pa$$word123");
+		Properties prop = mailSender.getJavaMailProperties();
+		prop.put("mail.transport.protocol", "smtp");
+		prop.put("mail.smtp.auth", "true");
+		prop.put("mail.smtp.starttls.enable", "true");
+		prop.put("mail.debug", "true");
+		return mailSender;
 	}
 }

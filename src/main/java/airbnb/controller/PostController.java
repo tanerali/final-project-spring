@@ -88,11 +88,13 @@ public class PostController {
 		User hostUser = null;
 		ArrayList<Comment> comments = new ArrayList<>();
 		ArrayList<LocalDate> unavailableDates = new ArrayList<>();
+		double postRating;
 
 		if (currPost != null) {
 			try {
 				hostUser = userManager.getUserByID(currPost.getHostID());
 				comments = commentManager.getCommentsForPost(postID);
+				postRating = postManager.getPostRating(postID);
 				
 				if (session.getAttribute("user") != null) {
 					unavailableDates = bookingManager.getUnavailableDates(postID);
@@ -105,10 +107,12 @@ public class PostController {
 					request.setAttribute("unavailableDatesString", unavailableDatesString);
 				}
 			} catch (SQLException | UserDataException e) {
+				e.printStackTrace();
 				request.setAttribute("exception", e.getMessage());
 				return "error";
 			}
 
+			request.setAttribute("rating", postRating);
 			request.setAttribute("user", hostUser);
 			request.setAttribute("post", currPost);
 			request.setAttribute("comments", comments);
