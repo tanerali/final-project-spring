@@ -8,17 +8,12 @@ import java.io.OutputStream;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.httpclient.HttpStatus;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,12 +24,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import airbnb.dao.LocationDao;
 import airbnb.exceptions.InvalidCommentIDException;
 import airbnb.exceptions.InvalidPostDataExcepetion;
-
 import airbnb.manager.BookingManager;
-
 import airbnb.exceptions.UserDataException;
 import airbnb.manager.CommentManager;
 import airbnb.manager.PostManager;
@@ -42,7 +34,6 @@ import airbnb.manager.UserManager;
 import airbnb.model.Comment;
 import airbnb.model.Post;
 import airbnb.model.User;
-import airbnb.model.Booking;
 
 @Controller
 public class PostController {

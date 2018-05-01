@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -113,11 +114,13 @@ public enum BookingDAO {
 		return unavailableDates;
 	}
 
-//	public boolean userHasVisited(User user, int postID) {
-//		String sql = "SELECT pb.post_id, p.title, pb.customer_id, pb.date_from, pb.date_to " + 
-//				"FROM POSTS_BOOKINGS pb " + 
-//				"JOIN POSTS p " + 
-//				"ON pb.post_id = p.ID " + 
-//				"WHERE (SELECT NOW()) > date_to AND confirmed=true;";
-//	}
+	public void changeStatusToVisited() throws SQLException {
+		String sql = "UPDATE POSTS_BOOKINGS " + 
+				"SET visited=true " + 
+				"WHERE (SELECT CURDATE()) = date_to AND confirmed=true AND visited=false;";
+		
+		try (Statement statement = connection.prepareStatement(sql)) {
+			statement.executeUpdate(sql);
+		}
+	}
 }

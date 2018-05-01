@@ -252,10 +252,12 @@ public class UserController {
 			User user = userManager.getUserByID(userID);
 			ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(user.getEmail());
 			ArrayList<Review> reviewsFromGuests = userManager.getReviewsFromGuests(user.getEmail());
-
+			ArrayList<Post> hostedPosts = (ArrayList<Post>) postManager.getPostsByUsers().get(user.getUserID());
+			
 			request.setAttribute("user", user);
 			request.setAttribute("reviewsFromHosts", reviewsFromHosts);
 			request.setAttribute("reviewsFromGuests", reviewsFromGuests);
+			request.setAttribute("hostedPosts", hostedPosts);
 		} catch (UserDataException | SQLException e) {
 			request.setAttribute("error", e.getMessage());
 			return "error";

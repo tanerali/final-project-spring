@@ -92,50 +92,60 @@
 					<img class="img-responsive" alt=""
 						src="getProfilePic?id=<%=user.getUserID()%>">
 				</div>
-				<div class="panel panel-default">
-					<div class="panel-heading">Verified info</div>
-					<div class="panel-body">
-						<ul>
-							<li>Email</li>
-						</ul>
-					</div>
-				</div>
+
 				<h2>Listings</h2>
-				<ul>
-					<li><img class="img-resposive" src="images/1.jpg"
-						style="width: 320px; height: 100%"></li>
-				</ul>
+				<div class="list-group">
+					<c:forEach var="listing" items="${ hostedPosts }">
+						<a href="post?id=${ listing.postID }" class="list-group-item">
+							<img class="img-responsive"
+							src="getThumbnail?id=${ listing.postID }">
+							<p>${ listing.title }</p>
+						</a>
+					</c:forEach>
+				</div>
 			</div>
 
-
-
 			<div class="col-sm-9">
-
 				<div id="user" style="display: block;">
-					<h1><%=user.getFirstName() + " " + user.getLastName()%></h1>
-
-					<ul>
-						<li><%=user.getEmail()%></li>
-						<li><%=user.getGender()%></li>
-						<li><%=user.getCountry()%></li>
-						<li><%=user.getCity()%></li>
-						<li><%=user.getDescription()%></li>
-						<li><%=user.getBirthDate()%></li>
-						<li><%=user.getTelNumber()%></li>
-					</ul>
+					<h1 class="page-header"><%=user.getFirstName() + " " + user.getLastName()%></h1>
+					<div class="panel panel-default">
+						<div class="panel-heading">Verified info</div>
+						<div class="panel-body">
+							<table class="table table-hover">
+								<tr>
+									<td>Email</td>
+									<td><%=user.getEmail()%></td>
+								</tr>
+								<tr>
+									<td>Gender</td>
+									<td><%=user.getGender()%></td>
+								</tr>
+								<tr>
+									<td>Country</td>
+									<td><%=user.getCountry()%></td>
+								</tr>
+								<tr>
+									<td>City</td>
+									<td><%=user.getCity()%></td>
+								</tr>
+								<tr>
+									<td>Description</td>
+									<td><%=user.getDescription()%></td>
+								</tr>
+								<tr>
+									<td>Birth Date</td>
+									<td><%=user.getBirthDate()%></td>
+								</tr>
+								<tr>
+									<td>Telephone Number</td>
+									<td><%=user.getTelNumber()%></td>
+								</tr>
+							</table>
+						</div>
+					</div>
 				</div>
 
-				<%
-					Exception e = null;
-					if (request.getAttribute("exception") != null) {
-						e = (Exception) request.getAttribute("exception");
-				%>
-				<p style="color: red"><%=e.getMessage()%></p>
-				<%
-					}
-				%>
-
-				<h1>Reviews from Hosts</h1>
+				<h1 class="page-header">Reviews from Hosts</h1>
 
 				<%
 					if (request.getAttribute("reviewsFromHosts") != null) {
@@ -144,12 +154,20 @@
 				%>
 
 				<div class="panel panel-default">
-					<div class="panel-heading"><%=review.getReviewerName()%></div>
-					<div class="panel-body">
-						<%=review.getReview()%>
+					<div class="panel-heading">
+						<%=review.getReviewerName()%>
+						<span style="float: right"><%=review.getDate()%></span>
 					</div>
+
 					<div class="panel-body">
-						<%=review.getDate()%>
+						<div class="row">
+							<div class="col-md-6">
+								<div class="panel-body">
+									<%=review.getReview()%>
+								</div>
+							</div>
+							<div class="col-md-6"></div>
+						</div>
 					</div>
 				</div>
 
@@ -161,7 +179,7 @@
 					}
 				%>
 
-				<h1>
+				<h1 class="page-header">
 					Reviews from Guests of
 					<%=user.getFirstName() + " " + user.getLastName()%></h1>
 
@@ -172,17 +190,25 @@
 				%>
 
 				<div class="panel panel-default">
-					<div class="panel-heading"><%=review.getReviewerName()%></div>
-					<div class="panel-body">
-						<%=review.getReview()%>
+					<div class="panel-heading">
+						<%=review.getReviewerName()%>
+						<span style="float: right"><%=review.getDate()%></span>
 					</div>
-					<div class="panel-body" style="font-style: italic;">
-
-						Reviewed Property:
-						<%=review.getReviewedName()%>
-					</div>
-					<div class="panel-body">
-						<%=review.getDate()%>
+					<div class="row">
+						<div class="col-md-6">
+							<div class="panel-body">
+								<%=review.getReview()%>
+							</div>
+						</div>
+						<div class="col-md-6">
+							<div class="panel-body">
+								Reviewed Property: <i><%=review.getReviewedName()%></i> <a
+									href="post?id=<%=review.getReviewedPropertyID()%>"> <img
+									class="img-responsive" style="width: 400px"
+									src="getThumbnail?id=<%=review.getReviewedPropertyID()%>">
+								</a>
+							</div>
+						</div>
 					</div>
 				</div>
 
