@@ -14,6 +14,7 @@ import java.util.Map;
 import airbnb.exceptions.InvalidPostDataExcepetion;
 import airbnb.manager.DBManager;
 import airbnb.model.Post;
+import airbnb.model.User;
 
 public enum PostDAO {
 	instance;
@@ -123,6 +124,20 @@ public enum PostDAO {
 			return null;
 		}
 	}
+
+	public boolean editPost(Post post) throws SQLException {
+		String sql = "UPDATE POSTS SET type_id=?, title=?, description=?, price=?  WHERE ID = ?;";
+
+		try (PreparedStatement ps = connection.prepareStatement(sql)) {
+			ps.setInt(1, post.getTypeLikeID());
+			ps.setString(2, post.getTitle());
+			ps.setString(3, post.getDescription());
+			ps.setInt(4, post.getPrice());
+			ps.setInt(5, post.getPostID());
+			return ps.executeUpdate() > 0 ? true : false;
+		}
+	}
+
 	
 	public List<Post> getAllPostsByUserID(int id) throws SQLException, InvalidPostDataExcepetion {
 		List<Post> posts = new ArrayList<>();

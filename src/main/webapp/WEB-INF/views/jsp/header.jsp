@@ -3,6 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!-- <script src="js/artyom.window.js"></script> -->
 <div class="header">
 	<div class="container">
 		<div class="header-left">
@@ -44,7 +45,8 @@
 									</form>
 								</li>
 
-								<li><a href="#" id="openBtn" class="active" onclick="openSearch()">Search</a></li>
+								<li><a href="#" id="openBtn" class="active"
+									onclick="openSearch()">Search</a></li>
 								<li><a href="explore" onclick="explore(this);">Explore</a></li>
 								<%
 									if (session.getAttribute("user") == null) {
@@ -55,7 +57,7 @@
 									} else {
 								%>
 								<li><a href="host">Host</a></li>
-								
+
 								<script type="text/javascript">
 									function rejectBookingRequest(notificationID) {
 										var req = new XMLHttpRequest();
@@ -85,9 +87,7 @@
 								</script>
 								
 								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" 
-												aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>
-									
-									
+												aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>									
 									<ul class="dropdown-menu">
 										<c:forEach var="notification" items="${bookingRequests}">
 										
@@ -98,15 +98,13 @@
 														<h4>Booking request for <em>${ notification.title }</em></h4>
 												</a>
 												<p>
-													From: ${ notification.dateFrom }<br>
-													To: ${ notification.dateTo }<br>
-													Customer name: ${ notification.fullName }<br>
-													Profile: <a href="profile?id=${ notification.customerID }">${ notification.email }</a>
+													From: ${ notification.dateFrom }<br> To: ${ notification.dateTo }<br>
+													Customer name: ${ notification.fullName }<br> Profile:
+													<a href="profile?id=${ notification.customerID }">${ notification.email }</a>
 												</p>
 												<button
 													onclick="rejectBookingRequest(${notification.notificationID})"
-													style="float: left; margin-bottom: 5px; background-color: red; 
-													border: none; color: white; padding: 15px 32px;">REJECT
+													style="float: left; margin-bottom: 5px; background-color: red; border: none; color: white; padding: 15px 32px;">REJECT
 												</button>
 												<button
 													onclick="acceptBookingRequest(${notification.notificationID})"
@@ -115,11 +113,8 @@
 												</button>
 												</div>
 											</li>
-										
 										</c:forEach>
 									</ul>
-									
-									
 								</li>
 								<li><a href="personalProfile">Profile</a></li>
 								<li><a href="logout">Logout</a></li>
@@ -137,3 +132,121 @@
 		<div class="clearfix"></div>
 	</div>
 </div>
+<script>// With ES6,TypeScript etc
+
+//Create a variable that stores your instance
+const artyom = new Artyom();
+
+//Or if you are using it in the browser
+//var artyom = new Artyom();// or `new window.Artyom()`
+
+//Add command (Short code artisan way)
+artyom.on(['Good morning','Good afternoon']).then((i) => {
+ switch (i) {
+     case 0:
+         artyom.say("Good morning, how are you?");
+     break;
+     case 1:
+         artyom.say("Good afternoon, how are you?");
+     break;            
+ }
+});
+
+//Smart command (Short code artisan way), set the second parameter of .on to true
+artyom.on(['Repeat after me *'] , true).then((i,wildcard) => {
+ artyom.say("You've said : " + wildcard);
+});
+
+//or add some commandsDemostrations in the normal way
+artyom.addCommands([
+ {
+	 indexes: ['go to *'],
+	 smart:true,
+     action: function(i,wildcard){
+         wildcard = wildcard || "";
+         
+         switch(wildcard.toLowerCase()){
+             case "explore":
+            	 window.location.href = "explore";
+             break;
+             case "login":
+            	 window.location.href = "login";
+             break;
+             case "register":
+            	 window.location.href = "register";
+             break;
+             case "other features":
+                 sdkcarlos.scrollTo("#section-otherfeatures");
+             break;
+             case "text to speech":
+                 sdkcarlos.scrollTo("#section-speechapi");
+             break;
+             case "github":
+                 window.location.href = "https://github.com/sdkcarlos/artyom.js";
+             break;
+             default:
+                 console.warn("Location "+wildcard+" has been not saved.");
+             break;
+         }
+         console.log(i,wildcard);
+     }
+ },
+ {
+     indexes: ['Repeat after me *'],
+     smart:true,
+     action: (i,wildcard) => {
+         artyom.say("You've said : "+ wildcard);
+     }
+ },
+ // The smart commands support regular expressions
+ {
+     indexes: [/Good Morning/i],
+     smart:true,
+     action: (i,wildcard) => {
+         artyom.say("You've said : "+ wildcard);
+     }
+ },
+ {
+     indexes: ['shut down yourself'],
+     action: (i,wildcard) => {
+         artyom.fatality().then(() => {
+             console.log("Artyom succesfully stopped");
+         });
+     }
+ },
+]);
+
+//Start the commands !
+artyom.initialize({
+ lang: "en-GB", // GreatBritain english
+ continuous: true, // Listen forever
+ soundex: true,// Use the soundex algorithm to increase accuracy
+ debug: true, // Show messages in the console
+ executionKeyword: "and do it now",
+ listen: true, // Start to listen commands !
+
+ // If providen, you can only trigger a command if you say its name
+ // e.g to trigger Good Morning, you need to say "Jarvis Good Morning"
+}).then(() => {
+ console.log("Artyom has been succesfully initialized");
+}).catch((err) => {
+ console.error("Artyom couldn't be initialized: ", err);
+});
+
+/**
+* To speech text
+*/
+artyom.say("Hello, this is a demo text. The next text will be spoken in Spanish",{
+ onStart: () => {
+     console.log("Reading ...");
+ },
+ onEnd: () => {
+     console.log("No more text to talk");
+
+     // Force the language of a single speechSynthesis
+     artyom.say("Hola, esto está en Español", {
+         lang:"es-ES"
+     });
+ }
+});
+</script>

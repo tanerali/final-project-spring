@@ -46,14 +46,13 @@ public class AjaxController {
 		int price = Integer.valueOf(request.getParameter("price"));
 		String type = request.getParameter("type");
 		User user = (User) session.getAttribute("user");
-		int hostID = user.getUserID();
 		String country = request.getParameter("country");
 		String city = request.getParameter("city");
 		
 		Post newPost;
 		int ID = -1;
-		String uploadFolder = "/home/dnn/UPLOADAIRBNB";
-		System.out.println(title + " " + description + " " + price + " " + type + " " + hostID);
+		//String uploadFolder = "/home/dnn/UPLOADAIRBNB";
+		String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
 		if (user != null) {
 			try {
 				// Create new post From PostForm

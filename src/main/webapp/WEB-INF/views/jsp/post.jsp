@@ -11,6 +11,11 @@
 <%
 	Post currPost = (Post) request.getAttribute("post");
 	User postUser = (User) request.getAttribute("user");
+	User currUser = (User) session.getAttribute("user");
+	boolean myPost = false;
+	if(currUser != null) {
+		myPost = (currPost.getHostID() == currUser.getUserID()) ? true : false;
+	}
 %>
 <title><%=currPost.getTitle()%></title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"
@@ -32,6 +37,9 @@
 <link
 	href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300'
 	rel='stylesheet' type='text/css'>
+	
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- //font -->
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
@@ -71,33 +79,40 @@
 					<!-- BOOK -->
 					<% if (session.getAttribute("user") != null) { %>
 
-					<form action="book" method="post">
-						<div class="input-group input-daterange">
-							<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 
-								<span class="input-group-addon"> 
-									<span class="glyphicon glyphicon-calendar"></span>
-								</span> 
-								<span class="input-group-addon">to</span> 
-								<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
-								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-calendar"></span>
-								</span>
+						<form action="book" method="post">
+							<div class="input-group input-daterange">
+								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 
+									<span class="input-group-addon"> 
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span> 
+									<span class="input-group-addon">to</span> 
+									<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+							</div>
+							<input type="hidden" name="postID" value="<%=currPost.getPostID()%>">
+							<!-- BOOK BUTTON -->
+							<input type="submit" value="Request Booking"
+								style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
+						</form>
+						
+						<div class="input-group" id="ratingStars">
+							<h1>Rate property by clicking on star</h1>
+							<button onclick="rate(1, ${post.postID})" class="btn"> <span id="rate1" class="fa fa-star checked"></span> </button>
+							<button onclick="rate(2, ${post.postID})" class="btn"> <span id="rate2" class="fa fa-star checked"></span> </button>
+							<button onclick="rate(3, ${post.postID})" class="btn"> <span id="rate3" class="fa fa-star checked"></span> </button>
+							<button onclick="rate(4, ${post.postID})" class="btn"> <span id="rate4" class="fa fa-star checked"></span> </button>
+							<button onclick="rate(5, ${post.postID})" class="btn"> <span id="rate5" class="fa fa-star checked"></span> </button>
 						</div>
-						<input type="hidden" name="postID" value="<%=currPost.getPostID()%>">
-						<!-- BOOK BUTTON -->
-						<input type="submit" value="Request Booking"
-							style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
-					</form>
-					
-					<div class="input-group" id="ratingStars">
-						<h1>Rate property by clicking on star</h1>
-						<button onclick="rate(1, ${post.postID})" class="btn"> <span id="rate1" class="fa fa-star checked"></span> </button>
-						<button onclick="rate(2, ${post.postID})" class="btn"> <span id="rate2" class="fa fa-star checked"></span> </button>
-						<button onclick="rate(3, ${post.postID})" class="btn"> <span id="rate3" class="fa fa-star checked"></span> </button>
-						<button onclick="rate(4, ${post.postID})" class="btn"> <span id="rate4" class="fa fa-star checked"></span> </button>
-						<button onclick="rate(5, ${post.postID})" class="btn"> <span id="rate5" class="fa fa-star checked"></span> </button>
-					</div>
+						
+						<%if(myPost) { %>
+						<br><a  href="edit?id=<%=currPost.getPostID()%>" style="background-color: #4CAF50; border: none; color: white;" >EDIT POST</a>
+						<a href="delete?id=<%=currPost.getPostID()%>"><i class="fa fa-trash" ></i></a>
+						<% } %>
 					<% } %>
+					
+					
 					
 				</div>
 				<h3>Description</h3>
@@ -128,8 +143,7 @@
 						int postID = comment.getPostID();
 				%>
 
-				<div class="agileits_three_comment_grid"
-					id="comment<%=commentID%>">
+				<div class="agileits_three_comment_grid" id="comment<%=commentID%>">
 					<div class="agileits_tom" id="profilePic">
 						<a href="profile?id=<%=userID%>"> <img
 							src="getProfilePic?id=<%=userID%>"
