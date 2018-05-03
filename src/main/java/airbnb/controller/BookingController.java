@@ -34,6 +34,9 @@ public class BookingController {
 	
 	@Autowired
 	private JavaMailSenderImpl mailSender;
+	
+	@Autowired
+	private PostController postController;
 
 	@RequestMapping(value = "/book", method = RequestMethod.POST)
 	public String bookPost(HttpSession session, HttpServletRequest request,
@@ -51,7 +54,7 @@ public class BookingController {
 			} catch (UserDataException e) {
 				e.printStackTrace();
 				request.setAttribute("error", e.getMessage());
-				return "error";
+				return postController.specificPostPage(request, session, postID);
 			}
 		}
 		return "redirect:post?id="+ postID;

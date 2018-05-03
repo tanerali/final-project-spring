@@ -44,7 +44,7 @@ public class GlobalControllerExceptionHandler {
 		}
 		// Otherwise setup and send the user to a default error-view.
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("exception", e);
+		mav.addObject("error", e);
 		mav.addObject("url", req.getRequestURL());
 		mav.setViewName(DEFAULT_ERROR_VIEW);
 		return mav;

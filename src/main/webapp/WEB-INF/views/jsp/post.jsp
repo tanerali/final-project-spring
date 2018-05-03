@@ -77,7 +77,16 @@
 					</ul>
 
 					<!-- BOOK -->
-					<% if (session.getAttribute("user") != null) { %>
+					<%-- <c:if test="${ error != null }">
+						<h4 style="color: red">${ error }</h4>
+					</c:if> --%>
+					
+					<% if (request.getAttribute("error") != null) { %>
+						<h4 style="color: red">${ error }</h4>
+					<% } %>
+					
+					
+					<% if (session.getAttribute("user") != null && !myPost) { %>
 						<form action="book" method="post">
 							<div class="input-group input-daterange">
 								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 

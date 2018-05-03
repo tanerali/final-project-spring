@@ -45,7 +45,9 @@ public class AjaxController {
 	private BookingManager bookingManager = BookingManager.INSTANCE;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public ResponseEntity<String> uploadPost(HttpServletRequest request, HttpSession session,
+	public ResponseEntity<String> uploadPost(
+			HttpServletRequest request, 
+			HttpSession session,
 			@RequestParam("file") MultipartFile file) {
 		String title = request.getParameter("title");
 		String description = request.getParameter("description");
@@ -105,17 +107,20 @@ public class AjaxController {
 		
 		if (user != null && bookingManager.deleteBookingRequest(notificationID)) {
 			
-			ArrayList<Notification> bookingRequestsInSession = new ArrayList<>();
-			bookingRequestsInSession = (ArrayList<Notification>)session.getAttribute("bookingRequests");
+			ArrayList<Notification> bookingRequestsInSession = 
+					(ArrayList<Notification>)session.getAttribute("bookingRequests");
 
-			//using iterator to avoid ConcurrentModificationException
-			for (Iterator<Notification> iterator = bookingRequestsInSession.iterator(); iterator.hasNext();) {
-				Notification notification = (Notification) iterator.next();
-				if (notification.getNotificationID() == notificationID) {
-					iterator.remove();
+			if (bookingRequestsInSession != null) {
+				//using iterator to avoid ConcurrentModificationException
+				for (Iterator<Notification> iterator = bookingRequestsInSession.iterator(); iterator.hasNext();) {
+					Notification notification = (Notification) iterator.next();
+					if (notification.getNotificationID() == notificationID) {
+						iterator.remove();
+					}
 				}
+				return ResponseEntity.status(HttpStatus.OK).body(null);
 			}
-			return ResponseEntity.status(HttpStatus.OK).body(null);
+			
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 	}

@@ -33,8 +33,6 @@ public enum PostDAO {
 			"ON p.city_id = ci.ID " + 
 			"JOIN COUNTRIES co " + 
 			"ON ci.country_code = co.code";
-	
-	private static final String getAllPostsByUser = "SELECT * FROM POSTS\n" + "JOIN\n" + "USERS on USERS.ID = ?;";
 
 	private PostDAO() {
 		connection = DBManager.INSTANCE.getConnection();
@@ -136,20 +134,6 @@ public enum PostDAO {
 			ps.setInt(5, post.getPostID());
 			return ps.executeUpdate() > 0 ? true : false;
 		}
-	}
-
-	
-	public List<Post> getAllPostsByUserID(int id) throws SQLException, InvalidPostDataExcepetion {
-		List<Post> posts = new ArrayList<>();
-		PreparedStatement st = connection.prepareStatement(getAllPostsByUser);
-		try {
-			st.setInt(1, id);
-			ResultSet result = st.executeQuery();
-			posts = this.getResult(result);
-		} finally {
-			st.close();
-		}
-		return posts;
 	}
 
 	public double getPostRating(int postID) throws SQLException {
