@@ -60,13 +60,13 @@
 
 									<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" 
 													aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>									
-										<ul class="dropdown-menu">
+										<ul class="dropdown-menu" style="border: solid; border-radius:20px;">
 											<c:forEach var="notification" items="${bookingRequests}">
 											
 												<li style="padding-top:5px" id="notification${notification.notificationID }">
-													<div style="width: 300px">
+													<div style="width: 250px">
 													<a href="post?id=${ notification.postID }">
-														<img class="img-responsive" src="getThumbnail?id=${ notification.postID }">
+														<img style="width: 40%; height: 40%;" class="img-responsive" src="getThumbnail?id=${ notification.postID }">
 															<h4>Booking request for <em>${ notification.title }</em></h4>
 													</a>
 													<p>
@@ -89,13 +89,10 @@
 										</ul>
 									</li>
 									
+
 									<li><a href="personalProfile">Profile</a></li>
 									<li><a href="logout">Logout</a></li>
 								</c:if>
-								
-								<%-- <%
-									}
-								%> --%>
 							</ul>
 							<div class="clearfix"></div>
 						</div>
@@ -179,14 +176,23 @@ artyom.addCommands([
              case "register":
             	 window.location.href = "register";
              break;
-             case "other features":
-                 sdkcarlos.scrollTo("#section-otherfeatures");
+             case "index":
+            	 window.location.href = "index";
              break;
-             case "text to speech":
-                 sdkcarlos.scrollTo("#section-speechapi");
+             case "host":
+            	 window.location.href = "host";
+             break;
+             case "logout":
+            	 window.location.href = "logout";
+             break;
+             case "home":
+            	 window.location.href = "index";
+             break;
+             case "profile":
+            	 window.location.href = "personalProfile";
              break;
              case "github":
-                 window.location.href = "https://github.com/sdkcarlos/artyom.js";
+                 window.location.href = "https://github.com/tanerali/final-project-spring";
              break;
              default:
                  console.warn("Location "+wildcard+" has been not saved.");
@@ -240,17 +246,12 @@ artyom.initialize({
 /**
 * To speech text
 */
-/* artyom.say("Hello, this is a demo text. The next text will be spoken in Spanish",{
+
+/* artyom.say("Hello, this is an Airbnb assisstant",{
  onStart: () => {
      console.log("Reading ...");
  },
- onEnd: () => {
-     console.log("No more text to talk");
-
-     // Force the language of a single speechSynthesis
-     artyom.say("Hola, esto está en Español", {
-         lang:"es-ES"
-     });
- } 
+ onEnd: () => {;
+ }
 }); */
 </script>

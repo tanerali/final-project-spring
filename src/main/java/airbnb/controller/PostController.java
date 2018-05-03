@@ -62,7 +62,6 @@ public class PostController {
 	public String search(Model model, @RequestParam("search") String search) {
 
 		ArrayList<Post> posts = (ArrayList<Post>) postManager.searchPost(search);
-
 		if (posts != null) {
 			model.addAttribute("posts", posts);
 		}
@@ -102,16 +101,15 @@ public class PostController {
 				}
 			} catch (UserDataException e) {
 				e.printStackTrace();
-				request.setAttribute("error", e.getMessage());
+				m.addAttribute("error", e.getMessage());
 				return "error";
 			}
 
-			request.setAttribute("rating", postRating);
-			request.setAttribute("user", hostUser);
-			request.setAttribute("post", currPost);
-			request.setAttribute("comments", comments);
-			request.setAttribute("photos", allPhotos);
-
+			m.addAttribute("rating", postRating);
+			m.addAttribute("user", hostUser);
+			m.addAttribute("post", currPost);
+			m.addAttribute("comments", comments);
+			m.addAttribute("photos", allPhotos);
 			return "post";
 		}
 		return "redirect:html/404.html";
@@ -139,7 +137,7 @@ public class PostController {
 				}
 			}
 		} catch (IOException e) {
-			req.setAttribute("error", e);
+			req.setAttribute("error", e.getMessage());
 			return "error";
 		}
 		return null;
@@ -167,20 +165,16 @@ public class PostController {
 	public String uploadMultipleImgs(
 			@RequestParam("file") MultipartFile file, 
 			@RequestParam("ID") int ID,
-			HttpServletRequest req) {
+			HttpServletRequest req) throws SQLException, IOException {
 		
-		System.out.println("================" + file.getOriginalFilename() + "================");
 		//String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
 		String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
 		System.out.println("ID = " + ID);
 		File fileOnDisk = new File(uploadFolder + file.getOriginalFilename());
-		try {
-			Files.copy(file.getInputStream(), fileOnDisk.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			PostDAO.INSTANCE.insertImageToPost(fileOnDisk.toPath().toString(), ID);
-		} catch (SQLException | IOException e) {
-			req.setAttribute("error", e);
-			return "forward:error";
-		}
+
+		Files.copy(file.getInputStream(), fileOnDisk.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		PostDAO.INSTANCE.insertImageToPost(fileOnDisk.toPath().toString(), ID);
+
 		return fileOnDisk.toString();
 	}
 
@@ -197,7 +191,13 @@ public class PostController {
 
 		Post post = null;
 		try {
-			post = new Post(postID, title, description, price, date, Post.Type.getType(type), userID);
+			post = new Post(postID,
+							title,
+							description, 
+							price, 
+							date, 
+							Post.Type.getType(type), 
+							userID);
 		} catch (InvalidPostDataExcepetion e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

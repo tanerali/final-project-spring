@@ -17,7 +17,7 @@
 		myPost = (currPost.getHostID() == currUser.getUserID()) ? true : false;
 	}
 %>
-<title><%=currPost.getTitle()%></title>
+<title>${post.title}</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"
 	media="all" />
 <!--// bootstrap-css -->
@@ -70,7 +70,8 @@
 							<div id="myCarousel" class="carousel slide" data-ride="carousel">
 								<div class="carousel-inner">
 									<div class="item carousel-item active">
-										<img src="getThumbnail?id=<%=currPost.getPostID()%>" alt="">
+										<img src=<c:url value="getThumbnail?id=${post.postID}"/>
+											alt="">
 									</div>
 									<c:forEach items="${photos}" var="item">
 										<div class="item carousel-item">
@@ -90,14 +91,14 @@
 					</div>
 				</div>
 				<!-- POST'S PICTURES -->
-				<h4><%=currPost.getTitle()%></h4>
+				<h4>${ post.title}</h4>
 				<div class="agileinfo-single-icons">
 					<ul>
-						<li><a href="profile?id=<%=postUser.getUserID()%>"><i
-								class="fa fa-user" aria-hidden="true"></i> <span>Host: <%=postUser.getFirstName()%>
-									<%=postUser.getLastName()%></span></a></li>
+						<li><a href="profile?id=${user.userID }"><i
+								class="fa fa-user" aria-hidden="true"></i> <span>Host:
+									${user.firstName} ${user.lastName}</span></a></li>
 						<li><i class="fa fa-calendar" aria-hidden="true"></i><span>Date
-								of posting: <%=currPost.getDateOfPosting().toString()%></span></li>
+								of posting: ${post.dateOfPosting }</span></li>
 						<li><i class="fa fa-heart" aria-hidden="true"></i><span id="postRating">${rating}/5
 								Rating</span></li>
 					</ul>
@@ -120,7 +121,7 @@
 										<span class="glyphicon glyphicon-calendar"></span>
 									</span>
 							</div>
-							<input type="hidden" name="postID" value="<%=currPost.getPostID()%>">
+							<input type="hidden" name="postID" value="${post.postID }">
 							<!-- BOOK BUTTON -->
 							<input type="submit" value="Request Booking"
 								style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
@@ -134,24 +135,21 @@
 							<button onclick="rate(4, ${post.postID})" class="btn"> <span id="rate4" class="fa fa-star checked"></span> </button>
 							<button onclick="rate(5, ${post.postID})" class="btn"> <span id="rate5" class="fa fa-star checked"></span> </button>
 						</div>
-						
 					<% } %>
 					
 					<% if (myPost) { %>
 					<br>
-					<a href="edit?id=<%=currPost.getPostID()%>"
+					<a href="edit?id=${post.postID }"
 						style="background-color: #4CAF50; border: none; color: white;">EDIT POST
 					</a> 
-					<a href="delete?id=<%=currPost.getPostID()%>"><i class="fa fa-trash"></i></a>
+					<a href="delete?id=${post.postID }"><i class="fa fa-trash"></i></a>
 					<% } %>
-
-
 
 				</div>
 				<h3>Description</h3>
-				<p><%=currPost.getDescription()%></p>
+				<p>${post.description }</p>
 				<p>
-					Price: <b><%=currPost.getPrice()%></b>
+					Price: <b>${post.price }</b>
 				</p>
 			</div>
 
@@ -220,7 +218,7 @@
 
 				<!-- AJAX -->
 				<textarea placeholder="Comment" id="comment" required></textarea>
-				<input type="hidden" id="postID" value="<%=currPost.getPostID()%>">
+				<input type="hidden" id="postID" value="${post.postID }">
 
 				<button class="form-control" id="leaveComment"
 					onclick="postComment()">SUBMIT</button>
@@ -233,25 +231,25 @@
 	</div>
 
 	<template>
-	<div class="agileits_three_comment_grid" id="comment">
-		<div class="agileits_tom" id="profilePic">
-			<a href="profile?id="> <img src="getProfilePic?id="
-				class="img-responsive img-circle"></a>
-		</div>
-		<div class="agileits_tom_right">
-			<div class="hardy" id="commenterAndDate">
-				<a href="profile?id="><h4></h4></a>
-				<p></p>
+		<div class="agileits_three_comment_grid" id="comment">
+			<div class="agileits_tom" id="profilePic">
+				<a href="profile?id="> <img src="getProfilePic?id="
+					class="img-responsive img-circle"></a>
 			</div>
-			<div class="clearfix"></div>
-			<p class="lorem"></p>
+			<div class="agileits_tom_right">
+				<div class="hardy" id="commenterAndDate">
+					<a href="profile?id="><h4></h4></a>
+					<p></p>
+				</div>
+				<div class="clearfix"></div>
+				<p class="lorem"></p>
+			</div>
+			<div class="clearfix">
+				<button
+					style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
+					onclick="deleteComment()">DELETE COMMENT</button>
+			</div>
 		</div>
-		<div class="clearfix">
-			<button
-				style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
-				onclick="deleteComment()">DELETE COMMENT</button>
-		</div>
-	</div>
 	</template>
 
 	<%@ include file="footer.jsp"%>

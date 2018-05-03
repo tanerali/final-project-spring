@@ -11,6 +11,7 @@
 <meta charset="utf-8">
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"
 	media="all" />
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <!-- css -->
 <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
@@ -97,6 +98,10 @@
 										value="${post.hostID}"></td>
 
 
+								</tr>
+								<tr>
+									<td><a href="post?id= ${post.postID}">or return to
+											post</a></td>
 								</tr>
 							</table>
 						</form>
@@ -242,6 +247,9 @@
 				fd.append('file', file[0]);
 
 				fd.append('ID', document.getElementById("postid").value);
+				swal("Successfully uploaded!", file[0].name, "success", {
+					button : "Aww yes!",
+				});
 				uploadData(fd);
 			});
 
@@ -273,40 +281,9 @@
 				processData : false,
 				dataType : 'json',
 				success : function(response) {
-					addThumbnail(response);
+					alert("Uploaded " + reponse);
 				}
 			});
-		}
-
-		// Added thumbnail
-		function addThumbnail(data) {
-			$("#uploadfile h1").remove();
-			var len = $("#uploadfile div.thumbnail").length;
-
-			var num = Number(len);
-			num = num + 1;
-
-			var name = data.name;
-			var size = convertSize(data.size);
-			var src = data.src;
-
-			// Creating an thumbnail
-			$("#uploadfile").append(
-					'<div id="thumbnail_'+num+'" class="thumbnail"></div>');
-			$("#thumbnail_" + num).append(
-					'<img src="' + src + '" width="100%" height="78%">');
-			$("#thumbnail_" + num).append(
-					'<span class="size">' + size + '<span>');
-
-		}
-
-		// Bytes conversion
-		function convertSize(size) {
-			var sizes = [ 'Bytes', 'KB', 'MB', 'GB', 'TB' ];
-			if (size == 0)
-				return '0 Byte';
-			var i = parseInt(Math.floor(Math.log(size) / Math.log(1024)));
-			return Math.round(size / Math.pow(1024, i), 2) + ' ' + sizes[i];
 		}
 	</script>
 </body>
