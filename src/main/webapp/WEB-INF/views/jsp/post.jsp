@@ -77,14 +77,9 @@
 					</ul>
 
 					<!-- BOOK -->
-					<%-- <c:if test="${ error != null }">
+					<c:if test="${ error != null }">
 						<h4 style="color: red">${ error }</h4>
-					</c:if> --%>
-					
-					<% if (request.getAttribute("error") != null) { %>
-						<h4 style="color: red">${ error }</h4>
-					<% } %>
-					
+					</c:if>
 					
 					<% if (session.getAttribute("user") != null && !myPost) { %>
 						<form action="book" method="post">

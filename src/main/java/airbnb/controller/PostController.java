@@ -63,15 +63,11 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public String search(
-			Model m, 
-			@RequestParam("search") String search, 
-			HttpServletRequest req,
-			HttpServletResponse resp) {
+	public String search(Model model, @RequestParam("search") String search) {
 		ArrayList<Post> posts = (ArrayList<Post>) postManager.searchPost(search);
 
 		if (posts != null) {
-			req.setAttribute("posts", posts);
+			model.addAttribute("posts", posts);
 		}
 		return "explore";
 
@@ -92,7 +88,7 @@ public class PostController {
 	public String specificPostPage(
 			HttpServletRequest request, 
 			HttpSession session, 
-			@RequestParam("id") int postID) {
+			@RequestParam("id") int postID) throws SQLException {
 
 		Post currPost = postManager.getPostsByID().get(postID);
 		User hostUser = null;
@@ -106,6 +102,8 @@ public class PostController {
 				comments = commentManager.getCommentsForPost(postID);
 				postRating = postManager.getPostRating(postID);
 
+				//if user logged in can also make a booking request
+				//therefore, the dates that are unavailable for booking are loaded
 				if (session.getAttribute("user") != null) {
 					unavailableDates = bookingManager.getUnavailableDates(postID);
 
@@ -116,9 +114,9 @@ public class PostController {
 
 					request.setAttribute("unavailableDatesString", unavailableDatesString);
 				}
-			} catch (SQLException | UserDataException e) {
+			} catch (UserDataException e) {
 				e.printStackTrace();
-				request.setAttribute("exception", e.getMessage());
+				request.setAttribute("error", e.getMessage());
 				return "error";
 			}
 
@@ -132,28 +130,29 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/getThumbnail", method = RequestMethod.GET)
-	public String getPostThumbnail(HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") int postID) {
+	public String getPostThumbnail(
+			HttpServletRequest req, 
+			HttpServletResponse resp, 
+			@RequestParam("id") int postID) throws SQLException {
 
-		if (postID != 0) {
-			try {
-				String path = postManager.getThumbnail(postID);
-				if (path != null) {
-					File file = new File(path);
+		try {
+			String path = postManager.getThumbnail(postID);
+			if (path != null) {
+				File file = new File(path);
 
-					try (InputStream filecontent = new FileInputStream(file);
-							OutputStream out = resp.getOutputStream()) {
+				try (InputStream filecontent = new FileInputStream(file);
+						OutputStream out = resp.getOutputStream()) {
 
-						byte[] bytes = new byte[1024];
+					byte[] bytes = new byte[1024];
 
-						while ((filecontent.read(bytes)) != -1) {
-							out.write(bytes);
-						}
+					while ((filecontent.read(bytes)) != -1) {
+						out.write(bytes);
 					}
 				}
-			} catch (IOException | SQLException e) {
-				req.setAttribute("error", e);
-				return "error";
 			}
+		} catch (IOException e) {
+			req.setAttribute("error", e);
+			return "error";
 		}
 		return null;
 	}
@@ -161,13 +160,11 @@ public class PostController {
 	@RequestMapping(value = "/comment", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<Object> leaveCommentOnPost(HttpServletRequest request, HttpSession session,
-			@RequestBody Comment comment) {
+			@RequestBody Comment comment) throws SQLException {
 
 		User user = (User) session.getAttribute("user");
 
-		if (comment.getContent() != null && !comment.getContent().isEmpty() && user != null
-		// && bookingManager.userHasVisited(user, comment.getPostID())
-		) {
+		if (comment.getContent() != null && !comment.getContent().isEmpty() && user != null) {
 
 			try {
 				comment.setUserID(user.getUserID());
@@ -180,43 +177,36 @@ public class PostController {
 				if (commentID > 0) {
 					return ResponseEntity.status(HttpStatus.SC_OK).body(comment);
 				}
-
-			} catch (SQLException e) {
-				request.setAttribute("error", e.getMessage());
-				// return "error";
 			} catch (InvalidPostDataExcepetion e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		// return "redirect:post?id=" + comment.getPostID();
 		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
 	}
 
 	@RequestMapping(value = "/comment/{id}", method = RequestMethod.DELETE)
 	@ResponseBody
-	public ResponseEntity<Object> deleteCommentOnPost(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("id") int commentID) {
+	public ResponseEntity<Object> deleteCommentOnPost(
+			HttpServletRequest request, 
+			HttpServletResponse response,
+			@PathVariable("id") int commentID) throws SQLException {
 
-		try {
-			if (commentManager.deleteComment(commentID)) {
-				return ResponseEntity.status(HttpStatus.SC_OK).body(null);
-			}
-		} catch (SQLException e) {
-			request.setAttribute("error", e.getMessage());
+		if (commentManager.deleteComment(commentID)) {
+			return ResponseEntity.status(HttpStatus.SC_OK).body(null);
 		}
+		
 		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
 
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public String deletePost(HttpServletRequest request, HttpSession session, @RequestParam("id") int postID) {
-		try {
-			PostDAO.INSTANCE.removePost(postID);
-		} catch (SQLException e) {
-			request.setAttribute("error", e);
-			return "error";
-		}
+	public String deletePost(
+			HttpServletRequest request, 
+			HttpSession session, 
+			@RequestParam("id") int postID) throws SQLException {
+		
+		PostDAO.INSTANCE.removePost(postID);
 		return "index";
 	}
 
@@ -229,8 +219,11 @@ public class PostController {
 
 	@ResponseBody
 	@RequestMapping(value = "/multipleUpload", method = RequestMethod.POST)
-	public String uploadMultipleImgs(@RequestParam("file") MultipartFile file, @RequestParam("ID") int ID,
+	public String uploadMultipleImgs(
+			@RequestParam("file") MultipartFile file, 
+			@RequestParam("ID") int ID,
 			HttpServletRequest req) {
+		
 		System.out.println("================" + file.getOriginalFilename() + "================");
 		String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
 		System.out.println("ID = " + ID);

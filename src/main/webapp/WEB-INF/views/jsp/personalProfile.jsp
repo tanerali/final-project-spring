@@ -150,9 +150,8 @@
 				</div>
 
 				<%
-				Exception e = null;
-				if (request.getAttribute("exception") != null) {
-					e = (Exception) request.getAttribute("exception"); %>
+				Exception e = (Exception) request.getAttribute("error");
+				if (e != null) { %>
 					<p style="color: red"><%=e.getMessage()%></p>
 				<% } %>
 

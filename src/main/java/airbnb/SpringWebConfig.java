@@ -80,7 +80,7 @@ public class SpringWebConfig extends WebMvcConfigurerAdapter {
 	public CommonsMultipartResolver multipartResolver(){
 	    CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
 	    commonsMultipartResolver.setDefaultEncoding("utf-8");
-	    commonsMultipartResolver.setMaxUploadSize(50000000);
+	    commonsMultipartResolver.setMaxUploadSize(50_000_000);
 	    return commonsMultipartResolver;
 	}
 	

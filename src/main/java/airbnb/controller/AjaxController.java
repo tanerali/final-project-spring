@@ -134,18 +134,20 @@ public class AjaxController {
 		User user = (User)session.getAttribute("user");
 		
 		if (user != null && bookingManager.acceptBookingRequest(notificationID)) {
-			ArrayList<Notification> bookingRequestsInSession = new ArrayList<>();
-			bookingRequestsInSession = (ArrayList<Notification>)session.getAttribute("bookingRequests");
+			ArrayList<Notification> bookingRequestsInSession = 
+					(ArrayList<Notification>)session.getAttribute("bookingRequests");
+			
+			if (bookingRequestsInSession != null) {
+				for (ListIterator<Notification> iterator = 
+						bookingRequestsInSession.listIterator(); iterator.hasNext();) {
 
-			for (ListIterator<Notification> iterator = 
-					bookingRequestsInSession.listIterator(); iterator.hasNext();) {
-
-				Notification notification = (Notification) iterator.next();
-				if (notification.getNotificationID() == notificationID) {
-					iterator.remove();
+					Notification notification = (Notification) iterator.next();
+					if (notification.getNotificationID() == notificationID) {
+						iterator.remove();
+					}
 				}
+				return ResponseEntity.status(HttpStatus.OK).body(null);
 			}
-			return ResponseEntity.status(HttpStatus.OK).body(null);
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 	}
@@ -154,6 +156,7 @@ public class AjaxController {
 	public ResponseEntity ratePost(HttpSession session,
 			@RequestParam("rating") int rating,
 			@RequestParam("postID") int postID) throws SQLException {
+		
 		User user = (User) session.getAttribute("user");
 		
 		if (user != null && bookingManager.ratePost(postID, user.getUserID(), rating)) {

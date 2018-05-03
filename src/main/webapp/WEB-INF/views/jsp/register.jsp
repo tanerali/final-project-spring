@@ -67,7 +67,7 @@
 			<h2 class="form-signin-heading">Please sign up</h2>
 
 			<%
-				Exception e = (Exception) request.getAttribute("exception");
+				Exception e = (Exception) request.getAttribute("error");
 				if (e != null) {
 			%>
 			<h4 class="form-signin-heading" style="color: red"><%=e.getMessage()%></h4>

@@ -48,79 +48,54 @@
 								<li><a href="#" id="openBtn" class="active"
 									onclick="openSearch()">Search</a></li>
 								<li><a href="explore" onclick="explore(this);">Explore</a></li>
-								<%
-									if (session.getAttribute("user") == null) {
-								%>
-								<li><a href="login">Login</a></li>
-								<li><a href="register">Register</a></li>
-								<%
-									} else {
-								%>
-								<li><a href="host">Host</a></li>
-
-								<script type="text/javascript">
-									function rejectBookingRequest(notificationID) {
-										var req = new XMLHttpRequest();
-										req.open("Delete", "notification/"+ notificationID);
-										req.send();
-										
-										req.onreadystatechange = function() {
-											if (req.readyState == 4 && req.status == 200) {
-												var element = document.getElementById("notification"+ notificationID);
-												element.parentNode.removeChild(element);
-											}
-										}
-									}
-									
-									function acceptBookingRequest(notificationID) {
-										var req = new XMLHttpRequest();
-										req.open("Post", "notification/"+ notificationID);
-										req.send();
-										
-										req.onreadystatechange = function() {
-											if (req.readyState == 4 && req.status == 200) {
-												var element = document.getElementById("notification"+ notificationID);
-												element.parentNode.removeChild(element);
-											}
-										}
-									}
-								</script>
 								
-								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" 
-												aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>									
-									<ul class="dropdown-menu">
-										<c:forEach var="notification" items="${bookingRequests}">
-										
-											<li style="padding-top:5px" id="notification${notification.notificationID }">
-												<div style="width: 300px">
-												<a href="post?id=${ notification.postID }">
-													<img class="img-responsive" src="getThumbnail?id=${ notification.postID }">
-														<h4>Booking request for <em>${ notification.title }</em></h4>
-												</a>
-												<p>
-													From: ${ notification.dateFrom }<br> To: ${ notification.dateTo }<br>
-													Customer name: ${ notification.fullName }<br> Profile:
-													<a href="profile?id=${ notification.customerID }">${ notification.email }</a>
-												</p>
-												<button
-													onclick="rejectBookingRequest(${notification.notificationID})"
-													style="float: left; margin-bottom: 5px; background-color: red; border: none; color: white; padding: 15px 32px;">REJECT
-												</button>
-												<button
-													onclick="acceptBookingRequest(${notification.notificationID})"
-													style="float: right; margin-bottom: 5px; background-color: #4CAF50; 
-													border: none; color: white; padding: 15px 32px;">ACCEPT
-												</button>
-												</div>
-											</li>
-										</c:forEach>
-									</ul>
-								</li>
-								<li><a href="personalProfile">Profile</a></li>
-								<li><a href="logout">Logout</a></li>
-								<%
+								<c:if test="${sessionScope.user == null }">
+									<li><a href="login">Login</a></li>
+									<li><a href="register">Register</a></li>
+								</c:if>
+								
+								
+								<c:if test="${sessionScope.user != null }">
+									<li><a href="host">Host</a></li>
+
+									<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" 
+													aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>									
+										<ul class="dropdown-menu">
+											<c:forEach var="notification" items="${bookingRequests}">
+											
+												<li style="padding-top:5px" id="notification${notification.notificationID }">
+													<div style="width: 300px">
+													<a href="post?id=${ notification.postID }">
+														<img class="img-responsive" src="getThumbnail?id=${ notification.postID }">
+															<h4>Booking request for <em>${ notification.title }</em></h4>
+													</a>
+													<p>
+														From: ${ notification.dateFrom }<br> To: ${ notification.dateTo }<br>
+														Customer name: ${ notification.fullName }<br> Profile:
+														<a href="profile?id=${ notification.customerID }">${ notification.email }</a>
+													</p>
+													<button
+														onclick="rejectBookingRequest(${notification.notificationID})"
+														style="float: left; margin-bottom: 5px; background-color: red; border: none; color: white; padding: 15px 32px;">REJECT
+													</button>
+													<button
+														onclick="acceptBookingRequest(${notification.notificationID})"
+														style="float: right; margin-bottom: 5px; background-color: #4CAF50; 
+														border: none; color: white; padding: 15px 32px;">ACCEPT
+													</button>
+													</div>
+												</li>
+											</c:forEach>
+										</ul>
+									</li>
+									
+									<li><a href="personalProfile">Profile</a></li>
+									<li><a href="logout">Logout</a></li>
+								</c:if>
+								
+								<%-- <%
 									}
-								%>
+								%> --%>
 							</ul>
 							<div class="clearfix"></div>
 						</div>
@@ -132,6 +107,35 @@
 		<div class="clearfix"></div>
 	</div>
 </div>
+
+<script type="text/javascript">
+function rejectBookingRequest(notificationID) {
+	var req = new XMLHttpRequest();
+	req.open("Delete", "notification/"+ notificationID);
+	req.send();
+	
+	req.onreadystatechange = function() {
+		if (req.readyState == 4 && req.status == 200) {
+			var element = document.getElementById("notification"+ notificationID);
+			element.parentNode.removeChild(element);
+		}
+	}
+}
+
+function acceptBookingRequest(notificationID) {
+	var req = new XMLHttpRequest();
+	req.open("Post", "notification/"+ notificationID);
+	req.send();
+	
+	req.onreadystatechange = function() {
+		if (req.readyState == 4 && req.status == 200) {
+			var element = document.getElementById("notification"+ notificationID);
+			element.parentNode.removeChild(element);
+		}
+	}
+}
+</script>
+
 <script>// With ES6,TypeScript etc
 
 //Create a variable that stores your instance
