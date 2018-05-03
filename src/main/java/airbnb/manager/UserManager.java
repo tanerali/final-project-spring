@@ -5,14 +5,15 @@ import java.util.ArrayList;
 
 import airbnb.dao.UserDAO;
 import airbnb.exceptions.UserDataException;
+import airbnb.exceptions.UserDoesNotExistException;
 import airbnb.model.Review;
 import airbnb.model.User;
 
 public enum UserManager {
-	instance;
+	INSTANCE;
 	private UserDAO userDAO = UserDAO.INSTANCE;
 	
-	public User login(String email, String password) throws SQLException, UserDataException {
+	public User login(String email, String password) throws SQLException, UserDataException, UserDoesNotExistException {
 		return userDAO.getUserByEmail(email, password);
 	}
 

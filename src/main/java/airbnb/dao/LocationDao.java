@@ -12,7 +12,7 @@ import java.util.TreeSet;
 import airbnb.manager.DBManager;
 
 public enum LocationDao {
-	instance;
+	INSTANCE;
 	private Connection connection;
 	private Map<String, TreeSet<String>> locations;
 

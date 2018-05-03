@@ -17,7 +17,7 @@ import airbnb.model.Post;
 import airbnb.model.User;
 
 public enum PostDAO {
-	instance;
+	INSTANCE;
 	// Connection variable
 	private Connection connection;
 

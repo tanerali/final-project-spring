@@ -2,7 +2,7 @@ package airbnb.model;
 
 import java.time.LocalDate;
 
-import airbnb.exceptions.InvalidCommentIDException;
+import airbnb.exceptions.InvalidPostDataExcepetion;
 
 public class Comment {
 
@@ -37,11 +37,11 @@ public class Comment {
 		return commentID;
 	}
 
-	public void setCommentID(int commentID) throws InvalidCommentIDException {
+	public void setCommentID(int commentID) throws InvalidPostDataExcepetion {
 		if (commentID > 0) {
 			this.commentID = commentID;
 		} else {
-			throw new InvalidCommentIDException();
+			throw new InvalidPostDataExcepetion("");
 		}
 	}
 
@@ -49,11 +49,11 @@ public class Comment {
 		return postID;
 	}
 
-	public void setPostID(int postID) throws InvalidCommentIDException {
+	public void setPostID(int postID) throws InvalidPostDataExcepetion {
 		if (postID > 0) {
 			this.postID = postID;
 		} else {
-			throw new InvalidCommentIDException();
+			throw new InvalidPostDataExcepetion("");
 		}
 	}
 
@@ -61,11 +61,11 @@ public class Comment {
 		return userID;
 	}
 
-	public void setUserID(int userID) throws InvalidCommentIDException {
+	public void setUserID(int userID) throws InvalidPostDataExcepetion {
 		if (userID > 0) {
 			this.userID = userID;
 		} else {
-			throw new InvalidCommentIDException();
+			throw new InvalidPostDataExcepetion("");
 		}
 	}
 

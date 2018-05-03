@@ -3,10 +3,6 @@ package airbnb.model;
 import java.time.LocalDate;
 
 import airbnb.exceptions.InvalidPostDataExcepetion;
-import airbnb.exceptions.InvalidPostDateException;
-import airbnb.exceptions.InvalidPostDescriptionException;
-import airbnb.exceptions.InvalidPostPriceException;
-import airbnb.exceptions.InvalidPostTitleException;
 
 public class Post {
 	// In DB IDs (HOTEL-1)(APARTMENT-2)(HOUSE-3)(COTTAGE-4)
@@ -58,9 +54,8 @@ public class Post {
 	}
 
 	public Post(String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID,
-			String country, String city)
-
-			throws InvalidPostDataExcepetion {
+			String country, String city) throws InvalidPostDataExcepetion {
+		
 		this.setTitle(title);
 		this.setDescription(description);
 		this.setPrice(price);
@@ -102,9 +97,9 @@ public class Post {
 		return postID;
 	}
 
-	public void setTitle(String title) throws InvalidPostTitleException {
+	public void setTitle(String title) throws InvalidPostDataExcepetion {
 		if (title.isEmpty()) {
-			throw new InvalidPostTitleException();
+			throw new InvalidPostDataExcepetion("Title empty");
 		}
 		this.title = title;
 	}
@@ -113,9 +108,9 @@ public class Post {
 		return description;
 	}
 
-	public void setDescription(String description) throws InvalidPostDescriptionException {
+	public void setDescription(String description) throws InvalidPostDataExcepetion {
 		if (description.isEmpty()) {
-			throw new InvalidPostDescriptionException();
+			throw new InvalidPostDataExcepetion("Description empty");
 		}
 		this.description = description;
 	}
@@ -124,9 +119,9 @@ public class Post {
 		return price;
 	}
 
-	public void setPrice(int price) throws InvalidPostPriceException {
+	public void setPrice(int price) throws InvalidPostDataExcepetion {
 		if (price <= 0) {
-			throw new InvalidPostPriceException();
+			throw new InvalidPostDataExcepetion("Cannot enter negative numbers in price field");
 		}
 		this.price = price;
 	}
@@ -135,7 +130,7 @@ public class Post {
 		return dateOfPosting;
 	}
 
-	public void setDateOfPosting(LocalDate dateOfPosting) throws InvalidPostDateException {
+	public void setDateOfPosting(LocalDate dateOfPosting) throws InvalidPostDataExcepetion {
 		this.dateOfPosting = dateOfPosting;
 	}
 

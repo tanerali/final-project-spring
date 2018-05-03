@@ -10,8 +10,8 @@ import airbnb.model.Notification;
 
 
 public enum BookingManager {
-	instance;
-	private BookingDAO bookingDao = BookingDAO.instance;
+	INSTANCE;
+	private BookingDAO bookingDao = BookingDAO.INSTANCE;
 	
 	public boolean requestBooking(Booking booking) throws SQLException {
 		return bookingDao.createBooking(booking);

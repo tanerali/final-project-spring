@@ -9,8 +9,8 @@ import airbnb.model.User;
 
 public enum CommentManager {
 
-	instance;
-	private CommentDAO commentDAO = CommentDAO.instance;
+	INSTANCE;
+	private CommentDAO commentDAO = CommentDAO.INSTANCE;
 
 	public ArrayList<Comment> getCommentsForPost(int postID) throws SQLException {
 		return commentDAO.getCommentsByPostId(postID);

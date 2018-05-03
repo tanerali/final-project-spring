@@ -15,7 +15,7 @@ import airbnb.model.User;
 
 public enum BookingDAO {
 
-	instance;
+	INSTANCE;
 	private Connection connection;
 	
 	private BookingDAO() {
@@ -48,7 +48,7 @@ public enum BookingDAO {
 				"ON pb.customer_id = customer.ID " + 
 				"JOIN USERS host " + 
 				"ON p.host_id = host.ID " + 
-				"WHERE host.email = ?;";
+				"WHERE host.email = ? AND pb.confirmed=false;";
 		ArrayList<Notification> bookingRequestsNotifications = new ArrayList<>();
 		
 		try (PreparedStatement ps = connection.prepareStatement(sql)) {

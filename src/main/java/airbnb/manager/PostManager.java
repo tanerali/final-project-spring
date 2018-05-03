@@ -13,7 +13,7 @@ import airbnb.exceptions.InvalidPostDataExcepetion;
 import airbnb.model.Post;
 
 public enum PostManager {
-	instance;
+	INSTANCE;
 
 	// userID -> list of posts
 	private Map<Integer, List<Post>> postsByUsers;
@@ -27,7 +27,7 @@ public enum PostManager {
 
 		// Load(cache) all posts
 		try {
-			for (Post p : PostDAO.instance.getAllPosts()) {
+			for (Post p : PostDAO.INSTANCE.getAllPosts()) {
 				if (!postsByUsers.containsKey(p.getHostID())) {
 					postsByUsers.put(p.getHostID(), new ArrayList<>());
 				}
@@ -35,7 +35,7 @@ public enum PostManager {
 				postsByID.put(p.getPostID(), p);
 			}
 		} catch (SQLException | InvalidPostDataExcepetion e) {
-			System.out.println("Oops,smth went terribly wrong!");
+			e.printStackTrace();
 		}
 	}
 
@@ -66,21 +66,21 @@ public enum PostManager {
 	}
 
 	public List<Post> getAllPosts() throws SQLException, InvalidPostDataExcepetion {
-		return PostDAO.instance.getAllPosts();
+		return PostDAO.INSTANCE.getAllPosts();
 	}
 	
 	public int insertPost(Post newPost) throws InvalidPostDataExcepetion, SQLException {
-		int postID = PostDAO.instance.insertPost(newPost);
+		int postID = PostDAO.INSTANCE.insertPost(newPost);
 		newPost.setPostID(postID);
 		addPostToCache(newPost);
 		return postID;
 	}
 
 	public String getThumbnail(int postID) throws SQLException {
-		return PostDAO.instance.getThumbnailPath(postID);
+		return PostDAO.INSTANCE.getThumbnailPath(postID);
 	}
 
 	public double getPostRating(int postID) throws SQLException {
-		return PostDAO.instance.getPostRating(postID);
+		return PostDAO.INSTANCE.getPostRating(postID);
 	}
 }

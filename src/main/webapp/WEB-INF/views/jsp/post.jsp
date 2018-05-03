@@ -78,7 +78,6 @@
 
 					<!-- BOOK -->
 					<% if (session.getAttribute("user") != null) { %>
-
 						<form action="book" method="post">
 							<div class="input-group input-daterange">
 								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import airbnb.exceptions.UserDataException;
+import airbnb.exceptions.UserDoesNotExistException;
 import airbnb.manager.BookingManager;
 import airbnb.manager.PostManager;
 import airbnb.manager.UserManager;
@@ -35,18 +36,16 @@ import airbnb.model.User;
 
 @Controller
 public class UserController {
-	private UserManager userManager = UserManager.instance;
-	private BookingManager bookingManager = BookingManager.instance;
-	private PostManager postManager = PostManager.instance;
-
-	@RequestMapping(value = "/login", method = RequestMethod.GET)
-	public String loginPage() {
-		return "login";
-	}
+	private UserManager userManager = UserManager.INSTANCE;
+	private BookingManager bookingManager = BookingManager.INSTANCE;
+	private PostManager postManager = PostManager.INSTANCE;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(@RequestParam("email") String email, @RequestParam("password") String password,
-			HttpServletRequest request, HttpSession session) {
+	public String login(
+			@RequestParam("email") String email, 
+			@RequestParam("password") String password,
+			HttpServletRequest request, 
+			HttpSession session) throws SQLException {
 
 		try {
 			User user = userManager.login(email, password);
@@ -75,35 +74,29 @@ public class UserController {
 				
 				return "redirect:personalProfile";
 			} else {
-				request.setAttribute("wrong_password", new Object());
+				request.setAttribute("exception", "Wrong password");
 				return "login";
 			}
-		} catch (SQLException e) {
-			request.setAttribute("wrong_credentials", new Object());
+		} catch (UserDoesNotExistException e) {
+			e.printStackTrace();
+			request.setAttribute("exception", e.getMessage());
 			return "login";
 		} catch (UserDataException e) {
-			request.setAttribute("exception", e);
+			e.printStackTrace();
+			request.setAttribute("error", e);
 			return "error";
 		}
-
-	}
-
-	@RequestMapping(value = "/register", method = RequestMethod.GET)
-	public String registerPage() {
-		return "register";
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
 	public String register(HttpServletRequest request, @RequestParam("photo") MultipartFile file)
-			throws ServletException, IOException {
-		User user = null;
+			throws SQLException {
+		
 		try {
 			// if date is empty, or not exactly as it has to be it
 			// throws a parsing exception
 			LocalDate birthDate = null;
 			try {
-				System.out.println(request.getParameter("birthDate"));
-				System.out.println(request.getParameter("firstName"));
 				birthDate = LocalDate.parse(request.getParameter("birthDate"));
 			} catch (Exception e) {
 				throw new UserDataException("Invalid birth date entered");
@@ -116,7 +109,7 @@ public class UserController {
 
 			// String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
 
-			String uploadFolder = "/home/dnn/UPLOADAIRBNB";
+			String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
 
 			if (file.isEmpty()) {
 				throw new UserDataException("Please select a file to upload");
@@ -127,7 +120,7 @@ public class UserController {
 			Path path = Paths.get(uploadFolder + file.getOriginalFilename());
 			Files.write(path, bytes);
 
-			user = new User(request.getParameter("firstName"), 
+			User newUser = new User(request.getParameter("firstName"), 
 					request.getParameter("lastName"),
 					request.getParameter("email"),
 					request.getParameter("pass1"),
@@ -139,19 +132,19 @@ public class UserController {
 					birthDate,
 					request.getParameter("telNumber"));
 
-			if (userManager.register(user)) {
+			if (userManager.register(newUser)) {
 				return "login";
 			}
-		} catch (UserDataException | IOException e) {
-			System.out.println(e.getMessage());
+		} catch (UserDataException e) {
+			e.printStackTrace();
 			request.setAttribute("exception", e);
 			return "register";
-		} catch (SQLException e) {
-			System.out.println("Couldnt add to database; " + e.getMessage());
-			request.setAttribute("exception", e);
+		} catch (IOException e) {
+			e.printStackTrace();
+			request.setAttribute("error", e.getMessage());
 			return "error";
-		}
-		return "login";
+		} 
+		return "register";
 	}
 
 	// Utility method to get file name from HTTP header content-disposition
@@ -166,30 +159,19 @@ public class UserController {
 		return "";
 	}
 
-	@RequestMapping(value = "/personalProfile", method = RequestMethod.GET)
-	public String personalProfilePage(HttpSession session) {
-		User user = (User) session.getAttribute("user");
-
-		if (user != null) {
-			
-			return "personalProfile";
-		} else {
-			return "login";
-		}
-	}
-
 	@RequestMapping(value = "/personalProfile", method = RequestMethod.POST)
-	public String editUser(HttpSession session, HttpServletRequest request) {
+	public String editUser(HttpSession session, HttpServletRequest request) throws SQLException {
 		User user = (User) session.getAttribute("user");
 
 		try {
-			LocalDate birthDate = null;
-			try {
-				birthDate = LocalDate.parse(request.getParameter("birthDate"));
-			} catch (Exception e) {
-				throw new UserDataException("Invalid birth date entered");
-			}
 			if (user != null) {
+				LocalDate birthDate = null;
+				try {
+					birthDate = LocalDate.parse(request.getParameter("birthDate"));
+				} catch (Exception e) {
+					throw new UserDataException("Invalid birth date entered");
+				}
+				
 				user.setFirstName(request.getParameter("firstName"));
 				user.setLastName(request.getParameter("lastName"));
 				user.setEmail(request.getParameter("email"));
@@ -205,10 +187,8 @@ public class UserController {
 		} catch (UserDataException e) {
 			// this exception goes to personalProfile and gets displayed
 			// nicely to user in red font
+			e.printStackTrace();
 			request.setAttribute("exception", e.getMessage());
-		} catch (SQLException e) {
-			request.setAttribute("error", e.getMessage());
-			return "error";
 		}
 		return "personalProfile";
 	}
@@ -220,33 +200,35 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/getProfilePic", method = RequestMethod.GET)
-	public String getProfilePic(HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") int userID) {
+	public String getProfilePic(
+			HttpServletRequest req, 
+			HttpServletResponse resp, 
+			@RequestParam("id") int userID) throws SQLException {
 
-		String path = null;
-		try {
-			path = userManager.getPhoto(userID);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		String path = userManager.getPhoto(userID);
+		
+		if (path != null) {
+			File file = new File(path);
+			try (InputStream filecontent = new FileInputStream(file); 
+				 OutputStream out = resp.getOutputStream()) {
 
-		File file = new File(path);
-		try (InputStream filecontent = new FileInputStream(file); OutputStream out = resp.getOutputStream()) {
+				byte[] bytes = new byte[1024];
 
-			byte[] bytes = new byte[1024];
-
-			while ((filecontent.read(bytes)) != -1) {
-				out.write(bytes);
+				while ((filecontent.read(bytes)) != -1) {
+					out.write(bytes);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+				req.setAttribute("exception", e.getMessage());
+				return "error";
 			}
-		} catch (IOException e) {
-			req.setAttribute("exception", e.getMessage());
-			return "error";
 		}
 		return null;
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
-	public String getProfilePage(HttpServletRequest request, @RequestParam("id") int userID) {
+	public String getProfilePage(HttpServletRequest request, @RequestParam("id") int userID) 
+			throws SQLException {
 
 		try {
 			User user = userManager.getUserByID(userID);
@@ -258,11 +240,11 @@ public class UserController {
 			request.setAttribute("reviewsFromHosts", reviewsFromHosts);
 			request.setAttribute("reviewsFromGuests", reviewsFromGuests);
 			request.setAttribute("hostedPosts", hostedPosts);
-		} catch (UserDataException | SQLException e) {
+		} catch (UserDataException e) {
+			e.printStackTrace();
 			request.setAttribute("error", e.getMessage());
 			return "error";
 		}
-
 		return "profile";
 	}
 }

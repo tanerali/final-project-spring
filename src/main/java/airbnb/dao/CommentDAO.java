@@ -12,7 +12,7 @@ import airbnb.manager.DBManager;
 import airbnb.model.Comment;
 
 public enum CommentDAO {
-	instance;
+	INSTANCE;
 	private Connection connection;
 	private static final String DELETE_COMMENT = "DELETE FROM POST_COMMENTS WHERE ID = ?;";
 	

@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeSet;
 
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,7 +30,9 @@ import org.springframework.web.multipart.MultipartFile;
 import airbnb.dao.LocationDao;
 import airbnb.dao.PostDAO;
 import airbnb.exceptions.InvalidPostDataExcepetion;
+import airbnb.manager.BookingManager;
 import airbnb.manager.PostManager;
+import airbnb.model.Notification;
 import airbnb.model.Post;
 import airbnb.model.User;
 
@@ -35,8 +40,9 @@ import airbnb.model.User;
 @MultipartConfig
 public class AjaxController {
 
-	private PostManager postManager = PostManager.instance;
-	private LocationDao locationDao = LocationDao.instance;
+	private PostManager postManager = PostManager.INSTANCE;
+	private LocationDao locationDao = LocationDao.INSTANCE;
+	private BookingManager bookingManager = BookingManager.INSTANCE;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<String> uploadPost(HttpServletRequest request, HttpSession session,
@@ -74,7 +80,7 @@ public class AjaxController {
 				File fileOnDisk = new File(uploadFolder + file.getOriginalFilename());
 				Files.copy(file.getInputStream(), fileOnDisk.toPath(), StandardCopyOption.REPLACE_EXISTING);
 				// 2.Insert
-				PostDAO.instance.insertImageToPost(fileOnDisk.toPath().toString(), ID);
+				PostDAO.INSTANCE.insertImageToPost(fileOnDisk.toPath().toString(), ID);
 			} catch (InvalidPostDataExcepetion | SQLException | IOException e) {
 				System.out.println(e.getMessage());
 			}
@@ -86,9 +92,68 @@ public class AjaxController {
 	@RequestMapping(value = "/locations", method = RequestMethod.GET)
 	public Map<String, TreeSet<String>> getLocations() {
 		Map<String, TreeSet<String>> locations = locationDao.getLocations();
-		ArrayList<String> countries = new ArrayList<>(locations.keySet());
-		System.out.println( countries);
-		
 		return locations;
+	}
+	
+	@RequestMapping(value = "/notification/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity rejectBookingRequest(
+			HttpServletRequest request,
+			HttpSession session,
+			@PathVariable("id") int notificationID) throws SQLException {
+
+		User user = (User)session.getAttribute("user");
+		
+		if (user != null && bookingManager.deleteBookingRequest(notificationID)) {
+			
+			ArrayList<Notification> bookingRequestsInSession = new ArrayList<>();
+			bookingRequestsInSession = (ArrayList<Notification>)session.getAttribute("bookingRequests");
+
+			//using iterator to avoid ConcurrentModificationException
+			for (Iterator<Notification> iterator = bookingRequestsInSession.iterator(); iterator.hasNext();) {
+				Notification notification = (Notification) iterator.next();
+				if (notification.getNotificationID() == notificationID) {
+					iterator.remove();
+				}
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(null);
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+	}
+	
+	@RequestMapping(value = "/notification/{id}", method = RequestMethod.POST)
+	public ResponseEntity acceptBookingRequest(
+			HttpServletRequest request,
+			HttpSession session,
+			@PathVariable("id") int notificationID) throws SQLException {
+		
+		User user = (User)session.getAttribute("user");
+		
+		if (user != null && bookingManager.acceptBookingRequest(notificationID)) {
+			ArrayList<Notification> bookingRequestsInSession = new ArrayList<>();
+			bookingRequestsInSession = (ArrayList<Notification>)session.getAttribute("bookingRequests");
+
+			for (ListIterator<Notification> iterator = 
+					bookingRequestsInSession.listIterator(); iterator.hasNext();) {
+
+				Notification notification = (Notification) iterator.next();
+				if (notification.getNotificationID() == notificationID) {
+					iterator.remove();
+				}
+			}
+			return ResponseEntity.status(HttpStatus.OK).body(null);
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+	}
+	
+	@RequestMapping(value = "/rate", method = RequestMethod.POST)
+	public ResponseEntity ratePost(HttpSession session,
+			@RequestParam("rating") int rating,
+			@RequestParam("postID") int postID) throws SQLException {
+		User user = (User) session.getAttribute("user");
+		
+		if (user != null && bookingManager.ratePost(postID, user.getUserID(), rating)) {
+			return ResponseEntity.status(HttpStatus.OK).body(null);
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 	}
 }

@@ -61,7 +61,8 @@
 			<strong> Airbnb</strong>
 		</a>
 	</div>
-	<!--/.Copyright --> </footer>
+	<!--/.Copyright --> 
+	</footer>
 	<!--/.Footer-->
 
 </body>

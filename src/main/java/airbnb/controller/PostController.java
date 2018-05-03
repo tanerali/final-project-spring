@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import airbnb.exceptions.InvalidCommentIDException;
 import airbnb.exceptions.InvalidPostDataExcepetion;
 import airbnb.manager.BookingManager;
 import airbnb.dao.PostDAO;
@@ -42,34 +41,25 @@ import airbnb.model.User;
 @Controller
 public class PostController {
 
-	private PostManager postManager = PostManager.instance;
-	private UserManager userManager = UserManager.instance;
-	private CommentManager commentManager = CommentManager.instance;
-	private BookingManager bookingManager = BookingManager.instance;
+	private PostManager postManager = PostManager.INSTANCE;
+	private UserManager userManager = UserManager.INSTANCE;
+	private CommentManager commentManager = CommentManager.INSTANCE;
+	private BookingManager bookingManager = BookingManager.INSTANCE;
 
 	@RequestMapping(value = "/explore", method = RequestMethod.GET)
-	public String explore(HttpServletRequest request) {
-		ArrayList<Post> posts = null;
-		// Map<String, TreeSet<String>> locations = locationDao.getLocations();
-		// ArrayList<String> countries = new ArrayList<>(locations.keySet());
-		// System.out.println( countries);
-
+	public String explore(HttpServletRequest request) throws SQLException {
 		try {
-			posts = (ArrayList<Post>) postManager.getAllPosts();
-
+			ArrayList<Post> posts = (ArrayList<Post>) postManager.getAllPosts();
+			
 			if (posts != null) {
 				request.setAttribute("posts", posts);
 			}
-			// if (locations != null) {
-			// request.setAttribute("locations", locations);
-			// request.setAttribute("countries", countries);
-			// }
-		} catch (SQLException | InvalidPostDataExcepetion e) {
+		} catch (InvalidPostDataExcepetion e) {
+			e.printStackTrace();
 			request.setAttribute("error", e.getMessage());
 			return "error";
 		}
 		return "explore";
-
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
@@ -187,7 +177,7 @@ public class PostController {
 			} catch (SQLException e) {
 				request.setAttribute("error", e.getMessage());
 				// return "error";
-			} catch (InvalidCommentIDException e) {
+			} catch (InvalidPostDataExcepetion e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -215,7 +205,7 @@ public class PostController {
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String deletePost(HttpServletRequest request, HttpSession session, @RequestParam("id") int postID) {
 		try {
-			PostDAO.instance.removePost(postID);
+			PostDAO.INSTANCE.removePost(postID);
 		} catch (SQLException e) {
 			request.setAttribute("error", e);
 			return "error";
@@ -240,7 +230,7 @@ public class PostController {
 		File fileOnDisk = new File(uploadFolder + file.getOriginalFilename());
 		try {
 			Files.copy(file.getInputStream(), fileOnDisk.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			PostDAO.instance.insertImageToPost(fileOnDisk.toPath().toString(), ID);
+			PostDAO.INSTANCE.insertImageToPost(fileOnDisk.toPath().toString(), ID);
 		} catch (SQLException | IOException e) {
 			req.setAttribute("error", e);
 			return "forward:error";
@@ -268,7 +258,7 @@ public class PostController {
 		}
 		System.out.println("========" + post + "========");
 		try {
-			PostDAO.instance.editPost(post);
+			PostDAO.INSTANCE.editPost(post);
 		} catch (SQLException e) {
 			request.setAttribute("error", e);
 			return "error";
