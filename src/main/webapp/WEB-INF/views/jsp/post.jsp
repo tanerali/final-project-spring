@@ -13,7 +13,7 @@
 	User postUser = (User) request.getAttribute("user");
 	User currUser = (User) session.getAttribute("user");
 	boolean myPost = false;
-	if(currUser != null) {
+	if (currUser != null) {
 		myPost = (currPost.getHostID() == currUser.getUserID()) ? true : false;
 	}
 %>
@@ -37,9 +37,10 @@
 <link
 	href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300'
 	rel='stylesheet' type='text/css'>
-	
+
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- //font -->
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
@@ -62,8 +63,33 @@
 		<div class="container">
 			<div class="agileits-single-img">
 
-				<!-- POST'S PICTURE -->
-				<img id="placeImage" src="getThumbnail?id=<%=currPost.getPostID()%>">
+				<!-- POST'S PICTURES -->
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div id="myCarousel" class="carousel slide" data-ride="carousel">
+								<div class="carousel-inner">
+									<div class="item carousel-item active">
+										<img src="getThumbnail?id=<%=currPost.getPostID()%>" alt="">
+									</div>
+									<c:forEach items="${photos}" var="item">
+										<div class="item carousel-item">
+											<img src="getPhoto?path=${item} " alt="">
+										</div>
+									</c:forEach>
+								</div>
+								<a class="carousel-control left carousel-control-prev"
+									href="#myCarousel" data-slide="prev"> <i
+									class="fa fa-angle-left"></i>
+								</a> <a class="carousel-control right carousel-control-next"
+									href="#myCarousel" data-slide="next"> <i
+									class="fa fa-angle-right"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- POST'S PICTURES -->
 				<h4><%=currPost.getTitle()%></h4>
 				<div class="agileinfo-single-icons">
 					<ul>
@@ -73,55 +99,81 @@
 						<li><i class="fa fa-calendar" aria-hidden="true"></i><span>Date
 								of posting: <%=currPost.getDateOfPosting().toString()%></span></li>
 						<li><i class="fa fa-heart" aria-hidden="true"></i><span>${rating}/5
-									Rating</span></li>
+								Rating</span></li>
 					</ul>
 
 					<!-- BOOK -->
 					<%-- <c:if test="${ error != null }">
 						<h4 style="color: red">${ error }</h4>
 					</c:if> --%>
-					
-					<% if (request.getAttribute("error") != null) { %>
-						<h4 style="color: red">${ error }</h4>
-					<% } %>
-					
-					
-					<% if (session.getAttribute("user") != null && !myPost) { %>
-						<form action="book" method="post">
-							<div class="input-group input-daterange">
-								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 
-									<span class="input-group-addon"> 
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span> 
-									<span class="input-group-addon">to</span> 
-									<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
-									<span class="input-group-addon">
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span>
-							</div>
-							<input type="hidden" name="postID" value="<%=currPost.getPostID()%>">
-							<!-- BOOK BUTTON -->
-							<input type="submit" value="Request Booking"
-								style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
-						</form>
-						
-						<div class="input-group" id="ratingStars">
-							<h1>Rate property by clicking on star</h1>
-							<button onclick="rate(1, ${post.postID})" class="btn"> <span id="rate1" class="fa fa-star checked"></span> </button>
-							<button onclick="rate(2, ${post.postID})" class="btn"> <span id="rate2" class="fa fa-star checked"></span> </button>
-							<button onclick="rate(3, ${post.postID})" class="btn"> <span id="rate3" class="fa fa-star checked"></span> </button>
-							<button onclick="rate(4, ${post.postID})" class="btn"> <span id="rate4" class="fa fa-star checked"></span> </button>
-							<button onclick="rate(5, ${post.postID})" class="btn"> <span id="rate5" class="fa fa-star checked"></span> </button>
+
+					<%
+						if (request.getAttribute("error") != null) {
+					%>
+					<h4 style="color: red">${ error }</h4>
+					<%
+						}
+					%>
+
+
+					<%
+						if (session.getAttribute("user") != null && !myPost) {
+					%>
+					<form action="book" method="post">
+						<div class="input-group input-daterange">
+							<input id="startDate1" name="dateFrom" type="text"
+								class="form-control" readonly="readonly"> <span
+								class="input-group-addon"> <span
+								class="glyphicon glyphicon-calendar"></span>
+							</span> <span class="input-group-addon">to</span> <input id="endDate1"
+								name="dateTo" type="text" class="form-control"
+								readonly="readonly"> <span class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar"></span>
+							</span>
 						</div>
-						
-						<%if(myPost) { %>
-						<br><a  href="edit?id=<%=currPost.getPostID()%>" style="background-color: #4CAF50; border: none; color: white;" >EDIT POST</a>
-						<a href="delete?id=<%=currPost.getPostID()%>"><i class="fa fa-trash" ></i></a>
-						<% } %>
-					<% } %>
-					
-					
-					
+						<input type="hidden" name="postID"
+							value="<%=currPost.getPostID()%>">
+						<!-- BOOK BUTTON -->
+						<input type="submit" value="Request Booking"
+							style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
+					</form>
+
+					<div class="input-group" id="ratingStars">
+						<h1>Rate property by clicking on star</h1>
+						<button onclick="rate(1, ${post.postID})" class="btn">
+							<span id="rate1" class="fa fa-star checked"></span>
+						</button>
+						<button onclick="rate(2, ${post.postID})" class="btn">
+							<span id="rate2" class="fa fa-star checked"></span>
+						</button>
+						<button onclick="rate(3, ${post.postID})" class="btn">
+							<span id="rate3" class="fa fa-star checked"></span>
+						</button>
+						<button onclick="rate(4, ${post.postID})" class="btn">
+							<span id="rate4" class="fa fa-star checked"></span>
+						</button>
+						<button onclick="rate(5, ${post.postID})" class="btn">
+							<span id="rate5" class="fa fa-star checked"></span>
+						</button>
+					</div>
+
+					<%
+						if (myPost) {
+					%>
+					<br>
+					<a href="edit?id=<%=currPost.getPostID()%>"
+						style="background-color: #4CAF50; border: none; color: white;">EDIT
+						POST</a> <a href="delete?id=<%=currPost.getPostID()%>"><i
+						class="fa fa-trash"></i></a>
+					<%
+						}
+					%>
+					<%
+						}
+					%>
+
+
+
 				</div>
 				<h3>Description</h3>
 				<p><%=currPost.getDescription()%></p>
@@ -167,15 +219,21 @@
 					</div>
 					<div class="clearfix">
 						<%
-						if (session.getAttribute("user") != null
-										&& ((User) session.getAttribute("user")).getUserID() == userID) { %>
+							if (session.getAttribute("user") != null
+										&& ((User) session.getAttribute("user")).getUserID() == userID) {
+						%>
 						<button
 							style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
-							onclick="deleteComment(<%=commentID%>, <%=postID%>)">DELETE COMMENT</button>
-						<% } %>
+							onclick="deleteComment(<%=commentID%>, <%=postID%>)">DELETE
+							COMMENT</button>
+						<%
+							}
+						%>
 					</div>
 				</div>
-				<% } %>
+				<%
+					}
+				%>
 			</div>
 			<!-- //comments -->
 

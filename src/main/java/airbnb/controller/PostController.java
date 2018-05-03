@@ -50,7 +50,7 @@ public class PostController {
 	public String explore(HttpServletRequest request) throws SQLException {
 		try {
 			ArrayList<Post> posts = (ArrayList<Post>) postManager.getAllPosts();
-			
+
 			if (posts != null) {
 				request.setAttribute("posts", posts);
 			}
@@ -63,10 +63,7 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public String search(
-			Model m, 
-			@RequestParam("search") String search, 
-			HttpServletRequest req,
+	public String search(Model m, @RequestParam("search") String search, HttpServletRequest req,
 			HttpServletResponse resp) {
 		ArrayList<Post> posts = (ArrayList<Post>) postManager.searchPost(search);
 
@@ -89,15 +86,14 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/post", method = RequestMethod.GET)
-	public String specificPostPage(
-			HttpServletRequest request, 
-			HttpSession session, 
+	public String specificPostPage(Model m, HttpServletRequest request, HttpSession session,
 			@RequestParam("id") int postID) {
 
 		Post currPost = postManager.getPostsByID().get(postID);
 		User hostUser = null;
 		ArrayList<Comment> comments = new ArrayList<>();
 		ArrayList<LocalDate> unavailableDates = new ArrayList<>();
+		ArrayList<String> allPhotos = new ArrayList<>();
 		double postRating;
 
 		if (currPost != null) {
@@ -105,7 +101,7 @@ public class PostController {
 				hostUser = userManager.getUserByID(currPost.getHostID());
 				comments = commentManager.getCommentsForPost(postID);
 				postRating = postManager.getPostRating(postID);
-
+				allPhotos = postManager.getAllPhotos(postID);
 				if (session.getAttribute("user") != null) {
 					unavailableDates = bookingManager.getUnavailableDates(postID);
 
@@ -126,6 +122,8 @@ public class PostController {
 			request.setAttribute("user", hostUser);
 			request.setAttribute("post", currPost);
 			request.setAttribute("comments", comments);
+			request.setAttribute("photos", allPhotos);
+
 			return "post";
 		}
 		return "redirect:html/404.html";
@@ -272,5 +270,27 @@ public class PostController {
 		}
 		request.setAttribute("post", post);
 		return "explore";
+	}
+
+	@RequestMapping(value = "/getPhoto", method = RequestMethod.GET)
+	public String getPhoto(HttpServletRequest req, HttpServletResponse resp, @RequestParam("path") String path) {
+
+		try {
+			if (path != null) {
+				File file = new File(path);
+				try (InputStream filecontent = new FileInputStream(file); OutputStream out = resp.getOutputStream()) {
+
+					byte[] bytes = new byte[1024];
+
+					while ((filecontent.read(bytes)) != -1) {
+						out.write(bytes);
+					}
+				}
+			}
+		} catch (IOException e) {
+			req.setAttribute("error", e);
+			return "error";
+		}
+		return null;
 	}
 }

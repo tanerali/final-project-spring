@@ -18,6 +18,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,38 +32,37 @@ import airbnb.model.User;
 @Controller
 public class BookingController {
 	private BookingManager bookingManager = BookingManager.INSTANCE;
-	
+
 	@Autowired
 	private JavaMailSenderImpl mailSender;
-	
+
 	@Autowired
 	private PostController postController;
 
 	@RequestMapping(value = "/book", method = RequestMethod.POST)
-	public String bookPost(HttpSession session, HttpServletRequest request,
-			@RequestParam("postID") int postID,
+	public String bookPost(Model m, HttpSession session, HttpServletRequest request, @RequestParam("postID") int postID,
 			@RequestParam("dateFrom") @DateTimeFormat(iso = ISO.DATE) LocalDate dateFrom,
 			@RequestParam("dateTo") @DateTimeFormat(iso = ISO.DATE) LocalDate dateTo) throws SQLException {
-				
-		User user = (User)session.getAttribute("user");
-		
+
+		User user = (User) session.getAttribute("user");
+
 		if (user != null) {
 			try {
 				Booking booking = new Booking(postID, user.getUserID(), dateFrom, dateTo);
 				bookingManager.requestBooking(booking);
-				
+
 			} catch (UserDataException e) {
 				e.printStackTrace();
 				request.setAttribute("error", e.getMessage());
-				return postController.specificPostPage(request, session, postID);
+				return postController.specificPostPage(m, request, session, postID);
 			}
 		}
-		return "redirect:post?id="+ postID;
+		return "redirect:post?id=" + postID;
 	}
-	
-	//if it is checkout day, then the visit has concluded
-	//@Scheduled(cron="*/10 * * * * *")
-	@Scheduled(cron="0 0 12 * * *")
+
+	// if it is checkout day, then the visit has concluded
+	// @Scheduled(cron="*/10 * * * * *")
+	@Scheduled(cron = "0 0 12 * * *")
 	public void changeStatusToVisited() {
 		try {
 			BookingDAO.INSTANCE.changeStatusToVisited();
@@ -70,10 +70,10 @@ public class BookingController {
 			e.printStackTrace();
 		}
 	}
-	
-	//after checkout ask users to rate
-	//@Scheduled(cron="*/10 * * * * *")
-	@Scheduled(cron="0 30 12 * * *")
+
+	// after checkout ask users to rate
+	// @Scheduled(cron="*/10 * * * * *")
+	@Scheduled(cron = "0 30 12 * * *")
 	public void askUsersToRatePlaceAfterVisit() {
 		ArrayList<String> emails = new ArrayList<>();
 		try {
@@ -81,10 +81,10 @@ public class BookingController {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+
 		for (String email : emails) {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
-			
+
 			try {
 				MimeMessageHelper mailMsg = new MimeMessageHelper(mimeMessage, true);
 				mailMsg.setFrom("ittalents.airbnb@gmail.com");

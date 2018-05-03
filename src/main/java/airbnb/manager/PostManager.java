@@ -83,4 +83,9 @@ public enum PostManager {
 	public double getPostRating(int postID) throws SQLException {
 		return PostDAO.INSTANCE.getPostRating(postID);
 	}
+
+	public ArrayList<String> getAllPhotos(int postID) throws SQLException {
+		return PostDAO.INSTANCE.getAllPhotos(postID);
+		
+	}
 }
