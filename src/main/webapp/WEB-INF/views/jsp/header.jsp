@@ -3,7 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<!-- <script src="js/artyom.window.js"></script> -->
+<script src="js/artyom.window.js"></script>
 <div class="header">
 	<div class="container">
 		<div class="header-left">
@@ -85,37 +85,41 @@
 										}
 									}
 								</script>
-								
-								<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" 
-												aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>									
-									<ul class="dropdown-menu">
+
+								<li class=""><a href="#"
+									class="dropdown-toggle hvr-bounce-to-bottom"
+									data-toggle="dropdown" role="button" aria-haspopup="true"
+									aria-expanded="false">Notifications<span class="caret"></span></a>
+									<ul class="dropdown-menu" style="overflow:  hidden;border:white;">
 										<c:forEach var="notification" items="${bookingRequests}">
-										
-											<li style="padding-top:5px" id="notification${notification.notificationID }">
+
+											<li style="padding-top: 5px"
+												id="notification${notification.notificationID }">
 												<div style="width: 300px">
-												<a href="post?id=${ notification.postID }">
-													<img class="img-responsive" src="getThumbnail?id=${ notification.postID }">
-														<h4>Booking request for <em>${ notification.title }</em></h4>
-												</a>
-												<p>
-													From: ${ notification.dateFrom }<br> To: ${ notification.dateTo }<br>
-													Customer name: ${ notification.fullName }<br> Profile:
-													<a href="profile?id=${ notification.customerID }">${ notification.email }</a>
-												</p>
-												<button
-													onclick="rejectBookingRequest(${notification.notificationID})"
-													style="float: left; margin-bottom: 5px; background-color: red; border: none; color: white; padding: 15px 32px;">REJECT
-												</button>
-												<button
-													onclick="acceptBookingRequest(${notification.notificationID})"
-													style="float: right; margin-bottom: 5px; background-color: #4CAF50; 
-													border: none; color: white; padding: 15px 32px;">ACCEPT
-												</button>
+													<a href="post?id=${ notification.postID }"> <img
+														style="width: 25%; height: 25%;" class="img-responsive"
+														src="getThumbnail?id=${ notification.postID }">
+														<h4>
+															Booking request for <em>${ notification.title }</em>
+														</h4>
+													</a>
+													<p>
+														From: ${ notification.dateFrom }<br> To: ${ notification.dateTo }<br>
+														Customer name: ${ notification.fullName }<br>
+														Profile: <a href="profile?id=${ notification.customerID }">${ notification.email }</a>
+													</p>
+													<button
+														onclick="rejectBookingRequest(${notification.notificationID})"
+														style="float: left; margin-bottom: 5px; background-color: red; border: none; color: white; padding: 15px 32px;">REJECT
+													</button>
+													<button
+														onclick="acceptBookingRequest(${notification.notificationID})"
+														style="float: right; margin-bottom: 5px; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">ACCEPT
+													</button>
 												</div>
 											</li>
 										</c:forEach>
-									</ul>
-								</li>
+									</ul></li>
 								<li><a href="personalProfile">Profile</a></li>
 								<li><a href="logout">Logout</a></li>
 								<%
@@ -175,14 +179,11 @@ artyom.addCommands([
              case "register":
             	 window.location.href = "register";
              break;
-             case "other features":
-                 sdkcarlos.scrollTo("#section-otherfeatures");
-             break;
-             case "text to speech":
-                 sdkcarlos.scrollTo("#section-speechapi");
+             case "index":
+            	 window.location.href = "index";
              break;
              case "github":
-                 window.location.href = "https://github.com/sdkcarlos/artyom.js";
+                 window.location.href = "https://github.com/tanerali/final-project-spring";
              break;
              default:
                  console.warn("Location "+wildcard+" has been not saved.");
@@ -236,17 +237,11 @@ artyom.initialize({
 /**
 * To speech text
 */
-artyom.say("Hello, this is a demo text. The next text will be spoken in Spanish",{
+artyom.say("Hello, this is an Airbnb assisstant",{
  onStart: () => {
      console.log("Reading ...");
  },
- onEnd: () => {
-     console.log("No more text to talk");
-
-     // Force the language of a single speechSynthesis
-     artyom.say("Hola, esto está en Español", {
-         lang:"es-ES"
-     });
+ onEnd: () => {;
  }
 });
 </script>

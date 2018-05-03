@@ -151,7 +151,9 @@ public enum PostDAO {
 				allPhotos.add(resultSet.getString("photo"));
 			}
 			// Remove first photo !
-			allPhotos.remove(0);
+			if (allPhotos.size() > 1) {
+				allPhotos.remove(0);
+			}
 			return allPhotos;
 		}
 	}

@@ -63,12 +63,10 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public String search(Model m, @RequestParam("search") String search, HttpServletRequest req,
-			HttpServletResponse resp) {
+	public String search(Model m, @RequestParam("search") String search) {
 		ArrayList<Post> posts = (ArrayList<Post>) postManager.searchPost(search);
-
 		if (posts != null) {
-			req.setAttribute("posts", posts);
+			m.addAttribute("posts",posts);
 		}
 		return "explore";
 
@@ -114,7 +112,7 @@ public class PostController {
 				}
 			} catch (SQLException | UserDataException e) {
 				e.printStackTrace();
-				request.setAttribute("exception", e.getMessage());
+				m.addAttribute("error", e.getMessage());
 				return "error";
 			}
 
@@ -123,14 +121,20 @@ public class PostController {
 			request.setAttribute("post", currPost);
 			request.setAttribute("comments", comments);
 			request.setAttribute("photos", allPhotos);
-
+			m.addAttribute("rating", postRating);
+			m.addAttribute("user", hostUser);
+			m.addAttribute("post", currPost);
+			m.addAttribute("comments", comments);
+			m.addAttribute("photos", allPhotos);
 			return "post";
 		}
 		return "redirect:html/404.html";
 	}
 
 	@RequestMapping(value = "/getThumbnail", method = RequestMethod.GET)
-	public String getPostThumbnail(HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") int postID) {
+	public String getPostThumbnail(HttpServletRequest req, 
+								   HttpServletResponse resp, 
+								   @RequestParam("id") int postID) throws SQLException {
 
 		if (postID != 0) {
 			try {
@@ -148,7 +152,7 @@ public class PostController {
 						}
 					}
 				}
-			} catch (IOException | SQLException e) {
+			} catch (IOException e) {
 				req.setAttribute("error", e);
 				return "error";
 			}
@@ -158,8 +162,9 @@ public class PostController {
 
 	@RequestMapping(value = "/comment", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Object> leaveCommentOnPost(HttpServletRequest request, HttpSession session,
-			@RequestBody Comment comment) {
+	public ResponseEntity<Object> leaveCommentOnPost(HttpServletRequest request, 
+													HttpSession session,
+			                                        @RequestBody Comment comment) {
 
 		User user = (User) session.getAttribute("user");
 

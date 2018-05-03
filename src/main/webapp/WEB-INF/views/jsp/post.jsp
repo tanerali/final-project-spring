@@ -17,7 +17,7 @@
 		myPost = (currPost.getHostID() == currUser.getUserID()) ? true : false;
 	}
 %>
-<title><%=currPost.getTitle()%></title>
+<title>${post.title}</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"
 	media="all" />
 <!--// bootstrap-css -->
@@ -70,7 +70,8 @@
 							<div id="myCarousel" class="carousel slide" data-ride="carousel">
 								<div class="carousel-inner">
 									<div class="item carousel-item active">
-										<img src="getThumbnail?id=<%=currPost.getPostID()%>" alt="">
+										<img src=<c:url value="getThumbnail?id=${post.postID}"/>
+											alt="">
 									</div>
 									<c:forEach items="${photos}" var="item">
 										<div class="item carousel-item">
@@ -90,12 +91,12 @@
 					</div>
 				</div>
 				<!-- POST'S PICTURES -->
-				<h4><%=currPost.getTitle()%></h4>
+				<h4>${ post.title}</h4>
 				<div class="agileinfo-single-icons">
 					<ul>
 						<li><a href="profile?id=<%=postUser.getUserID()%>"><i
-								class="fa fa-user" aria-hidden="true"></i> <span>Host: <%=postUser.getFirstName()%>
-									<%=postUser.getLastName()%></span></a></li>
+								class="fa fa-user" aria-hidden="true"></i> <span>Host:
+									${user.firstName} ${user.lastName}</span></a></li>
 						<li><i class="fa fa-calendar" aria-hidden="true"></i><span>Date
 								of posting: <%=currPost.getDateOfPosting().toString()%></span></li>
 						<li><i class="fa fa-heart" aria-hidden="true"></i><span>${rating}/5
@@ -156,24 +157,19 @@
 							<span id="rate5" class="fa fa-star checked"></span>
 						</button>
 					</div>
-
+					<%
+						}
+					%>
 					<%
 						if (myPost) {
 					%>
-					<br>
-					<a href="edit?id=<%=currPost.getPostID()%>"
+					<br> <a href="edit?id=<%=currPost.getPostID()%>"
 						style="background-color: #4CAF50; border: none; color: white;">EDIT
 						POST</a> <a href="delete?id=<%=currPost.getPostID()%>"><i
 						class="fa fa-trash"></i></a>
 					<%
 						}
 					%>
-					<%
-						}
-					%>
-
-
-
 				</div>
 				<h3>Description</h3>
 				<p><%=currPost.getDescription()%></p>
