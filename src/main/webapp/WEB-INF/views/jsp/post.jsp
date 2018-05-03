@@ -17,7 +17,8 @@
 		myPost = (currPost.getHostID() == currUser.getUserID()) ? true : false;
 	}
 %>
-<title>${post.title}</title>
+<!-- <title>${post.title}</title> -->
+<title><%=currPost.getTitle()%></title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"
 	media="all" />
 <!--// bootstrap-css -->

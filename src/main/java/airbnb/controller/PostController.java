@@ -213,7 +213,7 @@ public class PostController {
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String deletePost(HttpServletRequest request, HttpSession session, @RequestParam("id") int postID) {
 		try {
-			PostDAO.INSTANCE.removePost(postID);
+			PostManager.INSTANCE.removePost(postID);
 		} catch (SQLException e) {
 			request.setAttribute("error", e);
 			return "error";
@@ -244,7 +244,7 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/editPost", method = RequestMethod.POST)
-	public String editPost(HttpServletRequest request) {
+	public String editPost(HttpServletRequest request) throws SQLException {
 		// New data
 		String title = request.getParameter("title");
 		String description = request.getParameter("description");
@@ -256,20 +256,14 @@ public class PostController {
 
 		Post post = null;
 		try {
-			post = new Post(postID,
-							title,
-							description, 
-							price, 
-							date, 
-							Post.Type.getType(type), 
-							userID);
+			post = new Post(postID, title, description, price, date, Post.Type.getType(type), userID);
 		} catch (InvalidPostDataExcepetion e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		System.out.println("========" + post + "========");
 		try {
-			PostDAO.INSTANCE.editPost(post);
+			PostManager.INSTANCE.editPost(post);
 		} catch (SQLException e) {
 			request.setAttribute("error", e);
 			return "error";

@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import airbnb.dao.PostDAO;
@@ -43,10 +42,14 @@ public enum PostManager {
 		return Collections.unmodifiableMap(postsByUsers);
 	}
 
+	public void removePostFromCache(int postID) {
+		this.postsByID.remove(postID);
+	}
+
 	public Map<Integer, Post> getPostsByID() {
 		return Collections.unmodifiableMap(postsByID);
 	}
-	
+
 	public void addPostToCache(Post post) {
 		postsByID.put(post.getPostID(), post);
 		if (!postsByUsers.containsKey(post.getHostID())) {
@@ -54,7 +57,7 @@ public enum PostManager {
 		}
 		postsByUsers.get(post.getHostID()).add(post);
 	}
-	
+
 	public List<Post> searchPost(String search) {
 		ArrayList<Post> posts = new ArrayList<Post>();
 		for (int id : postsByID.keySet()) {
@@ -68,7 +71,7 @@ public enum PostManager {
 	public List<Post> getAllPosts() throws SQLException, InvalidPostDataExcepetion {
 		return PostDAO.INSTANCE.getAllPosts();
 	}
-	
+
 	public int insertPost(Post newPost) throws InvalidPostDataExcepetion, SQLException {
 		int postID = PostDAO.INSTANCE.insertPost(newPost);
 		newPost.setPostID(postID);
@@ -86,6 +89,18 @@ public enum PostManager {
 
 	public ArrayList<String> getAllPhotos(int postID) throws SQLException {
 		return PostDAO.INSTANCE.getAllPhotos(postID);
-		
+
+	}
+
+	public void editPost(Post post) throws SQLException {
+		PostDAO.INSTANCE.editPost(post);
+		addPostToCache(post);
+
+	}
+
+	public void removePost(int postID) throws SQLException {
+
+		PostDAO.INSTANCE.removePost(postID);
+		removePostFromCache(postID);
 	}
 }
