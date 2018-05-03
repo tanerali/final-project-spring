@@ -11,6 +11,7 @@
 <meta charset="utf-8">
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"
 	media="all" />
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <!-- css -->
 <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
@@ -246,6 +247,7 @@
 				fd.append('file', file[0]);
 
 				fd.append('ID', document.getElementById("postid").value);
+				swal("Successfully uploaded!", file[0].name, "success");
 				uploadData(fd);
 			});
 
