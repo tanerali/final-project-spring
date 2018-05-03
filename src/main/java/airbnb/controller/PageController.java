@@ -35,4 +35,15 @@ public class PageController {
 			return "login";
 		}
 	}
+	
+	@RequestMapping(value = "/host", method = RequestMethod.GET)
+	public String createPostPage(HttpSession session) {
+		User currUser = (User) session.getAttribute("user");
+		// check session if logged to return to host
+		if (currUser != null) {
+			return "host";
+		}
+		// otherwise to "login"
+		return "login";
+	}
 }

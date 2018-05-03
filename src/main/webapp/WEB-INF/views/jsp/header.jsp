@@ -240,7 +240,7 @@ artyom.initialize({
 /**
 * To speech text
 */
-artyom.say("Hello, this is a demo text. The next text will be spoken in Spanish",{
+/* artyom.say("Hello, this is a demo text. The next text will be spoken in Spanish",{
  onStart: () => {
      console.log("Reading ...");
  },
@@ -251,6 +251,6 @@ artyom.say("Hello, this is a demo text. The next text will be spoken in Spanish"
      artyom.say("Hola, esto está en Español", {
          lang:"es-ES"
      });
- }
-});
+ } 
+}); */
 </script>

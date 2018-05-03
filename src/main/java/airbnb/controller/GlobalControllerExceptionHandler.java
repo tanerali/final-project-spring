@@ -23,28 +23,20 @@ public class GlobalControllerExceptionHandler {
 		// Nothing to do.  Returns the logical view name of an error page, passed
 		// to the view-resolver(s) in usual way.
 		// Note that the exception is NOT available to this view (it is not added
-		// to the model) but see using ModelAndView or 
-		//"Extending ExceptionHandlerExceptionResolver" below.
+		// to the model) but see using ModelAndView below.
 		model.addAttribute("error", "Unable to retrieve or update your data in the database. "
 				+ "This may be due to an issue in our server. "
 				+ "Please try again and make sure you enter valid data.");
 		return DEFAULT_ERROR_VIEW;
 	}
 
-	// Total control - setup a model and return the view name yourself. Or
-	// consider subclassing ExceptionHandlerExceptionResolver (see below).
+	// Total control - setup a model and return the view name yourself
 	@ExceptionHandler(value = Exception.class)
 	public ModelAndView defaultErrorHandler(HttpServletRequest req, Exception e) throws Exception {
-		// If the exception is annotated with @ResponseStatus rethrow it and let
-		// the framework handle it - like the OrderNotFoundException example
-		// at the start of this post.
-		// AnnotationUtils is a Spring Framework utility class.
-		if (AnnotationUtils.findAnnotation(e.getClass(), ResponseStatus.class) != null) {
-			throw e;
-		}
+		
 		// Otherwise setup and send the user to a default error-view.
 		ModelAndView mav = new ModelAndView();
-		mav.addObject("error", e);
+		
 		mav.addObject("url", req.getRequestURL());
 		mav.setViewName(DEFAULT_ERROR_VIEW);
 		return mav;

@@ -13,7 +13,7 @@
 	User postUser = (User) request.getAttribute("user");
 	User currUser = (User) session.getAttribute("user");
 	boolean myPost = false;
-	if(currUser != null) {
+	if (currUser != null) {
 		myPost = (currPost.getHostID() == currUser.getUserID()) ? true : false;
 	}
 %>
@@ -37,9 +37,10 @@
 <link
 	href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300'
 	rel='stylesheet' type='text/css'>
-	
+
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <!-- //font -->
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
@@ -62,8 +63,33 @@
 		<div class="container">
 			<div class="agileits-single-img">
 
-				<!-- POST'S PICTURE -->
-				<img id="placeImage" src="getThumbnail?id=<%=currPost.getPostID()%>">
+				<!-- POST'S PICTURES -->
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<div id="myCarousel" class="carousel slide" data-ride="carousel">
+								<div class="carousel-inner">
+									<div class="item carousel-item active">
+										<img src="getThumbnail?id=<%=currPost.getPostID()%>" alt="">
+									</div>
+									<c:forEach items="${photos}" var="item">
+										<div class="item carousel-item">
+											<img src="getPhoto?path=${item} " alt="">
+										</div>
+									</c:forEach>
+								</div>
+								<a class="carousel-control left carousel-control-prev"
+									href="#myCarousel" data-slide="prev"> <i
+									class="fa fa-angle-left"></i>
+								</a> <a class="carousel-control right carousel-control-next"
+									href="#myCarousel" data-slide="next"> <i
+									class="fa fa-angle-right"></i>
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- POST'S PICTURES -->
 				<h4><%=currPost.getTitle()%></h4>
 				<div class="agileinfo-single-icons">
 					<ul>
@@ -72,15 +98,15 @@
 									<%=postUser.getLastName()%></span></a></li>
 						<li><i class="fa fa-calendar" aria-hidden="true"></i><span>Date
 								of posting: <%=currPost.getDateOfPosting().toString()%></span></li>
-						<li><i class="fa fa-heart" aria-hidden="true"></i><span>${rating}/5
-									Rating</span></li>
+						<li><i class="fa fa-heart" aria-hidden="true"></i><span id="postRating">${rating}/5
+								Rating</span></li>
 					</ul>
 
-					<!-- BOOK -->
 					<c:if test="${ error != null }">
 						<h4 style="color: red">${ error }</h4>
 					</c:if>
 					
+					<!-- BOOK IF NOT LOGGED IN AND MY POST -->					
 					<% if (session.getAttribute("user") != null && !myPost) { %>
 						<form action="book" method="post">
 							<div class="input-group input-daterange">
@@ -109,14 +135,18 @@
 							<button onclick="rate(5, ${post.postID})" class="btn"> <span id="rate5" class="fa fa-star checked"></span> </button>
 						</div>
 						
-						<%if(myPost) { %>
-						<br><a  href="edit?id=<%=currPost.getPostID()%>" style="background-color: #4CAF50; border: none; color: white;" >EDIT POST</a>
-						<a href="delete?id=<%=currPost.getPostID()%>"><i class="fa fa-trash" ></i></a>
-						<% } %>
 					<% } %>
 					
-					
-					
+					<% if (myPost) { %>
+					<br>
+					<a href="edit?id=<%=currPost.getPostID()%>"
+						style="background-color: #4CAF50; border: none; color: white;">EDIT POST
+					</a> 
+					<a href="delete?id=<%=currPost.getPostID()%>"><i class="fa fa-trash"></i></a>
+					<% } %>
+
+
+
 				</div>
 				<h3>Description</h3>
 				<p><%=currPost.getDescription()%></p>
@@ -162,15 +192,21 @@
 					</div>
 					<div class="clearfix">
 						<%
-						if (session.getAttribute("user") != null
-										&& ((User) session.getAttribute("user")).getUserID() == userID) { %>
+							if (session.getAttribute("user") != null
+										&& ((User) session.getAttribute("user")).getUserID() == userID) {
+						%>
 						<button
 							style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
-							onclick="deleteComment(<%=commentID%>, <%=postID%>)">DELETE COMMENT</button>
-						<% } %>
+							onclick="deleteComment(<%=commentID%>, <%=postID%>)">DELETE
+							COMMENT</button>
+						<%
+							}
+						%>
 					</div>
 				</div>
-				<% } %>
+				<%
+					}
+				%>
 			</div>
 			<!-- //comments -->
 
@@ -293,22 +329,22 @@
 				}
 			}
 		}
+		 
+		 function deleteComment(commentID, postID) {
+				var req = new XMLHttpRequest();
+				req.open("Delete", "comment/"+ commentID);
+				req.send();
+				
+				req.onreadystatechange = function() {
+					if (req.readyState == 4 && req.status == 200) {
+						var element = document.getElementById("comment"+ commentID);
+						element.parentNode.removeChild(element);
+					}
+				}
+			}
 	 </script>
 
 	<script type="text/javascript">
-		function deleteComment(commentID, postID) {
-			var req = new XMLHttpRequest();
-			req.open("Delete", "comment/"+ commentID);
-			req.send();
-			
-			req.onreadystatechange = function() {
-				if (req.readyState == 4 && req.status == 200) {
-					var element = document.getElementById("comment"+ commentID);
-					element.parentNode.removeChild(element);
-				}
-			}
-		}
-		
 		function rate(rating, postID){
 			var req = new XMLHttpRequest();
 			
@@ -330,8 +366,23 @@
 						if(star.id == ("rate"+rating)) continue;
 						star.style = "";
 					}
+					getRating(postID);
 				}
 			}
+		}
+		
+		function getRating(postID) {
+			var req = new XMLHttpRequest();
+			req.open("Get", "getRating?id="+ postID);
+			req.send();
+			
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					req.responseText;
+					console.log();
+					document.getElementById("postRating").innerHTML = req.responseText+ "/5 Rating";
+				}
+			} 
 		}
 				
 	</script>

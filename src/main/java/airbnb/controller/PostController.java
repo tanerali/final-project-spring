@@ -15,12 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.httpclient.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,7 +46,7 @@ public class PostController {
 	public String explore(HttpServletRequest request) throws SQLException {
 		try {
 			ArrayList<Post> posts = (ArrayList<Post>) postManager.getAllPosts();
-			
+
 			if (posts != null) {
 				request.setAttribute("posts", posts);
 			}
@@ -64,6 +60,7 @@ public class PostController {
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
 	public String search(Model model, @RequestParam("search") String search) {
+
 		ArrayList<Post> posts = (ArrayList<Post>) postManager.searchPost(search);
 
 		if (posts != null) {
@@ -73,27 +70,15 @@ public class PostController {
 
 	}
 
-	@RequestMapping(value = "/host", method = RequestMethod.GET)
-	public String createPostPage(HttpSession session) {
-		User currUser = (User) session.getAttribute("user");
-		// check session if logged to return to host
-		if (currUser != null) {
-			return "host";
-		}
-		// otherwise to "login"
-		return "login";
-	}
-
 	@RequestMapping(value = "/post", method = RequestMethod.GET)
-	public String specificPostPage(
-			HttpServletRequest request, 
-			HttpSession session, 
+	public String specificPostPage(Model m, HttpServletRequest request, HttpSession session,
 			@RequestParam("id") int postID) throws SQLException {
 
 		Post currPost = postManager.getPostsByID().get(postID);
 		User hostUser = null;
 		ArrayList<Comment> comments = new ArrayList<>();
 		ArrayList<LocalDate> unavailableDates = new ArrayList<>();
+		ArrayList<String> allPhotos = new ArrayList<>();
 		double postRating;
 
 		if (currPost != null) {
@@ -104,6 +89,7 @@ public class PostController {
 
 				//if user logged in can also make a booking request
 				//therefore, the dates that are unavailable for booking are loaded
+				allPhotos = postManager.getAllPhotos(postID);
 				if (session.getAttribute("user") != null) {
 					unavailableDates = bookingManager.getUnavailableDates(postID);
 
@@ -124,6 +110,8 @@ public class PostController {
 			request.setAttribute("user", hostUser);
 			request.setAttribute("post", currPost);
 			request.setAttribute("comments", comments);
+			request.setAttribute("photos", allPhotos);
+
 			return "post";
 		}
 		return "redirect:html/404.html";
@@ -157,49 +145,6 @@ public class PostController {
 		return null;
 	}
 
-	@RequestMapping(value = "/comment", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<Object> leaveCommentOnPost(HttpServletRequest request, HttpSession session,
-			@RequestBody Comment comment) throws SQLException {
-
-		User user = (User) session.getAttribute("user");
-
-		if (comment.getContent() != null && !comment.getContent().isEmpty() && user != null) {
-
-			try {
-				comment.setUserID(user.getUserID());
-				comment.setFullName(user.getFirstName() + " " + user.getLastName());
-				comment.setDate(LocalDate.now());
-
-				int commentID = commentManager.addCommentToPost(comment);
-				comment.setCommentID(commentID);
-
-				if (commentID > 0) {
-					return ResponseEntity.status(HttpStatus.SC_OK).body(comment);
-				}
-			} catch (InvalidPostDataExcepetion e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
-	}
-
-	@RequestMapping(value = "/comment/{id}", method = RequestMethod.DELETE)
-	@ResponseBody
-	public ResponseEntity<Object> deleteCommentOnPost(
-			HttpServletRequest request, 
-			HttpServletResponse response,
-			@PathVariable("id") int commentID) throws SQLException {
-
-		if (commentManager.deleteComment(commentID)) {
-			return ResponseEntity.status(HttpStatus.SC_OK).body(null);
-		}
-		
-		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
-
-	}
-
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
 	public String deletePost(
 			HttpServletRequest request, 
@@ -225,7 +170,8 @@ public class PostController {
 			HttpServletRequest req) {
 		
 		System.out.println("================" + file.getOriginalFilename() + "================");
-		String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
+		//String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
+		String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
 		System.out.println("ID = " + ID);
 		File fileOnDisk = new File(uploadFolder + file.getOriginalFilename());
 		try {
@@ -265,5 +211,27 @@ public class PostController {
 		}
 		request.setAttribute("post", post);
 		return "explore";
+	}
+
+	@RequestMapping(value = "/getPhoto", method = RequestMethod.GET)
+	public String getPhoto(HttpServletRequest req, HttpServletResponse resp, @RequestParam("path") String path) {
+
+		try {
+			if (path != null) {
+				File file = new File(path);
+				try (InputStream filecontent = new FileInputStream(file); OutputStream out = resp.getOutputStream()) {
+
+					byte[] bytes = new byte[1024];
+
+					while ((filecontent.read(bytes)) != -1) {
+						out.write(bytes);
+					}
+				}
+			}
+		} catch (IOException e) {
+			req.setAttribute("error", e);
+			return "error";
+		}
+		return null;
 	}
 }

@@ -9,13 +9,6 @@
 <title>Airbnb</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta charset="utf-8">
-<script type="application/x-javascript">
-	
-		
-	 addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } 
-
-
-</script>
 
 <!-- bootstrap-css -->
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"
@@ -41,6 +34,9 @@
 	href='//fonts.googleapis.com/css?family=Roboto+Condensed:400,700italic,700,400italic,300italic,300'
 	rel='stylesheet' type='text/css'>
 <!-- //font -->
+<!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<![endif]-->
 
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
@@ -54,9 +50,12 @@
 		});
 	});
 </script>
-<!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-<![endif]-->
+<script type="application/x-javascript">		
+	 addEventListener("load", function() { 
+		 setTimeout(hideURLbar, 0); 
+		 }, false); 
+	 function hideURLbar(){ window.scrollTo(0,1); } 
+</script>
 <script type="text/javascript">
 	function editUser() {
 		document.getElementById("user").style.display = "none";
@@ -70,13 +69,8 @@
 
 	}
 </script>
-
 </head>
-
-
 <body>
-
-
 	<%@ include file="header.jsp"%>
 
 	<div class="container">
@@ -90,7 +84,7 @@
 				<h1>User details</h1>
 				<div style="width: 240px; height: 240px">
 					<img class="img-responsive" alt=""
-						src="getProfilePic?id=<%=user.getUserID()%>">
+						src="getProfilePic?id=${user.userID }">
 				</div>
 
 				<h2>Listings</h2>
@@ -108,38 +102,38 @@
 			<div class="col-sm-9">
 				<div id="user" style="display: block;">
 
-					<h1 class="page-header"><%=user.getFirstName() + " " + user.getLastName()%></h1>
+					<h1 class="page-header">${user.firstName }  ${user.lastName }</h1>
 					<div class="panel panel-default">
 						<div class="panel-heading">Verified info</div>
 						<div class="panel-body">
 							<table class="table table-hover">
 								<tr>
 									<td>Email</td>
-									<td><%=user.getEmail()%></td>
+									<td>${user.email }</td>
 								</tr>
 								<tr>
 									<td>Gender</td>
-									<td><%=user.getGender()%></td>
+									<td>${user.gender }</td>
 								</tr>
 								<tr>
 									<td>Country</td>
-									<td><%=user.getCountry()%></td>
+									<td>${user.country }</td>
 								</tr>
 								<tr>
 									<td>City</td>
-									<td><%=user.getCity()%></td>
+									<td>${user.city }</td>
 								</tr>
 								<tr>
 									<td>Description</td>
-									<td><%=user.getDescription()%></td>
+									<td>${user.description }</td>
 								</tr>
 								<tr>
 									<td>Birth Date</td>
-									<td><%=user.getBirthDate()%></td>
+									<td>${user.birthDate }</td>
 								</tr>
 								<tr>
 									<td>Telephone Number</td>
-									<td><%=user.getTelNumber()%></td>
+									<td>${user.telNumber }</td>
 								</tr>
 							</table>
 							<button
@@ -148,12 +142,10 @@
 						</div>
 					</div>
 				</div>
-
-				<%
-				Exception e = (Exception) request.getAttribute("error");
-				if (e != null) { %>
-					<p style="color: red"><%=e.getMessage()%></p>
-				<% } %>
+				
+				<c:if test="${error != null }">
+					<h3 style="color: red">${error }</h3>
+				</c:if>
 
 				<div id="editUser" style="display: none;">
 
@@ -165,47 +157,47 @@
 									<tr>
 										<td>First Name</td>
 										<td><input type="text" name="firstName"
-											value="<%=user.getFirstName()%>"></td>
+											value="${user.firstName }"></td>
 									</tr>
 									<tr>
 										<td>Last Name</td>
 										<td><input type="text" name="lastName"
-											value="<%=user.getLastName()%>"></td>
+											value="${user.lastName }"></td>
 									</tr>
 									<tr>
 										<td>Email</td>
 										<td><input type="email" name="email"
-											value="<%=user.getEmail()%>"></td>
+											value="${user.email }"></td>
 									</tr>
 									<tr>
 										<td>Gender</td>
 										<td><input type="text" name="gender"
-											value="<%=user.getGender()%>"></td>
+											value="${user.gender }"></td>
 									</tr>
 									<tr>
 										<td>Country</td>
 										<td><input type="text" name="country"
-											value="<%=user.getCountry()%>"></td>
+											value="${user.country }"></td>
 									</tr>
 									<tr>
 										<td>City</td>
 										<td><input type="text" name="city"
-											value="<%=user.getCity()%>"></td>
+											value="${user.city }"></td>
 									</tr>
 									<tr>
 										<td>Description</td>
 										<td><input type="text" name="description"
-											value="<%=user.getDescription()%>"></td>
+											value="${user.description }"></td>
 									</tr>
 									<tr>
 										<td>Birth Date</td>
 										<td><input type="date" name="birthDate"
-											value="<%=user.getBirthDate()%>"></td>
+											value="${user.birthDate }"></td>
 									</tr>
 									<tr>
 										<td>Telephone Number</td>
 										<td><input type="tel" name="telNumber"
-											value="<%=user.getTelNumber()%>"></td>
+											value="${user.telNumber }"></td>
 									</tr>
 								</table>
 								<input
@@ -245,8 +237,7 @@
 					</div>
 				</c:forEach>
 
-				<h1 class="page-header">Reviews from Guests of
-					<%=user.getFirstName() + " " + user.getLastName()%></h1>
+				<h1 class="page-header">Reviews from Guests of ${user.firstName } ${user.lastName }</h1>
 								
 				<c:forEach var="reviewFromGuest" items="${reviewsFromGuests}">
 					<div class="panel panel-default">
@@ -271,7 +262,6 @@
 						</div>
 					</div>
 				</c:forEach>
-				
 			</div>
 		</div>
 	</div>
