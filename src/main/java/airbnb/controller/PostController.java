@@ -66,7 +66,7 @@ public class PostController {
 	public String search(Model m, @RequestParam("search") String search) {
 		ArrayList<Post> posts = (ArrayList<Post>) postManager.searchPost(search);
 		if (posts != null) {
-			m.addAttribute("posts",posts);
+			m.addAttribute("posts", posts);
 		}
 		return "explore";
 
@@ -132,9 +132,8 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/getThumbnail", method = RequestMethod.GET)
-	public String getPostThumbnail(HttpServletRequest req, 
-								   HttpServletResponse resp, 
-								   @RequestParam("id") int postID) throws SQLException {
+	public String getPostThumbnail(HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") int postID)
+			throws SQLException {
 
 		if (postID != 0) {
 			try {
@@ -162,9 +161,8 @@ public class PostController {
 
 	@RequestMapping(value = "/comment", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<Object> leaveCommentOnPost(HttpServletRequest request, 
-													HttpSession session,
-			                                        @RequestBody Comment comment) {
+	public ResponseEntity<Object> leaveCommentOnPost(HttpServletRequest request, HttpSession session,
+			@RequestBody Comment comment) {
 
 		User user = (User) session.getAttribute("user");
 
@@ -233,18 +231,15 @@ public class PostController {
 	@ResponseBody
 	@RequestMapping(value = "/multipleUpload", method = RequestMethod.POST)
 	public String uploadMultipleImgs(@RequestParam("file") MultipartFile file, @RequestParam("ID") int ID,
-			HttpServletRequest req) {
+			HttpServletRequest req) throws IOException, SQLException {
 		System.out.println("================" + file.getOriginalFilename() + "================");
 		String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
 		System.out.println("ID = " + ID);
 		File fileOnDisk = new File(uploadFolder + file.getOriginalFilename());
-		try {
-			Files.copy(file.getInputStream(), fileOnDisk.toPath(), StandardCopyOption.REPLACE_EXISTING);
-			PostDAO.INSTANCE.insertImageToPost(fileOnDisk.toPath().toString(), ID);
-		} catch (SQLException | IOException e) {
-			req.setAttribute("error", e);
-			return "forward:error";
-		}
+
+		Files.copy(file.getInputStream(), fileOnDisk.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		PostDAO.INSTANCE.insertImageToPost(fileOnDisk.toPath().toString(), ID);
+
 		return fileOnDisk.toString();
 	}
 
@@ -261,7 +256,13 @@ public class PostController {
 
 		Post post = null;
 		try {
-			post = new Post(postID, title, description, price, date, Post.Type.getType(type), userID);
+			post = new Post(postID,
+							title,
+							description, 
+							price, 
+							date, 
+							Post.Type.getType(type), 
+							userID);
 		} catch (InvalidPostDataExcepetion e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

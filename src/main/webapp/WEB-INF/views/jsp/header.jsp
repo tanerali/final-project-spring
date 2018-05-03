@@ -90,7 +90,8 @@
 									class="dropdown-toggle hvr-bounce-to-bottom"
 									data-toggle="dropdown" role="button" aria-haspopup="true"
 									aria-expanded="false">Notifications<span class="caret"></span></a>
-									<ul class="dropdown-menu" style="overflow:  hidden;border:white;">
+									<ul class="dropdown-menu"
+										style="overflow: hidden; border: white;">
 										<c:forEach var="notification" items="${bookingRequests}">
 
 											<li style="padding-top: 5px"
@@ -181,6 +182,18 @@ artyom.addCommands([
              break;
              case "index":
             	 window.location.href = "index";
+             break;
+             case "host":
+            	 window.location.href = "host";
+             break;
+             case "logout":
+            	 window.location.href = "logout";
+             break;
+             case "home":
+            	 window.location.href = "index";
+             break;
+             case "profile":
+            	 window.location.href = "personalProfile";
              break;
              case "github":
                  window.location.href = "https://github.com/tanerali/final-project-spring";

@@ -55,10 +55,10 @@
 
 	<div class="container">
 		<h2>Explore All The Great Places You Can Stay</h2>
-		
+
 		<div class="form-group" id="types" style="display: inline">
-			<label for="typeSelector" style="display:inline">Select type:</label> 
-			<select class="form-control" id="typeSelector">
+			<label for="typeSelector" style="display: inline">Select
+				type:</label> <select class="form-control" id="typeSelector">
 				<option>Show all</option>
 				<option>HOUSE</option>
 				<option>APARTMENT</option>
@@ -68,26 +68,27 @@
 		</div>
 
 		<div class="form-group" id="countries" style="display: inline">
-			<label for="sel1" style="display:inline">Select country:</label> 
-			<select class="form-control" id="sel1">
+			<label for="sel1" style="display: inline">Select country:</label> <select
+				class="form-control" id="sel1">
 				<option>Show all</option>
 			</select>
 		</div>
-		
+
 		<div class="form-group" id="cities" style="display: none">
-			<label for="sel2" style="display:inline">Select city:</label> 
-			<select class="form-control" id="sel2">
+			<label for="sel2" style="display: inline">Select city:</label> <select
+				class="form-control" id="sel2">
 				<option>Show all</option>
 			</select>
 		</div>
 
 		<!-- POSTS -->
-		<div class="row" id="posts">
+		<div class="row" id="posts" style="margin-top: 2%;">
 			<c:forEach var="post" items="${ posts }">
-				<div class="col-md-4 filterDiv ${post.type} show" id="post${post.postID }">
+				<div class="col-md-4 filterDiv ${post.type} show"
+					id="post${post.postID }">
 					<div class="thumbnail">
-						<a href="post?id=${post.postID}"> 
-							<img src="getThumbnail?id=${post.postID}" alt="" style="width: 100%">
+						<a href="post?id=${post.postID}"> <img
+							src="getThumbnail?id=${post.postID}" alt="" style="width: 100%">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="caption">
@@ -96,11 +97,14 @@
 									</div>
 									<div class="caption">
 										<p>Price: ${post.price}</p>
-									</div>	
+									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="caption">
-										<p><span id="cityOfPost${post.postID}">${post.city}</span>, ${post.country}</p>
+										<p>
+											<span id="cityOfPost${post.postID}">${post.city}</span>,
+											${post.country}
+										</p>
 									</div>
 								</div>
 							</div>
@@ -111,9 +115,9 @@
 		</div>
 		<!-- /POSTS -->
 	</div>
-	
+
 	<%@ include file="footer.jsp"%>
-	
+
 	<script type="text/javascript">
 	var posts = document.getElementsByClassName("filterDiv");
 	
@@ -163,7 +167,7 @@
 		}
 	});
 	</script>
-	
+
 	<script type="text/javascript">
 		var responseJSON;
 		
@@ -231,7 +235,7 @@
 		    //console.log(opt);
 		});
 	</script>
-	
+
 	<script>
 		var req = new XMLHttpRequest();
 		function openSearch() {
