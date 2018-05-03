@@ -111,43 +111,43 @@
 	<script>
 		//footer smooth scroll
 		$(window)
-				.scroll(
-						function(event) {
-							function footer() {
-								var scroll = $(window).scrollTop();
-								if (scroll > 50) {
-									$(
-											".page-footer font-small blue-grey lighten-5 pt-0")
-											.fadeIn("slow").addClass("show");
-								} else {
-									$(
-											".page-footer font-small blue-grey lighten-5 pt-0")
-											.fadeOut("slow")
-											.removeClass("show");
-								}
+			.scroll(
+				function(event) {
+					function footer() {
+						var scroll = $(window).scrollTop();
+						if (scroll > 50) {
+							$(
+									".page-footer font-small blue-grey lighten-5 pt-0")
+									.fadeIn("slow").addClass("show");
+						} else {
+							$(
+									".page-footer font-small blue-grey lighten-5 pt-0")
+									.fadeOut("slow")
+									.removeClass("show");
+						}
 
-								clearTimeout($.data(this, 'scrollTimer'));
-								$
-										.data(
-												this,
-												'scrollTimer',
-												setTimeout(
-														function() {
-															if ($(
-																	'.page-footer font-small blue-grey lighten-5 pt-0')
-																	.is(
-																			':hover')) {
-																footer();
-															} else {
-																$(
-																		".page-footer font-small blue-grey lighten-5 pt-0")
-																		.fadeOut(
-																				"slow");
-															}
-														}, 2000));
-							}
-							footer();
-						});
+						clearTimeout($.data(this, 'scrollTimer'));
+						$
+								.data(
+										this,
+										'scrollTimer',
+										setTimeout(
+												function() {
+													if ($(
+															'.page-footer font-small blue-grey lighten-5 pt-0')
+															.is(
+																	':hover')) {
+														footer();
+													} else {
+														$(
+																".page-footer font-small blue-grey lighten-5 pt-0")
+																.fadeOut(
+																		"slow");
+													}
+												}, 2000));
+					}
+					footer();
+				});
 	</script>
 </body>
 </html>

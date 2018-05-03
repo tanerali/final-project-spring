@@ -42,6 +42,4 @@ public enum UserManager {
 	public String getPhoto(int userID) throws SQLException {
 		return userDAO.getPhotoPathById(userID);
 	}
-	
-	
 }

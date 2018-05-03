@@ -74,12 +74,12 @@ public class UserController {
 				
 				return "redirect:personalProfile";
 			} else {
-				request.setAttribute("exception", "Wrong password");
+				request.setAttribute("error", "Wrong password");
 				return "login";
 			}
 		} catch (UserDoesNotExistException e) {
 			e.printStackTrace();
-			request.setAttribute("exception", e.getMessage());
+			request.setAttribute("error", e.getMessage());
 			return "login";
 		} catch (UserDataException e) {
 			e.printStackTrace();
@@ -107,9 +107,8 @@ public class UserController {
 				throw new UserDataException("Password mismatch");
 			}
 
-			// String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
-
-			String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
+			String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
+			//String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
 
 			if (file.isEmpty()) {
 				throw new UserDataException("Please select a file to upload");
@@ -137,7 +136,7 @@ public class UserController {
 			}
 		} catch (UserDataException e) {
 			e.printStackTrace();
-			request.setAttribute("exception", e);
+			request.setAttribute("error", e);
 			return "register";
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -188,7 +187,7 @@ public class UserController {
 			// this exception goes to personalProfile and gets displayed
 			// nicely to user in red font
 			e.printStackTrace();
-			request.setAttribute("exception", e.getMessage());
+			request.setAttribute("error", e.getMessage());
 		}
 		return "personalProfile";
 	}
@@ -219,7 +218,7 @@ public class UserController {
 				}
 			} catch (IOException e) {
 				e.printStackTrace();
-				req.setAttribute("exception", e.getMessage());
+				req.setAttribute("error", e.getMessage());
 				return "error";
 			}
 		}

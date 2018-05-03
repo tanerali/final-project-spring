@@ -95,87 +95,62 @@
 				<h4>${ post.title}</h4>
 				<div class="agileinfo-single-icons">
 					<ul>
-						<li><a href="profile?id=<%=postUser.getUserID()%>"><i
+						<li><a href="profile?id=${user.userID }"><i
 								class="fa fa-user" aria-hidden="true"></i> <span>Host:
 									${user.firstName} ${user.lastName}</span></a></li>
 						<li><i class="fa fa-calendar" aria-hidden="true"></i><span>Date
-								of posting: <%=currPost.getDateOfPosting().toString()%></span></li>
-						<li><i class="fa fa-heart" aria-hidden="true"></i><span>${rating}/5
+								of posting: ${post.dateOfPosting }</span></li>
+						<li><i class="fa fa-heart" aria-hidden="true"></i><span id="postRating">${rating}/5
 								Rating</span></li>
 					</ul>
 
-					<!-- BOOK -->
-					<%-- <c:if test="${ error != null }">
+					<c:if test="${ error != null }">
 						<h4 style="color: red">${ error }</h4>
-					</c:if> --%>
-
-					<%
-						if (request.getAttribute("error") != null) {
-					%>
-					<h4 style="color: red">${ error }</h4>
-					<%
-						}
-					%>
-
-
-					<%
-						if (session.getAttribute("user") != null && !myPost) {
-					%>
-					<form action="book" method="post">
-						<div class="input-group input-daterange">
-							<input id="startDate1" name="dateFrom" type="text"
-								class="form-control" readonly="readonly"> <span
-								class="input-group-addon"> <span
-								class="glyphicon glyphicon-calendar"></span>
-							</span> <span class="input-group-addon">to</span> <input id="endDate1"
-								name="dateTo" type="text" class="form-control"
-								readonly="readonly"> <span class="input-group-addon">
-								<span class="glyphicon glyphicon-calendar"></span>
-							</span>
+					</c:if>
+					
+					<!-- BOOK IF NOT LOGGED IN AND MY POST -->					
+					<% if (session.getAttribute("user") != null && !myPost) { %>
+						<form action="book" method="post">
+							<div class="input-group input-daterange">
+								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 
+									<span class="input-group-addon"> 
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span> 
+									<span class="input-group-addon">to</span> 
+									<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+							</div>
+							<input type="hidden" name="postID" value="${post.postID }">
+							<!-- BOOK BUTTON -->
+							<input type="submit" value="Request Booking"
+								style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
+						</form>
+						
+						<div class="input-group" id="ratingStars">
+							<h1>Rate property by clicking on star</h1>
+							<button onclick="rate(1, ${post.postID})" class="btn"> <span id="rate1" class="fa fa-star checked"></span> </button>
+							<button onclick="rate(2, ${post.postID})" class="btn"> <span id="rate2" class="fa fa-star checked"></span> </button>
+							<button onclick="rate(3, ${post.postID})" class="btn"> <span id="rate3" class="fa fa-star checked"></span> </button>
+							<button onclick="rate(4, ${post.postID})" class="btn"> <span id="rate4" class="fa fa-star checked"></span> </button>
+							<button onclick="rate(5, ${post.postID})" class="btn"> <span id="rate5" class="fa fa-star checked"></span> </button>
 						</div>
-						<input type="hidden" name="postID"
-							value="<%=currPost.getPostID()%>">
-						<!-- BOOK BUTTON -->
-						<input type="submit" value="Request Booking"
-							style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
-					</form>
+					<% } %>
+					
+					<% if (myPost) { %>
+					<br>
+					<a href="edit?id=${post.postID }"
+						style="background-color: #4CAF50; border: none; color: white;">EDIT POST
+					</a> 
+					<a href="delete?id=${post.postID }"><i class="fa fa-trash"></i></a>
+					<% } %>
 
-					<div class="input-group" id="ratingStars">
-						<h1>Rate property by clicking on star</h1>
-						<button onclick="rate(1, ${post.postID})" class="btn">
-							<span id="rate1" class="fa fa-star checked"></span>
-						</button>
-						<button onclick="rate(2, ${post.postID})" class="btn">
-							<span id="rate2" class="fa fa-star checked"></span>
-						</button>
-						<button onclick="rate(3, ${post.postID})" class="btn">
-							<span id="rate3" class="fa fa-star checked"></span>
-						</button>
-						<button onclick="rate(4, ${post.postID})" class="btn">
-							<span id="rate4" class="fa fa-star checked"></span>
-						</button>
-						<button onclick="rate(5, ${post.postID})" class="btn">
-							<span id="rate5" class="fa fa-star checked"></span>
-						</button>
-					</div>
-					<%
-						}
-					%>
-					<%
-						if (myPost) {
-					%>
-					<br> <a href="edit?id=<%=currPost.getPostID()%>"
-						style="background-color: #4CAF50; border: none; color: white;">EDIT
-						POST</a> <a href="delete?id=<%=currPost.getPostID()%>"><i
-						class="fa fa-trash"></i></a>
-					<%
-						}
-					%>
 				</div>
 				<h3>Description</h3>
-				<p><%=currPost.getDescription()%></p>
+				<p>${post.description }</p>
 				<p>
-					Price: <b><%=currPost.getPrice()%></b>
+					Price: <b>${post.price }</b>
 				</p>
 			</div>
 
@@ -244,7 +219,7 @@
 
 				<!-- AJAX -->
 				<textarea placeholder="Comment" id="comment" required></textarea>
-				<input type="hidden" id="postID" value="<%=currPost.getPostID()%>">
+				<input type="hidden" id="postID" value="${post.postID }">
 
 				<button class="form-control" id="leaveComment"
 					onclick="postComment()">SUBMIT</button>
@@ -257,25 +232,25 @@
 	</div>
 
 	<template>
-	<div class="agileits_three_comment_grid" id="comment">
-		<div class="agileits_tom" id="profilePic">
-			<a href="profile?id="> <img src="getProfilePic?id="
-				class="img-responsive img-circle"></a>
-		</div>
-		<div class="agileits_tom_right">
-			<div class="hardy" id="commenterAndDate">
-				<a href="profile?id="><h4></h4></a>
-				<p></p>
+		<div class="agileits_three_comment_grid" id="comment">
+			<div class="agileits_tom" id="profilePic">
+				<a href="profile?id="> <img src="getProfilePic?id="
+					class="img-responsive img-circle"></a>
 			</div>
-			<div class="clearfix"></div>
-			<p class="lorem"></p>
+			<div class="agileits_tom_right">
+				<div class="hardy" id="commenterAndDate">
+					<a href="profile?id="><h4></h4></a>
+					<p></p>
+				</div>
+				<div class="clearfix"></div>
+				<p class="lorem"></p>
+			</div>
+			<div class="clearfix">
+				<button
+					style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
+					onclick="deleteComment()">DELETE COMMENT</button>
+			</div>
 		</div>
-		<div class="clearfix">
-			<button
-				style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
-				onclick="deleteComment()">DELETE COMMENT</button>
-		</div>
-	</div>
 	</template>
 
 	<%@ include file="footer.jsp"%>
@@ -353,22 +328,22 @@
 				}
 			}
 		}
+		 
+		 function deleteComment(commentID, postID) {
+				var req = new XMLHttpRequest();
+				req.open("Delete", "comment/"+ commentID);
+				req.send();
+				
+				req.onreadystatechange = function() {
+					if (req.readyState == 4 && req.status == 200) {
+						var element = document.getElementById("comment"+ commentID);
+						element.parentNode.removeChild(element);
+					}
+				}
+			}
 	 </script>
 
 	<script type="text/javascript">
-		function deleteComment(commentID, postID) {
-			var req = new XMLHttpRequest();
-			req.open("Delete", "comment/"+ commentID);
-			req.send();
-			
-			req.onreadystatechange = function() {
-				if (req.readyState == 4 && req.status == 200) {
-					var element = document.getElementById("comment"+ commentID);
-					element.parentNode.removeChild(element);
-				}
-			}
-		}
-		
 		function rate(rating, postID){
 			var req = new XMLHttpRequest();
 			
@@ -390,8 +365,23 @@
 						if(star.id == ("rate"+rating)) continue;
 						star.style = "";
 					}
+					getRating(postID);
 				}
 			}
+		}
+		
+		function getRating(postID) {
+			var req = new XMLHttpRequest();
+			req.open("Get", "getRating?id="+ postID);
+			req.send();
+			
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					req.responseText;
+					console.log();
+					document.getElementById("postRating").innerHTML = req.responseText+ "/5 Rating";
+				}
+			} 
 		}
 				
 	</script>

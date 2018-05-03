@@ -15,12 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.httpclient.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,29 +59,19 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.GET)
-	public String search(Model m, @RequestParam("search") String search) {
+	public String search(Model model, @RequestParam("search") String search) {
+
 		ArrayList<Post> posts = (ArrayList<Post>) postManager.searchPost(search);
 		if (posts != null) {
-			m.addAttribute("posts", posts);
+			model.addAttribute("posts", posts);
 		}
 		return "explore";
 
 	}
 
-	@RequestMapping(value = "/host", method = RequestMethod.GET)
-	public String createPostPage(HttpSession session) {
-		User currUser = (User) session.getAttribute("user");
-		// check session if logged to return to host
-		if (currUser != null) {
-			return "host";
-		}
-		// otherwise to "login"
-		return "login";
-	}
-
 	@RequestMapping(value = "/post", method = RequestMethod.GET)
 	public String specificPostPage(Model m, HttpServletRequest request, HttpSession session,
-			@RequestParam("id") int postID) {
+			@RequestParam("id") int postID) throws SQLException {
 
 		Post currPost = postManager.getPostsByID().get(postID);
 		User hostUser = null;
@@ -99,6 +85,9 @@ public class PostController {
 				hostUser = userManager.getUserByID(currPost.getHostID());
 				comments = commentManager.getCommentsForPost(postID);
 				postRating = postManager.getPostRating(postID);
+
+				// if user logged in can also make a booking request
+				// therefore, the dates that are unavailable for booking are loaded
 				allPhotos = postManager.getAllPhotos(postID);
 				if (session.getAttribute("user") != null) {
 					unavailableDates = bookingManager.getUnavailableDates(postID);
@@ -110,17 +99,12 @@ public class PostController {
 
 					request.setAttribute("unavailableDatesString", unavailableDatesString);
 				}
-			} catch (SQLException | UserDataException e) {
+			} catch (UserDataException e) {
 				e.printStackTrace();
 				m.addAttribute("error", e.getMessage());
 				return "error";
 			}
 
-			request.setAttribute("rating", postRating);
-			request.setAttribute("user", hostUser);
-			request.setAttribute("post", currPost);
-			request.setAttribute("comments", comments);
-			request.setAttribute("photos", allPhotos);
 			m.addAttribute("rating", postRating);
 			m.addAttribute("user", hostUser);
 			m.addAttribute("post", currPost);
@@ -135,79 +119,25 @@ public class PostController {
 	public String getPostThumbnail(HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") int postID)
 			throws SQLException {
 
-		if (postID != 0) {
-			try {
-				String path = postManager.getThumbnail(postID);
-				if (path != null) {
-					File file = new File(path);
+		try {
+			String path = postManager.getThumbnail(postID);
+			if (path != null) {
+				File file = new File(path);
 
-					try (InputStream filecontent = new FileInputStream(file);
-							OutputStream out = resp.getOutputStream()) {
+				try (InputStream filecontent = new FileInputStream(file); OutputStream out = resp.getOutputStream()) {
 
-						byte[] bytes = new byte[1024];
+					byte[] bytes = new byte[1024];
 
-						while ((filecontent.read(bytes)) != -1) {
-							out.write(bytes);
-						}
+					while ((filecontent.read(bytes)) != -1) {
+						out.write(bytes);
 					}
 				}
-			} catch (IOException e) {
-				req.setAttribute("error", e);
-				return "error";
 			}
+		} catch (IOException e) {
+			req.setAttribute("error", e.getMessage());
+			return "error";
 		}
 		return null;
-	}
-
-	@RequestMapping(value = "/comment", method = RequestMethod.POST)
-	@ResponseBody
-	public ResponseEntity<Object> leaveCommentOnPost(HttpServletRequest request, HttpSession session,
-			@RequestBody Comment comment) {
-
-		User user = (User) session.getAttribute("user");
-
-		if (comment.getContent() != null && !comment.getContent().isEmpty() && user != null
-		// && bookingManager.userHasVisited(user, comment.getPostID())
-		) {
-
-			try {
-				comment.setUserID(user.getUserID());
-				comment.setFullName(user.getFirstName() + " " + user.getLastName());
-				comment.setDate(LocalDate.now());
-
-				int commentID = commentManager.addCommentToPost(comment);
-				comment.setCommentID(commentID);
-
-				if (commentID > 0) {
-					return ResponseEntity.status(HttpStatus.SC_OK).body(comment);
-				}
-
-			} catch (SQLException e) {
-				request.setAttribute("error", e.getMessage());
-				// return "error";
-			} catch (InvalidPostDataExcepetion e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		// return "redirect:post?id=" + comment.getPostID();
-		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
-	}
-
-	@RequestMapping(value = "/comment/{id}", method = RequestMethod.DELETE)
-	@ResponseBody
-	public ResponseEntity<Object> deleteCommentOnPost(HttpServletRequest request, HttpServletResponse response,
-			@PathVariable("id") int commentID) {
-
-		try {
-			if (commentManager.deleteComment(commentID)) {
-				return ResponseEntity.status(HttpStatus.SC_OK).body(null);
-			}
-		} catch (SQLException e) {
-			request.setAttribute("error", e.getMessage());
-		}
-		return ResponseEntity.status(HttpStatus.SC_BAD_REQUEST).body(null);
-
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
@@ -231,9 +161,10 @@ public class PostController {
 	@ResponseBody
 	@RequestMapping(value = "/multipleUpload", method = RequestMethod.POST)
 	public String uploadMultipleImgs(@RequestParam("file") MultipartFile file, @RequestParam("ID") int ID,
-			HttpServletRequest req) throws IOException, SQLException {
-		System.out.println("================" + file.getOriginalFilename() + "================");
-		String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
+			HttpServletRequest req) throws SQLException, IOException {
+
+		// String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
+		String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
 		System.out.println("ID = " + ID);
 		File fileOnDisk = new File(uploadFolder + file.getOriginalFilename());
 

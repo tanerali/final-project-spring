@@ -40,7 +40,8 @@ public class BookingController {
 	private PostController postController;
 
 	@RequestMapping(value = "/book", method = RequestMethod.POST)
-	public String bookPost(Model m, HttpSession session, HttpServletRequest request, @RequestParam("postID") int postID,
+	public String bookPost(Model m, HttpSession session, HttpServletRequest request, 
+			@RequestParam("postID") int postID,
 			@RequestParam("dateFrom") @DateTimeFormat(iso = ISO.DATE) LocalDate dateFrom,
 			@RequestParam("dateTo") @DateTimeFormat(iso = ISO.DATE) LocalDate dateTo) throws SQLException {
 
@@ -60,29 +61,20 @@ public class BookingController {
 		}
 		return "redirect:post?id=" + postID;
 	}
-
-	// if it is checkout day, then the visit has concluded
-	// @Scheduled(cron="*/10 * * * * *")
-	@Scheduled(cron = "0 0 12 * * *")
-	public void changeStatusToVisited() {
-		try {
-			BookingDAO.INSTANCE.changeStatusToVisited();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	
+	//if it is checkout day, then the visit has concluded
+	//@Scheduled(cron="*/10 * * * * *")
+	@Scheduled(cron="0 0 12 * * *")
+	public void changeStatusToVisited() throws SQLException {
+		BookingDAO.INSTANCE.changeStatusToVisited();
 	}
-
-	// after checkout ask users to rate
-	// @Scheduled(cron="*/10 * * * * *")
-	@Scheduled(cron = "0 30 12 * * *")
-	public void askUsersToRatePlaceAfterVisit() {
-		ArrayList<String> emails = new ArrayList<>();
-		try {
-			emails = BookingDAO.INSTANCE.askUsersToRatePlaceAfterVisit();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-
+	
+	//after checkout ask users to rate
+	//@Scheduled(cron="*/10 * * * * *")
+	@Scheduled(cron="0 30 12 * * *")
+	public void askUsersToRatePlaceAfterVisit() throws SQLException {
+		ArrayList<String> emails = BookingDAO.INSTANCE.askUsersToRatePlaceAfterVisit();
+		
 		for (String email : emails) {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();
 
