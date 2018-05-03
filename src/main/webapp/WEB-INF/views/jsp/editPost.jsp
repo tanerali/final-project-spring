@@ -35,6 +35,7 @@
 
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
+<script src="js/sweetalert.min.js" type="text/javascript"></script>
 <body>
 	<!-- banner -->
 	<div id="top" class="banner">

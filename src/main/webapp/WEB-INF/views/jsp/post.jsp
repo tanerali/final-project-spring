@@ -17,8 +17,7 @@
 		myPost = (currPost.getHostID() == currUser.getUserID()) ? true : false;
 	}
 %>
-<!-- <title>${post.title}</title> -->
-<title><%=currPost.getTitle()%></title>
+<title>${post.title}</title>
 <link href="css/bootstrap.css" rel="stylesheet" type="text/css"
 	media="all" />
 <!--// bootstrap-css -->
@@ -117,7 +116,7 @@
 										<span class="glyphicon glyphicon-calendar"></span>
 									</span> 
 									<span class="input-group-addon">to</span> 
-									<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
+								<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
 									<span class="input-group-addon">
 										<span class="glyphicon glyphicon-calendar"></span>
 									</span>
@@ -265,6 +264,8 @@
 				startDate: new Date()
 			});
 		});
+		
+		
 	</script>
 
 	<script type="text/javascript">

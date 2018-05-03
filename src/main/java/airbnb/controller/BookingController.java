@@ -54,8 +54,7 @@ public class BookingController {
 
 			} catch (UserDataException e) {
 				e.printStackTrace();
-				//request.setAttribute("error", e.getMessage());
-				m.addAttribute("error",e);
+				m.addAttribute("error",e.getMessage());
 				return postController.specificPostPage(m, request, session, postID);
 			}
 		}

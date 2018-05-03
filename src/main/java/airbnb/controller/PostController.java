@@ -141,12 +141,18 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/delete", method = RequestMethod.GET)
-	public String deletePost(HttpServletRequest request, HttpSession session, @RequestParam("id") int postID) {
-		try {
-			PostManager.INSTANCE.removePost(postID);
-		} catch (SQLException e) {
-			request.setAttribute("error", e);
-			return "error";
+	public String deletePost(
+			HttpServletRequest request, 
+			HttpSession session, 
+			@RequestParam("id") int postID) throws SQLException {
+		
+		User user = (User)session.getAttribute("user");
+		if (user != null) {
+			Post postToRemove = PostManager.INSTANCE.removePost(postID);
+			ArrayList<Post> hostedPostsInSession = ((ArrayList<Post>)session.getAttribute("hostedPosts"));
+			if (hostedPostsInSession != null) {
+				hostedPostsInSession.remove(postToRemove);
+			}
 		}
 		return "index";
 	}
@@ -192,13 +198,8 @@ public class PostController {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		System.out.println("========" + post + "========");
-		try {
-			PostManager.INSTANCE.editPost(post);
-		} catch (SQLException e) {
-			request.setAttribute("error", e);
-			return "error";
-		}
+		
+		PostManager.INSTANCE.editPost(post);
 		request.setAttribute("post", post);
 		return "explore";
 	}

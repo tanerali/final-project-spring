@@ -82,7 +82,6 @@ public class AjaxController {
 						
 				// insert new post in DB and cached
 				ID = postManager.insertPost(newPost);
-				postManager.addPostToCache(newPost);
 				// Save Image and insert into DB
 				// 1.Save
 				File fileOnDisk = new File(uploadFolder + file.getOriginalFilename());
@@ -214,7 +213,7 @@ public class AjaxController {
 	}
 	
 	@RequestMapping(value = "/getRating", method = RequestMethod.GET)
-	public double name(@RequestParam("id") int postID) throws SQLException {
+	public double getRating(@RequestParam("id") int postID) throws SQLException {
 		return postManager.getPostRating(postID);
 	}
 }

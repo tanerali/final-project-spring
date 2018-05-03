@@ -2,9 +2,12 @@ package airbnb.manager;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import airbnb.dao.PostDAO;
@@ -42,12 +45,14 @@ public enum PostManager {
 		return Collections.unmodifiableMap(postsByUsers);
 	}
 
-	public void removePostFromCache(int postID) {
-		this.postsByID.remove(postID);
-	}
-
 	public Map<Integer, Post> getPostsByID() {
 		return Collections.unmodifiableMap(postsByID);
+	}
+	
+	public Post removePostFromCache(int postID) {
+		Post postToRemove = postsByID.remove(postID);
+		postsByUsers.get(postToRemove.getHostID()).remove(postToRemove);
+		return postToRemove;
 	}
 
 	public void addPostToCache(Post post) {
@@ -72,13 +77,6 @@ public enum PostManager {
 		return PostDAO.INSTANCE.getAllPosts();
 	}
 
-	public int insertPost(Post newPost) throws InvalidPostDataExcepetion, SQLException {
-		int postID = PostDAO.INSTANCE.insertPost(newPost);
-		newPost.setPostID(postID);
-		addPostToCache(newPost);
-		return postID;
-	}
-
 	public String getThumbnail(int postID) throws SQLException {
 		return PostDAO.INSTANCE.getThumbnailPath(postID);
 	}
@@ -98,9 +96,16 @@ public enum PostManager {
 
 	}
 
-	public void removePost(int postID) throws SQLException {
+	public int insertPost(Post newPost) throws InvalidPostDataExcepetion, SQLException {
+		int postID = PostDAO.INSTANCE.insertPost(newPost);
+		newPost.setPostID(postID);
+		addPostToCache(newPost);
+		return postID;
+	}
+	
+	public Post removePost(int postID) throws SQLException {
 
 		PostDAO.INSTANCE.removePost(postID);
-		removePostFromCache(postID);
+		return removePostFromCache(postID);
 	}
 }
