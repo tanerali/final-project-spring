@@ -247,7 +247,9 @@
 				fd.append('file', file[0]);
 
 				fd.append('ID', document.getElementById("postid").value);
-				swal("Successfully uploaded!", file[0].name, "success");
+				swal("Successfully uploaded!", file[0].name, "success", {
+					button : "Aww yes!",
+				});
 				uploadData(fd);
 			});
 
