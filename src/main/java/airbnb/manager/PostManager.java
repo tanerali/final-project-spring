@@ -103,9 +103,13 @@ public enum PostManager {
 
 	}
 
-	public void editPost(Post post) throws SQLException {
-		PostDAO.INSTANCE.editPost(post);
-		editPostInCache(post);
+	public boolean editPost(Post post) throws SQLException {
+		boolean edited = PostDAO.INSTANCE.editPost(post);
+		if (edited) {
+			editPostInCache(post);
+			return true;
+		}
+		return false;
 	}
 
 	public int insertPost(Post newPost) throws InvalidPostDataExcepetion, SQLException {

@@ -56,19 +56,6 @@
 		 }, false); 
 	 function hideURLbar(){ window.scrollTo(0,1); } 
 </script>
-<script type="text/javascript">
-	function editUser() {
-		document.getElementById("user").style.display = "none";
-		document.getElementById("editUser").style.display = "block";
-	}
-	function cancelEdit() {
-		document.getElementById("user").style.display = "block";
-		document.getElementById("editUser").style.display = "none";
-	}
-	function saveEdit() {
-
-	}
-</script>
 </head>
 <body>
 	<%@ include file="header.jsp"%>
@@ -266,5 +253,19 @@
 		</div>
 	</div>
 	<%@ include file="footer.jsp"%>
+	
+	<script type="text/javascript">
+	function editUser() {
+		document.getElementById("user").style.display = "none";
+		document.getElementById("editUser").style.display = "block";
+	}
+	function cancelEdit() {
+		document.getElementById("user").style.display = "block";
+		document.getElementById("editUser").style.display = "none";
+	}
+	function saveEdit() {
+
+	}
+</script>
 </body>
 </html>

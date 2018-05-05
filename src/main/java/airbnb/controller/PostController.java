@@ -66,7 +66,6 @@ public class PostController {
 			model.addAttribute("posts", posts);
 		}
 		return "explore";
-
 	}
 
 	@RequestMapping(value = "/post", method = RequestMethod.GET)
@@ -116,15 +115,18 @@ public class PostController {
 	}
 
 	@RequestMapping(value = "/getThumbnail", method = RequestMethod.GET)
-	public String getPostThumbnail(HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") int postID)
-			throws SQLException {
+	public String getPostThumbnail(
+			HttpServletRequest req, 
+			HttpServletResponse resp, 
+			@RequestParam("id") int postID) throws SQLException {
 
 		try {
 			String path = postManager.getThumbnail(postID);
 			if (path != null) {
 				File file = new File(path);
 
-				try (InputStream filecontent = new FileInputStream(file); OutputStream out = resp.getOutputStream()) {
+				try (InputStream filecontent = new FileInputStream(file); 
+					 OutputStream out = resp.getOutputStream()) {
 
 					byte[] bytes = new byte[1024];
 
@@ -154,7 +156,7 @@ public class PostController {
 				hostedPostsInSession.remove(postToRemove);
 			}
 		}
-		return "index";
+		return explore(request);
 	}
 
 	@RequestMapping(value = "/edit", method = RequestMethod.GET)
@@ -166,7 +168,9 @@ public class PostController {
 
 	@ResponseBody
 	@RequestMapping(value = "/multipleUpload", method = RequestMethod.POST)
-	public String uploadMultipleImgs(@RequestParam("file") MultipartFile file, @RequestParam("ID") int ID,
+	public String uploadMultipleImgs(
+			@RequestParam("file") MultipartFile file, 
+			@RequestParam("ID") int ID,
 			HttpServletRequest req) throws SQLException, IOException {
 
 		// String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
@@ -179,38 +183,18 @@ public class PostController {
 
 		return fileOnDisk.toString();
 	}
-
-	@RequestMapping(value = "/editPost", method = RequestMethod.POST)
-	public String editPost(HttpServletRequest request) throws SQLException {
-		// New data
-		String title = request.getParameter("title");
-		String description = request.getParameter("description");
-		int price = Integer.valueOf(request.getParameter("price"));
-		String type = request.getParameter("type");
-		int postID = Integer.valueOf(request.getParameter("ID"));
-		int userID = Integer.valueOf(request.getParameter("userID"));
-		LocalDate date = LocalDate.parse(request.getParameter("date"));
-
-		Post post = null;
-		try {
-			post = new Post(postID, title, description, price, date, Post.Type.getType(type), userID);
-		} catch (InvalidPostDataExcepetion e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		PostManager.INSTANCE.editPost(post);
-		request.setAttribute("post", post);
-		return "explore";
-	}
-
+	
 	@RequestMapping(value = "/getPhoto", method = RequestMethod.GET)
-	public String getPhoto(HttpServletRequest req, HttpServletResponse resp, @RequestParam("path") String path) {
+	public String getPhoto(
+			HttpServletRequest req, 
+			HttpServletResponse resp, 
+			@RequestParam("path") String path) {
 
 		try {
 			if (path != null) {
 				File file = new File(path);
-				try (InputStream filecontent = new FileInputStream(file); OutputStream out = resp.getOutputStream()) {
+				try (InputStream filecontent = new FileInputStream(file); 
+					 OutputStream out = resp.getOutputStream()) {
 
 					byte[] bytes = new byte[1024];
 

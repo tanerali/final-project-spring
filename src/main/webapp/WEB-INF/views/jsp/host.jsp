@@ -107,37 +107,6 @@
 	<%@ include file="footer.jsp"%>
 	<script>
 		var req = new XMLHttpRequest();
-		function openSearch() {
-			document.getElementById("myOverlay").style.display = "block";
-		}
-		function closeSearch() {
-			document.getElementById("myOverlay").style.display = "none";
-		}
-		function search() { //true means - async requests
-			req.open("Get", "search?search="
-					+ document.getElementById("search").value, true);
-			req.onreadystatechange = proccesSearch;
-			req.send(null);
-		}
-		function proccesSearch() {
-			if (req.readyState == 4 && req.status == 200
-					&& req.responseText != "[]") {
-				closeSearch();
-				var jsonSearch = eval('(' + req.responseText + ')');
-				document.getElementById("top").className = "n";
-				var table = document.getElementById("search-table");
-				table.innerHTML = "";
-				var headRow = table.insertRow(0);
-				var headCell = headRow.insertCell(0);
-				var results = jsonSearch;
-				var i = 0;
-				while (i < results.length) {
-					row = table.insertRow(i + 1);
-					cell = row.insertCell(0);
-					cell.innerHTML = results[i++].title;
-				}
-			}
-		}
 		$('#fc').click(function() {
 			$('#myFileField').click();
 		});

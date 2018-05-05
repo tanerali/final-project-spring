@@ -35,31 +35,6 @@ public class BookingController {
 
 	@Autowired
 	private JavaMailSenderImpl mailSender;
-
-	@Autowired
-	private PostController postController;
-
-	@RequestMapping(value = "/book", method = RequestMethod.POST)
-	public String bookPost(Model m, HttpSession session, HttpServletRequest request, 
-			@RequestParam("postID") int postID,
-			@RequestParam("dateFrom") @DateTimeFormat(iso = ISO.DATE) LocalDate dateFrom,
-			@RequestParam("dateTo") @DateTimeFormat(iso = ISO.DATE) LocalDate dateTo) throws SQLException {
-
-		User user = (User) session.getAttribute("user");
-
-		if (user != null) {
-			try {
-				Booking booking = new Booking(postID, user.getUserID(), dateFrom, dateTo);
-				bookingManager.requestBooking(booking);
-
-			} catch (UserDataException e) {
-				e.printStackTrace();
-				m.addAttribute("error",e.getMessage());
-				return postController.specificPostPage(m, request, session, postID);
-			}
-		}
-		return "redirect:post?id=" + postID;
-	}
 	
 	//if it is checkout day, then the visit has concluded
 	//@Scheduled(cron="*/10 * * * * *")

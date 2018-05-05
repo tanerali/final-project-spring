@@ -118,37 +118,7 @@
 	<%@ include file="footer.jsp"%>
 	<script>
 		var req = new XMLHttpRequest();
-		function openSearch() {
-			document.getElementById("myOverlay").style.display = "block";
-		}
-		function closeSearch() {
-			document.getElementById("myOverlay").style.display = "none";
-		}
-		function search() { //true means - async requests
-			req.open("Get", "search?search="
-					+ document.getElementById("search").value, true);
-			req.onreadystatechange = proccesSearch;
-			req.send(null);
-		}
-		function proccesSearch() {
-			if (req.readyState == 4 && req.status == 200
-					&& req.responseText != "[]") {
-				closeSearch();
-				var jsonSearch = eval('(' + req.responseText + ')');
-				document.getElementById("top").className = "n";
-				var table = document.getElementById("search-table");
-				table.innerHTML = "";
-				var headRow = table.insertRow(0);
-				var headCell = headRow.insertCell(0);
-				var results = jsonSearch;
-				var i = 0;
-				while (i < results.length) {
-					row = table.insertRow(i + 1);
-					cell = row.insertCell(0);
-					cell.innerHTML = results[i++].title;
-				}
-			}
-		}
+		
 		$('#fc').click(function() {
 			$('#myFileField').click();
 		});
@@ -163,55 +133,53 @@
 
 
 	<script>
-		jQuery(document).ready(
-				function($) {
+		jQuery(document).ready(function($) {
 
-					$("#upload").click(
-							function(event) {
+			$("#upload").click(function(event) {
 
-								var formData = new FormData();
-								formData.append("title", document
-										.getElementById("title").value);
-								formData.append("description", document
-										.getElementById("description").value);
-								formData.append("price", document
-										.getElementById("price").value);
-								formData.append("type", document
-										.getElementById("type").value);
+				var formData = new FormData();
+				formData.append("title", document
+						.getElementById("title").value);
+				formData.append("description", document
+						.getElementById("description").value);
+				formData.append("price", document
+						.getElementById("price").value);
+				formData.append("type", document
+						.getElementById("type").value);
 
-								formData.append("ID", document
-										.getElementById("postid").value);
-								formData.append("userID", document
-										.getElementById("posthostid").value);
-								formData.append("date", document
-										.getElementById("postdate").value);
-								$("#upload").prop("disabled", true);
+				formData.append("ID", document
+						.getElementById("postid").value);
+				formData.append("userID", document
+						.getElementById("posthostid").value);
+				formData.append("date", document
+						.getElementById("postdate").value);
+				$("#upload").prop("disabled", true);
 
-								$.ajax({
-									type : "POST",
-									url : "editPost",
-									data : formData,
-									dataType : 'text',
-									processData : false,
-									contentType : false,
-									success : function(response) {
-										$("#upload").prop("disabled", false);
-										swal("Successfully edited!", "success", {
-											button : "OK",
-										});
+				$.ajax({
+					type : "POST",
+					url : "editPost",
+					data : formData,
+					dataType : 'text',
+					processData : false,
+					contentType : false,
+					success : function(response) {
+						$("#upload").prop("disabled", false);
+						swal("Successfully edited!", "Your changes have been reflected", "success", {
+							button : "OK",
+						});
 
-									},
-									error : function(e) {
-										$("#upload").prop("disabled", false);
-										swal("Unable to edit!", "error", {
-											button : "OK",
-										});
-									}
-								});
-
-							});
-
+					},
+					error : function(e) {
+						$("#upload").prop("disabled", false);
+						swal("Error", "Unable to edit!", "error", {
+							button : "OK",
+						});
+					}
 				});
+
+			});
+
+		});
 	</script>
 	<script>
 		$(function() {

@@ -68,15 +68,15 @@
 		</div>
 
 		<div class="form-group" id="countries" style="display: inline">
-			<label for="sel1" style="display: inline">Select country:</label> <select
-				class="form-control" id="sel1">
+			<label for="countrySelector" style="display: inline">Select country:</label> 
+			<select class="form-control" id="countrySelector">
 				<option>Show all</option>
 			</select>
 		</div>
 
 		<div class="form-group" id="cities" style="display: none">
-			<label for="sel2" style="display: inline">Select city:</label> <select
-				class="form-control" id="sel2">
+			<label for="citySelector" style="display: inline">Select city:</label> 
+			<select class="form-control" id="citySelector">
 				<option>Show all</option>
 			</select>
 		</div>
@@ -121,17 +121,17 @@
 	<script type="text/javascript">
 	var posts = document.getElementsByClassName("filterDiv");
 	
-	$('#sel1').click(function() {
+	$('#countrySelector').click(function() {
 		$('#typeSelector').val("Show all");
 	});
 	
 	$('#typeSelector').click(function() {
-		$('#sel2').val("Show all");
+		$('#citySelector').val("Show all");
 		document.getElementById('cities').style = 'display: none';
-		$('#sel1').val("Show all");
+		$('#countrySelector').val("Show all");
 	});
 	
-	$('#sel2').change(function() {
+	$('#citySelector').change(function() {
 		for (div of posts) {
 			if($(this).val() == "Show all") {
 				div.classList.add("show");
@@ -169,6 +169,7 @@
 	</script>
 
 	<script type="text/javascript">
+		var req = new XMLHttpRequest();
 		var responseJSON;
 		
 		$(document).ready(function() {
@@ -180,7 +181,7 @@
 					/* get JSON response as object */ 
 					responseJSON = JSON.parse(req.responseText);
 					
-					var select = document.getElementById('sel1');
+					var select = document.getElementById('countrySelector');
 					
 					//load all countries into countries selector
 					for (var key in responseJSON) {
@@ -194,7 +195,7 @@
 		});
 		
 		
-		$('#sel1').change(function() {
+		$('#countrySelector').change(function() {
 			if($(this).val() == "Show all") {
 				document.getElementById('cities').style = 'display: none';
 				
@@ -207,7 +208,7 @@
 			} else {
 				var cities;
 				
-				var select = document.getElementById('sel2');
+				var select = document.getElementById('citySelector');
 				select.innerHTML = null;
 				select.appendChild(document.createElement("option"));
 				
@@ -235,49 +236,5 @@
 		    //console.log(opt);
 		});
 	</script>
-
-	<script>
-		var req = new XMLHttpRequest();
-		function openSearch() {
-			document.getElementById("myOverlay").style.display = "block";
-		}
-
-		function closeSearch() {
-			document.getElementById("myOverlay").style.display = "none";
-		}
-		function search() {
-			//true means - async requests
-			req.open("Get", "search?search="
-					+ document.getElementById("search").value, true);
-			req.onreadystatechange = function() {
-				if (req.readyState == 4 && req.status == 200) {
-					document.getElementById("body").innerHTML = req.responseText;
-				}
-			};
-
-			req.send(null);
-		}
-		function proccesSearch() {
-			if (req.readyState == 4 && req.status == 200
-					&& req.responseText != "[]") {
-				closeSearch();
-				var jsonSearch = eval('(' + req.responseText + ')');
-				document.getElementById("top").className = "n";
-				var table = document.getElementById("search-table");
-				table.innerHTML = "";
-				var headRow = table.insertRow(0);
-				var headCell = headRow.insertCell(0);
-				var results = jsonSearch;
-				var i = 0;
-				while (i < results.length) {
-					row = table.insertRow(i + 1);
-					cell = row.insertCell(0);
-					cell.innerHTML = results[i++].title;
-				}
-			}
-
-		}
-	</script>
-
 </body>
 </html>

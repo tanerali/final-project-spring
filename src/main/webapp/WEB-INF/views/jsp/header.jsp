@@ -60,12 +60,12 @@
 
 									<li class="">
 										<a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-											Notifications<span class="badge badge-light">${bookingRequests.size()}</span><span class="caret"></span>
+											Notifications<span id="notificationsCounter" class="badge badge-light">${bookingRequests.size()}</span><span class="caret"></span>
 										</a>									
 										<ul class="dropdown-menu" style="border: solid; border-radius:20px;">
 											<c:if test="${bookingRequests.size() == 0 }">
 												<div style="width: 250px">
-													<h1 class="page-header" style="text-align: center;">No notifications</h1>
+													<h1 class="bg-primary" style="text-align: center;">No notifications</h1>
 												</div>
 											</c:if>
 											<c:forEach var="notification" items="${bookingRequests}">
@@ -122,6 +122,8 @@ function rejectBookingRequest(notificationID) {
 		if (req.readyState == 4 && req.status == 200) {
 			var element = document.getElementById("notification"+ notificationID);
 			element.parentNode.removeChild(element);
+			var numNotifications = parseInt(document.getElementById('notificationsCounter').innerHTML);
+			document.getElementById('notificationsCounter').innerHTML = --numNotifications;
 		}
 	}
 }
@@ -135,6 +137,42 @@ function acceptBookingRequest(notificationID) {
 		if (req.readyState == 4 && req.status == 200) {
 			var element = document.getElementById("notification"+ notificationID);
 			element.parentNode.removeChild(element);
+			var numNotifications = parseInt(document.getElementById('notificationsCounter').innerHTML);
+			document.getElementById('notificationsCounter').innerHTML = --numNotifications;
+		}
+	}
+}
+</script>
+
+<script>
+function openSearch() {
+	document.getElementById("myOverlay").style.display = "block";
+}
+function closeSearch() {
+	document.getElementById("myOverlay").style.display = "none";
+}
+function search() { //true means - async requests
+	req.open("Get", "search?search="
+			+ document.getElementById("search").value, true);
+	req.onreadystatechange = proccesSearch;
+	req.send(null);
+}
+function proccesSearch() {
+	if (req.readyState == 4 && req.status == 200
+			&& req.responseText != "[]") {
+		closeSearch();
+		var jsonSearch = eval('(' + req.responseText + ')');
+		document.getElementById("top").className = "n";
+		var table = document.getElementById("search-table");
+		table.innerHTML = "";
+		var headRow = table.insertRow(0);
+		var headCell = headRow.insertCell(0);
+		var results = jsonSearch;
+		var i = 0;
+		while (i < results.length) {
+			row = table.insertRow(i + 1);
+			cell = row.insertCell(0);
+			cell.innerHTML = results[i++].title;
 		}
 	}
 }

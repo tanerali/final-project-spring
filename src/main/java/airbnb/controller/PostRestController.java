@@ -86,6 +86,32 @@ public class PostRestController {
 		return new ResponseEntity<String>(Integer.toString(ID), HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = "/editPost", method = RequestMethod.POST)
+	public ResponseEntity editPost(HttpServletRequest request) throws SQLException {
+		// New data
+		String title = request.getParameter("title");
+		String description = request.getParameter("description");
+		int price = Integer.valueOf(request.getParameter("price"));
+		String type = request.getParameter("type");
+		int postID = Integer.valueOf(request.getParameter("ID"));
+		int userID = Integer.valueOf(request.getParameter("userID"));
+		LocalDate date = LocalDate.parse(request.getParameter("date"));
+
+		Post post = null;
+		try {
+			post = new Post(postID, title, description, price, date, Post.Type.getType(type), userID);
+		} catch (InvalidPostDataExcepetion e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		if (PostManager.INSTANCE.editPost(post)) {
+			return ResponseEntity.status(HttpStatus.OK).body(null);
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+		}
+	}
+	
 	@RequestMapping(value = "/comment", method = RequestMethod.POST)
 	public ResponseEntity leaveCommentOnPost(
 			HttpServletRequest request, 
@@ -129,7 +155,8 @@ public class PostRestController {
 	}
 	
 	@RequestMapping(value = "/rate", method = RequestMethod.POST)
-	public ResponseEntity ratePost(HttpSession session,
+	public ResponseEntity ratePost(
+			HttpSession session,
 			@RequestParam("rating") int rating,
 			@RequestParam("postID") int postID) throws SQLException {
 		

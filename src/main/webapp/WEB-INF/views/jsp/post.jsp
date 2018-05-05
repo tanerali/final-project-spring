@@ -44,6 +44,7 @@
 <!-- //font -->
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <!-- Include Date Picker -->
 
@@ -107,9 +108,9 @@
 						<h4 style="color: red">${ error }</h4>
 					</c:if>
 					
-					<!-- BOOK IF NOT LOGGED IN AND MY POST -->					
+					<!-- BOOK IF LOGGED IN AND NOT MY POST -->					
 					<% if (session.getAttribute("user") != null && !myPost) { %>
-						<form action="book" method="post">
+						<%-- <form action="book" method="post">
 							<div class="input-group input-daterange">
 								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 
 									<span class="input-group-addon"> 
@@ -125,7 +126,27 @@
 							<!-- BOOK BUTTON -->
 							<input type="submit" value="Request Booking"
 								style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
-						</form>
+						</form> --%>
+						
+						
+							<div class="input-group input-daterange">
+								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 
+									<span class="input-group-addon"> 
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span> 
+									<span class="input-group-addon">to</span> 
+								<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+							</div>
+							<input type="hidden" name="postID" value="${post.postID }">
+							<!-- BOOK BUTTON -->
+							<button onclick="book()" style="background-color: #4CAF50; border: none; 
+									color: white; padding: 15px 32px;">Request Booking
+							</button>
+						
+						
 						
 						<div class="input-group" id="ratingStars">
 							<h1>Rate property by clicking on star</h1>
@@ -265,6 +286,30 @@
 			});
 		});
 		
+		function book(){
+			var req = new XMLHttpRequest();
+
+			req.open("Post", "book");
+			
+			var formData = new FormData();
+			formData.append("dateFrom", document.getElementById("startDate1").value);
+			formData.append("dateTo", document.getElementById("endDate1").value);
+			formData.append("postID", parseInt(document.getElementById("postID").value));
+			
+			req.send(formData);
+
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					swal("Booking requested!", "Now the host has to review your request", "success", {
+						button : "OK",
+					});
+				} else {
+					swal("Error", "Date-from has to be before date-to", "error", {
+						button : "OK",
+					});
+				}
+			}
+		}
 		
 	</script>
 
