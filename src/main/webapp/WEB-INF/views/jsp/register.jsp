@@ -77,26 +77,23 @@
 
 			First Name<input type="text" class="form-control" name="firstName">
 			Last Name<input type="text" class="form-control" name="lastName">
-
 			Email<input type="email" class="form-control" name="email" required>
-
 			Password<input type="password" class="form-control" name="pass1">
-			Confirm Password<input type="password" class="form-control"
-				name="pass2"> Gender<select class="form-control"
-				name="gender" required>
+			Confirm Password<input type="password" class="form-control" name="pass2"> 
+			
+			Gender<select class="form-control" name="gender" required>
 				<option>Male</option>
 				<option>Female</option>
-			</select> Country<input type="text" class="form-control" name="country">
+			</select>
+			 
+			Country<input type="text" class="form-control" name="country">
 			City<input type="text" class="form-control" name="city">
 
-			Photo<input type="file" class="form-control" name="photo"
-				accept="image/*" size="50" required /> Description<input type="text"
-				class="form-control" name="description"> Birth date<input
-				type="date" class="form-control" name="birthDate" value="1990-01-01">
-			Telephone Number<input type="tel" class="form-control"
-				name="telNumber"> <br>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign
-				up</button>
+			Photo<input type="file" class="form-control" name="photo" accept="image/*" size="50" required /> 
+			Description<textarea class="form-control" name="description"></textarea> 
+			Birth date<input type="date" class="form-control" name="birthDate" value="1990-01-01">
+			Telephone Number<input type="tel" class="form-control" name="telNumber"> <br>
+			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
 		</form>
 
 

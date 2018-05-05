@@ -67,7 +67,7 @@ public enum UserDAO {
 		}
 	}
 
-	public boolean addUser(User user) throws SQLException {
+	public boolean addUser(User user) throws UserDataException {
 		String sql = "INSERT INTO USERS (first_name, last_name, email, password, gender, city, "
 				+ "country, photo, description, birth_date, telephone_number) "
 				+ "VALUES (?,?,?,?,?,?,?,?,?,?,?);";
@@ -85,8 +85,11 @@ public enum UserDAO {
 			ps.setObject(10, user.getBirthDate());
 			ps.setString(11, user.getTelNumber());
 			return ps.executeUpdate() > 0 ? true : false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new UserDataException("Unable to register. "
+					+ "User with this email may already exist. Please try again with a different email");
 		}
-
 	}
 
 	public ArrayList<Review> getReviewsFromHostsByEmail(String email) throws SQLException {

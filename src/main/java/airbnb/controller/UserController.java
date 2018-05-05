@@ -74,7 +74,7 @@ public class UserController {
 				
 				return "redirect:personalProfile";
 			} else {
-				request.setAttribute("error", "Wrong password");
+				request.setAttribute("error", "Wrong credentials");
 				return "login";
 			}
 		} catch (UserDoesNotExistException e) {

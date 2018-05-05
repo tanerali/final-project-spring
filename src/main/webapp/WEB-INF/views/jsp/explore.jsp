@@ -140,7 +140,7 @@
 				
 				var cityOfPost = div.firstChild.nextSibling.firstChild.nextSibling.childNodes[2].
 				nextSibling.childNodes[2].nextSibling.firstChild.nextSibling.firstChild.nextSibling.
-				firstChild.innerHTML;
+				firstChild.nextSibling.innerHTML;
 				
 			    if (cityOfPost == $(this).val() ) {
 			    	div.classList.add("show");

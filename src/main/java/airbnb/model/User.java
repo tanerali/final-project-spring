@@ -19,9 +19,17 @@ public class User {
 	private LocalDate birthDate;
 	private String telNumber;
 
-	public User(String firstName, String lastName, String email, String password, String gender, String city,
-			String country, String photo, String description, LocalDate birthDate, String telNumber)
-			throws UserDataException {
+	public User(String firstName, 
+			String lastName, 
+			String email, 
+			String password, 
+			String gender, 
+			String city,
+			String country, 
+			String photo, 
+			String description, 
+			LocalDate birthDate, 
+			String telNumber) throws UserDataException {
 
 		setFirstName(firstName);
 		setLastName(lastName);
@@ -36,11 +44,21 @@ public class User {
 		setTelNumber(telNumber);
 	}
 
-	public User(int userID, String firstName, String lastName, String email, String password, String gender,
-			String city, String country, String photo, String description, LocalDate birthDate, String telNumber)
-			throws UserDataException {
+	public User(int userID, 
+			String firstName, 
+			String lastName, 
+			String email, 
+			String password, 
+			String gender,
+			String city, 
+			String country, 
+			String photo, 
+			String description, 
+			LocalDate birthDate, 
+			String telNumber) throws UserDataException {
 
-		this(firstName, lastName, email, password, gender, city, country, photo, description, birthDate, telNumber);
+		this(firstName, lastName, email, password, gender, city, 
+				country, photo, description, birthDate, telNumber);
 		this.userID = userID;
 	}
 
@@ -53,8 +71,8 @@ public class User {
 	}
 
 	public void setFirstName(String first_name) throws UserDataException {
-		if (first_name.isEmpty() || !first_name.matches("[a-zA-Z]+")) {
-			throw new UserDataException("Error setting first name");
+		if (first_name.isEmpty() || !first_name.matches("[a-zA-Z]+") || first_name.length()>45) {
+			throw new UserDataException("Error setting first name. Can't be longer than 45 characters.");
 		}
 		this.firstName = first_name;
 	}
@@ -64,8 +82,8 @@ public class User {
 	}
 
 	public void setLastName(String last_name) throws UserDataException {
-		if (last_name.isEmpty() || !last_name.matches("[a-zA-Z]+")) {
-			throw new UserDataException("Error setting last name");
+		if (last_name.isEmpty() || !last_name.matches("[a-zA-Z]+") || last_name.length()>45) {
+			throw new UserDataException("Error setting last name. Can't be longer than 45 characters.");
 		}
 		this.lastName = last_name;
 	}
@@ -76,16 +94,20 @@ public class User {
 
 	public void setEmail(String email) throws UserDataException {
 		/*
-		 * ‘@’ symbol required in username and domain name A-Z characters allowed a-z
-		 * characters allowed 0-9 numbers allowed Additionally email may contain only
-		 * dot(.), dash(-) and underscore(_) Rest all characters are not allowed domain
-		 * name must include at least one dot top-level domain to include only between
-		 * 2-6 chars
+		 * ‘@’ symbol required between username and domain name 
+		 * A-Z characters allowed 
+		 * a-z characters allowed 
+		 * 0-9 numbers allowed 
+		 * Additionally email may contain only dot(.), dash(-) and underscore(_) 
+		 * Other special characters are not allowed 
+		 * domain name must include at least one dot top-level domain having between 2-6 chars
 		 */
 		String regex = "^[A-Za-z0-9+._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
 
 		if (email.isEmpty() || !email.matches(regex)) {
-			throw new UserDataException("Error setting email");
+			throw new UserDataException("Error setting email. Email can contain letters, dots, dashes "
+					+ "and underscored. An @ symbol is requried betwwen the username and the domain name. "
+					+ "The domain name must include at least one top-level domain like .com or .bg");
 		}
 		this.email = email;
 	}
@@ -96,17 +118,21 @@ public class User {
 
 	public void setPassword(String password) throws UserDataException {
 		/*
-		 * ^ # start-of-string (?=.*[0-9]) # a digit must occur at least once
-		 * (?=.*[a-z]) # a lower case letter must occur at least once (?=.*[A-Z]) # an
-		 * upper case letter must occur at least once (?=.*[@#$%^&+=]) # a special
-		 * character must occur at least once (?=\S+$) # no whitespace allowed in the
-		 * entire string .{8,} # anything, at least eight places though $ #
-		 * end-of-string
+		 * ^ # start-of-string 
+		 * (?=.*[0-9]) # a digit must occur at least once
+		 * (?=.*[a-z]) # a lower case letter must occur at least once 
+		 * (?=.*[A-Z]) # an upper case letter must occur at least once 
+		 * (?=.*[@#$%^&+=]) # a special character must occur at least once 
+		 * (?=\S+$) # no whitespace allowed in the entire string 
+		 * .{8,} # anything, at least eight places though 
+		 * $ # end-of-string
 		 */
 		String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
 
 		if (password.isEmpty() || !password.matches(regex)) {
-			throw new UserDataException("Error setting password");
+			throw new UserDataException("Error setting password. Password must consist of at least 1 "
+					+ "lowercase letter, 1 uppercase letter, 1 digit, 1 special character, contain no "
+					+ "whitespace and be at least 8 characters long");
 		}
 		this.password = password;
 	}
@@ -116,7 +142,7 @@ public class User {
 	}
 
 	public void setGender(String gender) throws UserDataException {
-		if (gender.isEmpty()) {
+		if (gender.isEmpty() || !(gender.equals("Male") || gender.equals("Female"))) {
 			throw new UserDataException("Error setting gender");
 		}
 		this.gender = gender;
@@ -174,7 +200,8 @@ public class User {
 	}
 
 	public void setTelNumber(String telNumber) throws UserDataException {
-		if (telNumber.isEmpty()) {
+		String regex = "[0-9+]+";
+		if (telNumber.isEmpty() || !telNumber.matches(regex)) {
 			throw new UserDataException("Error setting telephone number");
 		}
 		this.telNumber = telNumber;

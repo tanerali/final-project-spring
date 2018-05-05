@@ -58,15 +58,22 @@
 								<c:if test="${sessionScope.user != null }">
 									<li><a href="host">Host</a></li>
 
-									<li class=""><a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" 
-													aria-haspopup="true" aria-expanded="false">Notifications<span class="caret"></span></a>									
+									<li class="">
+										<a href="#" class="dropdown-toggle hvr-bounce-to-bottom" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+											Notifications<span class="badge badge-light">${bookingRequests.size()}</span><span class="caret"></span>
+										</a>									
 										<ul class="dropdown-menu" style="border: solid; border-radius:20px;">
+											<c:if test="${bookingRequests.size() == 0 }">
+												<div style="width: 250px">
+													<h1 class="page-header" style="text-align: center;">No notifications</h1>
+												</div>
+											</c:if>
 											<c:forEach var="notification" items="${bookingRequests}">
 											
 												<li style="padding-top:5px" id="notification${notification.notificationID }">
 													<div style="width: 250px">
 													<a href="post?id=${ notification.postID }">
-														<img style="width: 40%; height: 40%;" class="img-responsive" src="getThumbnail?id=${ notification.postID }">
+														<img style="width: 60%; height: 60%;" class="img-responsive" src="getThumbnail?id=${ notification.postID }">
 															<h4>Booking request for <em>${ notification.title }</em></h4>
 													</a>
 													<p>

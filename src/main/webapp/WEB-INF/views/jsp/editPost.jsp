@@ -82,7 +82,7 @@
 												style="width: 70%; height: 200px; border: 2px solid lightgray; border-radius: 3px; margin: 0 auto; margin-top: 0px; text-align: center; overflow: auto;">
 												<h2
 													style="text-align: center; font-weight: normal; font-family: sans-serif; line-height: 50px; color: darkslategray;">
-													Drag and Drop images here<br />Or<br />Click to select
+													Drag and Drop images here<br/>Or<br/>Click to select
 												</h2>
 											</div>
 										</div>
@@ -90,7 +90,7 @@
 								</tr>
 								<tr>
 									<td>
-										<button id="upload" class="form-control" type="button"">Upload</button>
+										<button id="upload" class="form-control" type="button"">Edit</button>
 									<td><input id="postid" type="hidden" name="ID"
 										value="${post.postID }"></td>
 									<td><input id="postdate" type="hidden" name="date"
@@ -101,8 +101,11 @@
 
 								</tr>
 								<tr>
-									<td><a href="post?id= ${post.postID}">or return to
-											post</a></td>
+									<td>
+										<a href="post?id= ${post.postID}">
+											<button type="button" class="form-control">Return to post</button>
+										</a>
+									</td>
 								</tr>
 							</table>
 						</form>
@@ -193,12 +196,16 @@
 									contentType : false,
 									success : function(response) {
 										$("#upload").prop("disabled", false);
-										//...
+										swal("Successfully edited!", "success", {
+											button : "OK",
+										});
 
 									},
 									error : function(e) {
 										$("#upload").prop("disabled", false);
-										window.location.href = 'host';
+										swal("Unable to edit!", "error", {
+											button : "OK",
+										});
 									}
 								});
 
@@ -248,10 +255,10 @@
 				fd.append('file', file[0]);
 
 				fd.append('ID', document.getElementById("postid").value);
+				uploadData(fd);
 				swal("Successfully uploaded!", file[0].name, "success", {
 					button : "Aww yes!",
 				});
-				uploadData(fd);
 			});
 
 			// Open file selector on div click
@@ -264,10 +271,13 @@
 				var fd = new FormData();
 
 				var files = $('#file')[0].files[0];
-
+				
 				fd.append('file', files);
 				fd.append('ID', document.getElementById("postid").value);
 				uploadData(fd);
+				swal("Successfully uploaded!", files.name, "success", {
+					button : "Aww yes!",
+				});
 			});
 		});
 

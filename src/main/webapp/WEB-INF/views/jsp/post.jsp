@@ -142,7 +142,7 @@
 					<a href="edit?id=${post.postID }"
 						style="background-color: #4CAF50; border: none; color: white;">EDIT POST
 					</a> 
-					<a href="delete?id=${post.postID }"><i class="fa fa-trash"></i></a>
+					<a href="delete?id=${post.postID }"><i class="fa fa-trash fa-2x"></i></a>
 					<% } %>
 
 				</div>

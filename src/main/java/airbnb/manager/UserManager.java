@@ -17,7 +17,7 @@ public enum UserManager {
 		return userDAO.getUserByEmail(email, password);
 	}
 
-	public boolean register(User user) throws SQLException {
+	public boolean register(User user) throws UserDataException {
 		return userDAO.addUser(user);
 	}
 

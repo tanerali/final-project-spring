@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
@@ -62,6 +63,18 @@ public enum PostManager {
 		}
 		postsByUsers.get(post.getHostID()).add(post);
 	}
+	
+	public void editPostInCache(Post post) {
+		postsByID.put(post.getPostID(), post);
+		List<Post> postsByThisUser = postsByUsers.get(post.getHostID());
+		for (ListIterator<Post> iterator = postsByThisUser.listIterator(); iterator.hasNext();) {
+			Post thisUsersPost = (Post) iterator.next();
+			if (thisUsersPost.getPostID() == post.getPostID()) {
+				iterator.remove();
+			}
+		}
+		postsByThisUser.add(post);
+	}
 
 	public List<Post> searchPost(String search) {
 		ArrayList<Post> posts = new ArrayList<Post>();
@@ -92,8 +105,7 @@ public enum PostManager {
 
 	public void editPost(Post post) throws SQLException {
 		PostDAO.INSTANCE.editPost(post);
-		addPostToCache(post);
-
+		editPostInCache(post);
 	}
 
 	public int insertPost(Post newPost) throws InvalidPostDataExcepetion, SQLException {
