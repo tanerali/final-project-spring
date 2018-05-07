@@ -82,13 +82,15 @@
 		</div>
 
 		<!-- POSTS -->
-		<div class="row" id="posts" style="margin-top: 2%;">
-			<c:forEach var="post" items="${ posts }">
+		<c:forEach var="post" items="${ posts }" varStatus="loop">
+			<c:if test = "${loop.index % 3 == 0 || loop.index == 0}">
+			<div class="row" id="posts" style="margin-top: 2%;">
+			</c:if>
 				<div class="col-md-4 filterDiv ${post.type} show"
 					id="post${post.postID }">
 					<div class="thumbnail">
-						<a href="post?id=${post.postID}"> <img
-							src="getThumbnail?id=${post.postID}" alt="" style="width: 100%">
+						<a href="post?id=${post.postID}"> 
+							<img src="getThumbnail?id=${post.postID}" alt="" style="height: 200px">
 							<div class="row">
 								<div class="col-md-6">
 									<div class="caption">
@@ -111,8 +113,10 @@
 						</a>
 					</div>
 				</div>
-			</c:forEach>
-		</div>
+			<c:if test = "${(loop.index+1) % 3 == 0}">
+			</div>
+			</c:if>
+		</c:forEach>
 		<!-- /POSTS -->
 	</div>
 

@@ -28,10 +28,13 @@ public enum UserDAO {
 
 	public User getUserByEmail(String email, String password) 
 			throws SQLException, UserDataException, UserDoesNotExistException {
-		String sqlQuery = "SELECT ID, first_name, last_name, email, password, gender, city, "
-				+ "country, photo, description, birth_date, telephone_number "
-				+ "FROM USERS " 
-				+ "WHERE email = ?";
+		String sqlQuery = 
+				"SELECT u.ID, u.first_name, u.last_name, u.email, u.password, u.gender, ci.city_name, "+
+				"co.country_name, photo, u.description, u.birth_date, u.telephone_number " + 
+				"FROM USERS u " + 
+				"JOIN CITIES ci ON u.city_id = ci.ID " + 
+				"JOIN COUNTRIES co ON ci.country_code = co.code " + 
+				"WHERE u.email = ?;";
 
 		try (PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
 			ps.setString(1, email);
@@ -53,8 +56,8 @@ public enum UserDAO {
 							resultSet.getString("email"), 
 							resultSet.getString("password"),
 							resultSet.getString("gender"), 
-							resultSet.getString("city"), 
-							resultSet.getString("country"),
+							resultSet.getString("city_name"), 
+							resultSet.getString("country_name"),
 							resultSet.getString("photo"), 
 							resultSet.getString("description"),
 							LocalDate.parse(resultSet.getString("birth_date")), 
@@ -68,9 +71,9 @@ public enum UserDAO {
 	}
 
 	public boolean addUser(User user) throws UserDataException {
-		String sql = "INSERT INTO USERS (first_name, last_name, email, password, gender, city, "
-				+ "country, photo, description, birth_date, telephone_number) "
-				+ "VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+		String sql = "INSERT INTO USERS " + 
+				"(first_name, last_name, email, password, gender, city_id, photo, description, birth_date, telephone_number) " + 
+				"VALUES (?, ?, ?, ?, ?, (SELECT ID FROM CITIES WHERE city_name = ?), ?, ?, ?, ?);";
 
 		try (PreparedStatement ps = connection.prepareStatement(sql)) {
 			ps.setString(1, user.getFirstName());
@@ -79,11 +82,10 @@ public enum UserDAO {
 			ps.setString(4, bCryptEncoder.encode(user.getPassword()));
 			ps.setString(5, user.getGender());
 			ps.setString(6, user.getCity());
-			ps.setString(7, user.getCountry());
-			ps.setString(8, user.getPhoto());
-			ps.setString(9, user.getDescription());
-			ps.setObject(10, user.getBirthDate());
-			ps.setString(11, user.getTelNumber());
+			ps.setString(7, user.getPhoto());
+			ps.setString(8, user.getDescription());
+			ps.setObject(9, user.getBirthDate());
+			ps.setString(10, user.getTelNumber());
 			return ps.executeUpdate() > 0 ? true : false;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -95,7 +97,8 @@ public enum UserDAO {
 	public ArrayList<Review> getReviewsFromHostsByEmail(String email) throws SQLException {
 		String sql = "SELECT CONCAT(u.first_name, \" \", u.last_name) as Reviewer, "
 				+ "CONCAT(u2.first_name, \" \", u2.last_name) as Reviewed, cr.content, cr.date "
-				+ "FROM CLIENT_REVIEWS cr JOIN USERS u ON cr.reviewer_id = u.ID "
+				+ "FROM CLIENT_REVIEWS cr "
+				+ "JOIN USERS u ON cr.reviewer_id = u.ID "
 				+ "JOIN USERS u2 ON cr.reviewed_id = u2.ID "
 				+ "WHERE u2.email = ?";
 
@@ -118,8 +121,11 @@ public enum UserDAO {
 
 	public ArrayList<Review> getReviewsFromGuestsByEmail(String email) throws SQLException {
 		String sql = "SELECT CONCAT(u.first_name, \" \", u.last_name), p.title, pc.content, date, pc.post_id "
-				+ "FROM POST_COMMENTS pc " + "JOIN POSTS p ON pc.post_id = p.ID " + "JOIN USERS u ON pc.user_id = u.id "
-				+ "JOIN USERS h ON p.host_id = h.id " + "WHERE h.email = ?;";
+				+ "FROM POST_COMMENTS pc "
+				+ "JOIN POSTS p ON pc.post_id = p.ID "
+				+ "JOIN USERS u ON pc.user_id = u.id "
+				+ "JOIN USERS h ON p.host_id = h.id "
+				+ "WHERE h.email = ?;";
 
 		ArrayList<Review> reviewsFromGuests = new ArrayList<>();
 		try (PreparedStatement ps = connection.prepareStatement(sql)) {
@@ -140,8 +146,11 @@ public enum UserDAO {
 	}
 
 	public boolean editUserData(User user) throws SQLException {
-		String sql = "UPDATE USERS " + "SET first_name=?, last_name=?, email=?, gender=?, city=?, country=?, "
-				+ "description=?, birth_date=?, telephone_number=? " + "WHERE email = ?;";
+		String sql = "UPDATE USERS "
+				+ "SET first_name=?, last_name=?, email=?, gender=?, "
+					+ "city_id=(SELECT ID FROM CITIES WHERE city_name=?), "
+					+ "description=?, birth_date=?, telephone_number=? "
+				+ "WHERE email = ?;";
 
 		try (PreparedStatement ps = connection.prepareStatement(sql)) {
 			ps.setString(1, user.getFirstName());
@@ -149,18 +158,22 @@ public enum UserDAO {
 			ps.setString(3, user.getEmail());
 			ps.setString(4, user.getGender());
 			ps.setString(5, user.getCity());
-			ps.setString(6, user.getCountry());
-			ps.setString(7, user.getDescription());
-			ps.setObject(8, user.getBirthDate());
-			ps.setString(9, user.getTelNumber());
-			ps.setString(10, user.getEmail());
+			ps.setString(6, user.getDescription());
+			ps.setObject(7, user.getBirthDate());
+			ps.setString(8, user.getTelNumber());
+			ps.setString(9, user.getEmail());
 			return ps.executeUpdate() > 0 ? true : false;
 		}
 	}
 
 	public User getUserByID(int ID) throws SQLException, UserDataException {
-		String sqlQuery = "SELECT ID, first_name, last_name, email, password, gender, city, "
-				+ "country, photo, description, birth_date, telephone_number " + "FROM USERS WHERE ID = ?";
+		String sqlQuery = 
+				"SELECT u.ID, u.first_name, u.last_name, u.email, u.password, u.gender, ci.city_name, "+
+				"co.country_name, photo, u.description, u.birth_date, u.telephone_number " + 
+				"FROM USERS u " + 
+				"JOIN CITIES ci ON u.city_id = ci.ID " + 
+				"JOIN COUNTRIES co ON ci.country_code = co.code " + 
+				"WHERE u.ID = ?;";
 
 		try (PreparedStatement ps = connection.prepareStatement(sqlQuery)) {
 			ps.setInt(1, ID);
@@ -174,8 +187,8 @@ public enum UserDAO {
 					resultSet.getString("email"), 
 					resultSet.getString("password"), 
 					resultSet.getString("gender"),
-					resultSet.getString("city"), 
-					resultSet.getString("country"), 
+					resultSet.getString("city_name"), 
+					resultSet.getString("country_name"), 
 					resultSet.getString("photo"),
 					resultSet.getString("description"), 
 					LocalDate.parse(resultSet.getString("birth_date")),

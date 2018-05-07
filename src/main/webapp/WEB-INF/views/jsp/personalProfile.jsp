@@ -163,13 +163,25 @@
 									</tr>
 									<tr>
 										<td>Country</td>
-										<td><input type="text" name="country"
-											value="${user.country }"></td>
+										<td>
+											<div class="form-group" id="countries" style="display: inline">
+												<label for="countrySelector" style="display: inline">Select country:</label> 
+												<select class="form-control" id="countrySelector" name="country" value="${user.country }">
+													<option>Show all</option>
+												</select>
+											</div>
+										</td>
 									</tr>
 									<tr>
 										<td>City</td>
-										<td><input type="text" name="city"
-											value="${user.city }"></td>
+										<td>
+											<div class="form-group" id="cities" style="display: none">
+												<label for="citySelector" style="display: inline">Select city:</label> 
+												<select class="form-control" id="citySelector" name="city" value="${user.city }">
+													<option>Show all</option>
+												</select>
+											</div>
+										</td>
 									</tr>
 									<tr>
 										<td>Description</td>
@@ -255,17 +267,104 @@
 	<%@ include file="footer.jsp"%>
 	
 	<script type="text/javascript">
-	function editUser() {
-		document.getElementById("user").style.display = "none";
-		document.getElementById("editUser").style.display = "block";
-	}
-	function cancelEdit() {
-		document.getElementById("user").style.display = "block";
-		document.getElementById("editUser").style.display = "none";
-	}
-	function saveEdit() {
+		function editUser() {
+			document.getElementById("user").style.display = "none";
+			document.getElementById("editUser").style.display = "block";
+		}
+		function cancelEdit() {
+			document.getElementById("user").style.display = "block";
+			document.getElementById("editUser").style.display = "none";
+		}
+		function saveEdit() {
+	
+		}
+	</script>
+	<script type="text/javascript">
+		var req = new XMLHttpRequest();
+		var responseJSON;
+		
+		$(document).ready(function() {
+			//get all locations
+			req.open("Get", "locations");
+			req.send();
+			req.onreadystatechange = function() {
+				if (req.readyState == 4 && req.status == 200) {
+					/* get JSON response as object */ 
+					responseJSON = JSON.parse(req.responseText);
+					
+					var select = document.getElementById('countrySelector');
+					
+					//load all countries into countries selector
+					for (var key in responseJSON) {
+						var opt = document.createElement("option");
+						opt.value = key;
+					    opt.innerHTML = key;
+					    select.appendChild(opt);
+					}    			
+				}
+			}
+		});
+		
+		
+		$('#countrySelector').change(function() {
+			if($(this).val() == "Show all") {
+				document.getElementById('cities').style = 'display: none';
+				
+				var posts = document.getElementsByClassName("filterDiv");
+				
+				for (div of posts) {
+					div.classList.add("show");
+				}
+				
+			} else {
+				var cities;
+				
+				var select = document.getElementById('citySelector');
+				select.innerHTML = null;
+				select.appendChild(document.createElement("option"));
+				
+				for (var key in responseJSON) {
+				    if (!responseJSON.hasOwnProperty(key)) continue;
+				    
+				    if (key == $(this).val()) {
+				    	cities = responseJSON[key];
+				    	break;
+				    }
+				}
+				/* console.log(cities); */
+				
+				for (var city of cities) {
+					var opt = document.createElement("option");
+					opt.value = city;
+				    opt.innerHTML = city;
+				    select.appendChild(opt);
+				}
+				document.getElementById('cities').style = 'display: inline';
+			}
 
-	}
-</script>
+		    // if you want to do stuff based on the OPTION element:
+		    //var opt = $(this).find('option:selected')[0];
+		    //console.log(opt);
+		});
+		
+		$('#citySelector').change(function() {
+			var posts = document.getElementsByClassName("filterDiv");
+			for (div of posts) {
+				if($(this).val() == "Show all") {
+					div.classList.add("show");
+				} else {
+					div.classList.remove("show");
+					
+					var cityOfPost = div.firstChild.nextSibling.firstChild.nextSibling.childNodes[2].
+					nextSibling.childNodes[2].nextSibling.firstChild.nextSibling.firstChild.nextSibling.
+					firstChild.nextSibling.innerHTML;
+					
+				    if (cityOfPost == $(this).val() ) {
+				    	div.classList.add("show");
+				    }
+				}
+			}
+		});
+	</script>
 </body>
 </html>

@@ -95,9 +95,11 @@
 				<h4>${ post.title}</h4>
 				<div class="agileinfo-single-icons">
 					<ul>
-						<li><a href="profile?id=${user.userID }"><i
-								class="fa fa-user" aria-hidden="true"></i> <span>Host:
-									${user.firstName} ${user.lastName}</span></a></li>
+						<li>
+							<a href="profile?id=${user.userID }"><i class="fa fa-user" aria-hidden="true"></i> 
+								<span>Host: ${user.firstName} ${user.lastName}</span>
+							</a>
+						</li>
 						<li><i class="fa fa-calendar" aria-hidden="true"></i><span>Date
 								of posting: ${post.dateOfPosting }</span></li>
 						<li><i class="fa fa-heart" aria-hidden="true"></i><span id="postRating">${rating}/5
@@ -110,24 +112,6 @@
 					
 					<!-- BOOK IF LOGGED IN AND NOT MY POST -->					
 					<% if (session.getAttribute("user") != null && !myPost) { %>
-						<%-- <form action="book" method="post">
-							<div class="input-group input-daterange">
-								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 
-									<span class="input-group-addon"> 
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span> 
-									<span class="input-group-addon">to</span> 
-								<input id="endDate1" name="dateTo" type="text" class="form-control" readonly="readonly"> 
-									<span class="input-group-addon">
-										<span class="glyphicon glyphicon-calendar"></span>
-									</span>
-							</div>
-							<input type="hidden" name="postID" value="${post.postID }">
-							<!-- BOOK BUTTON -->
-							<input type="submit" value="Request Booking"
-								style="background-color: #4CAF50; border: none; color: white; padding: 15px 32px;">
-						</form> --%>
-						
 						
 							<div class="input-group input-daterange">
 								<input id="startDate1" name="dateFrom" type="text" class="form-control" readonly="readonly"> 

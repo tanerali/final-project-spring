@@ -118,7 +118,7 @@ public class UserController {
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get(uploadFolder + file.getOriginalFilename());
 			Files.write(path, bytes);
-
+			
 			User newUser = new User(request.getParameter("firstName"), 
 					request.getParameter("lastName"),
 					request.getParameter("email"),
@@ -161,7 +161,7 @@ public class UserController {
 	@RequestMapping(value = "/personalProfile", method = RequestMethod.POST)
 	public String editUser(HttpSession session, HttpServletRequest request) throws SQLException {
 		User user = (User) session.getAttribute("user");
-
+		
 		try {
 			if (user != null) {
 				LocalDate birthDate = null;
