@@ -3,6 +3,7 @@
 <%@page import="java.util.TreeSet"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="airbnb.model.Post"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -16,6 +17,7 @@
 	media="all" />
 <!--// bootstrap-css -->
 
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <!-- css -->
 <link rel="stylesheet" href="css/style.css" type="text/css" media="all" />
 <!--// css -->
@@ -68,58 +70,61 @@
 		</div>
 
 		<div class="form-group" id="countries" style="display: inline">
-			<label for="countrySelector" style="display: inline">Select country:</label> 
-			<select class="form-control" id="countrySelector">
+			<label for="countrySelector" style="display: inline">Select
+				country:</label> <select class="form-control" id="countrySelector">
 				<option>Show all</option>
 			</select>
 		</div>
 
 		<div class="form-group" id="cities" style="display: none">
-			<label for="citySelector" style="display: inline">Select city:</label> 
-			<select class="form-control" id="citySelector">
+			<label for="citySelector" style="display: inline">Select
+				city:</label> <select class="form-control" id="citySelector">
 				<option>Show all</option>
 			</select>
 		</div>
 
 		<!-- POSTS -->
 		<c:forEach var="post" items="${ posts }" varStatus="loop">
-			<c:if test = "${loop.index % 3 == 0 || loop.index == 0}">
-			<div class="row" id="posts" style="margin-top: 2%;">
+			<c:if test="${loop.index % 3 == 0 || loop.index == 0}">
+				<div class="row" id="posts" style="margin-top: 2%;">
 			</c:if>
-				<div class="col-md-4 filterDiv ${post.type} show"
-					id="post${post.postID }">
-					<div class="thumbnail">
-						<a href="post?id=${post.postID}"> 
-							<img src="getThumbnail?id=${post.postID}" alt="" style="height: 200px">
-							<div class="row">
-								<div class="col-md-6">
-									<div class="caption">
-										<p>${post.title}</p>
-										<p>${post.type}</p>
-									</div>
-									<div class="caption">
-										<p>Price: ${post.price}</p>
-									</div>
+			<div class="col-md-4 filterDiv ${post.type} show"
+				id="post${post.postID }">
+				<div class="thumbnail">
+					<a href="post?id=${post.postID}"> <img
+						src="getThumbnail?id=${post.postID}" alt="" style="height: 200px">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="caption">
+									<p>${post.title}</p>
+									<p>${post.type}</p>
 								</div>
-								<div class="col-md-6">
-									<div class="caption">
-										<p>
-											<span id="cityOfPost${post.postID}">${post.city}</span>,
-											${post.country}
-										</p>
-									</div>
+								<div class="caption">
+									<p>Price: ${post.price}</p>
 								</div>
 							</div>
-						</a>
-					</div>
+							<div class="col-md-6">
+								<div class="caption">
+									<p>
+										<span id="cityOfPost${post.postID}">${post.city}</span>,
+										${post.country}
+									</p>
+								</div>
+							</div>
+						</div>
+					</a>
 				</div>
-			<c:if test = "${(loop.index+1) % 3 == 0}">
 			</div>
-			</c:if>
-		</c:forEach>
-		<!-- /POSTS -->
+			<c:if test="${(loop.index+1) % 3 == 0}">
 	</div>
-
+	</c:if>
+	</c:forEach>
+	</div>
+	<c:if test="${empty posts}">
+		<script>				
+		swal("Sorry!", "No results found", "info");
+		</script>
+	</c:if>
 	<%@ include file="footer.jsp"%>
 
 	<script type="text/javascript">

@@ -107,8 +107,8 @@ public class UserController {
 				throw new UserDataException("Password mismatch");
 			}
 
-			String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
-			//String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
+			//String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
+			String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
 
 			if (file.isEmpty()) {
 				throw new UserDataException("Please select a file to upload");
