@@ -77,18 +77,17 @@ public class UserController {
 			}
 		} catch (UserDoesNotExistException e) {
 			e.printStackTrace();
-			request.setAttribute("error", e.getMessage());
+			request.setAttribute("error", e);
 			return "login";
 		} catch (UserDataException e) {
 			e.printStackTrace();
-			request.setAttribute("error", e.getMessage());
+			request.setAttribute("error", e);
 			return "error";
 		}
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String register(HttpServletRequest request,
-						   @RequestParam("photo") MultipartFile file) throws SQLException {
+	public String register(HttpServletRequest request, @RequestParam("photo") MultipartFile file) throws SQLException {
 
 		try {
 			// if date is empty, or not exactly as it has to be it
