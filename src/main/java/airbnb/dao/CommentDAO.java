@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import airbnb.exceptions.InvalidPostDataExcepetion;
 import airbnb.manager.DBManager;
 import airbnb.model.Comment;
 
@@ -41,7 +42,7 @@ public enum CommentDAO {
 		
 	}
 
-	public ArrayList<Comment> getCommentsByPostId(int postID) throws SQLException {
+	public ArrayList<Comment> getCommentsByPostId(int postID) throws SQLException, InvalidPostDataExcepetion {
 		try(PreparedStatement ps = connection.prepareStatement(ALL_COMMENTS_FOR_POST)) {
 			ps.setInt(1, postID);
 			ResultSet resultSet = ps.executeQuery();

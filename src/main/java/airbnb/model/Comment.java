@@ -3,6 +3,7 @@ package airbnb.model;
 import java.time.LocalDate;
 
 import airbnb.exceptions.InvalidPostDataExcepetion;
+import airbnb.exceptions.UserDataException;
 
 public class Comment {
 
@@ -16,21 +17,38 @@ public class Comment {
 	public Comment() {
 	}
 	
-	public Comment(int userID, String fullName, int postID, String content, LocalDate date) {
-		this.userID = userID;
-		this.fullName = fullName;
-		this.postID = postID;
-		this.content = content;
-		this.date = date;
+	public Comment(
+			int userID, 
+			String fullName, 
+			int postID, 
+			String content, 
+			LocalDate date) throws InvalidPostDataExcepetion {
+		
+		setUserID(userID);
+		setFullName(fullName);
+		setPostID(postID);
+		setContent(content);
+		setDate(date);
 	}
 
-	public Comment(int commentID, int userID, String fullName, int postID, String content, LocalDate date) {
+	public Comment(
+			int commentID, 
+			int userID, 
+			String fullName, 
+			int postID, 
+			String content, 
+			LocalDate date) throws InvalidPostDataExcepetion {
+		
 		this(userID, fullName, postID, content, date);
-		this.commentID = commentID;
+		setCommentID(commentID);
 	}
 
 	public String getFullName() {
 		return fullName;
+	}
+	
+	public void setFullName(String fullName) {
+		this.fullName = fullName;
 	}
 
 	public int getCommentID() {
@@ -41,7 +59,7 @@ public class Comment {
 		if (commentID > 0) {
 			this.commentID = commentID;
 		} else {
-			throw new InvalidPostDataExcepetion("");
+			throw new InvalidPostDataExcepetion("Invalid id set for comment");
 		}
 	}
 
@@ -53,7 +71,7 @@ public class Comment {
 		if (postID > 0) {
 			this.postID = postID;
 		} else {
-			throw new InvalidPostDataExcepetion("");
+			throw new InvalidPostDataExcepetion("Invalid post id set for comment");
 		}
 	}
 
@@ -65,19 +83,18 @@ public class Comment {
 		if (userID > 0) {
 			this.userID = userID;
 		} else {
-			throw new InvalidPostDataExcepetion("");
+			throw new InvalidPostDataExcepetion("Invalid user id set for comment");
 		}
-	}
-
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
 	}
 
 	public LocalDate getDate() {
 		return date;
 	}
 
-	public void setDate(LocalDate date) {
+	public void setDate(LocalDate date) throws InvalidPostDataExcepetion {
+		if (date == null) {
+			throw new InvalidPostDataExcepetion("Date not specified for comment");
+		}
 		this.date = date;
 	}
 

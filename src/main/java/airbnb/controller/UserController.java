@@ -62,12 +62,14 @@ public class UserController {
 					session.setAttribute("reviewsFromGuests", reviewsFromGuests);
 				}
 
-				ArrayList<Post> hostedPosts = (ArrayList<Post>) postManager.getPostsByUsers().get(user.getUserID());
+				ArrayList<Post> hostedPosts = 
+						(ArrayList<Post>) postManager.getPostsByUsers().get(user.getUserID());
 				if (hostedPosts != null) {
 					session.setAttribute("hostedPosts", hostedPosts);
 				}
 
-				ArrayList<Notification> bookingRequestNotifications = bookingManager.checkNotifications(user.getEmail());
+				ArrayList<Notification> bookingRequestNotifications = 
+						bookingManager.checkNotifications(user.getEmail());
 				if (bookingRequestNotifications != null) {
 					session.setAttribute("bookingRequests", bookingRequestNotifications);
 				}

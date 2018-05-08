@@ -13,11 +13,11 @@ public class Booking {
 	private LocalDate dateTo;
 	
 	public Booking(int postID, int customerID, LocalDate dateFrom, LocalDate dateTo) throws UserDataException {
-		this.postID = postID;
-		this.customerID = customerID;
+		setPostID(postID);
+		setCustomerID(customerID);
 		if (dateFrom.isBefore(dateTo)) {
-			this.dateFrom = dateFrom;
-			this.dateTo = dateTo;
+			setDateFrom(dateFrom);
+			setDateTo(dateTo);
 		} else {
 			throw new UserDataException("Date-from has to be before date-to");
 		}
@@ -59,11 +59,17 @@ public class Booking {
 		this.customerID = customerID;
 	}
 
-	public void setDateFrom(LocalDate dateFrom) {
+	public void setDateFrom(LocalDate dateFrom) throws UserDataException {
+		if (dateFrom == null) {
+			throw new UserDataException("You have to specify a date-from");
+		}
 		this.dateFrom = dateFrom;
 	}
 
-	public void setDateTo(LocalDate dateTo) {
+	public void setDateTo(LocalDate dateTo) throws UserDataException {
+		if (dateTo == null) {
+			throw new UserDataException("You have to specify a date-to");
+		}
 		this.dateTo = dateTo;
 	}	
 }

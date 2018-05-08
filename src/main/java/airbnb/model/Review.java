@@ -16,7 +16,12 @@ public class Review {
 		this.date = date;
 	}
 
-	public Review(String reviewerName, String reviewedName, String review, LocalDate date, int reviewedPropertyID) {
+	public Review(
+			String reviewerName, 
+			String reviewedName, 
+			String review, 
+			LocalDate date, 
+			int reviewedPropertyID) {
 		this(reviewerName, reviewedName, review, date);
 		this.reviewedPropertyID = reviewedPropertyID;
 	}

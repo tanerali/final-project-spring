@@ -43,8 +43,13 @@ public class Post {
 
 	}
 
-	public Post(String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID)
-			throws InvalidPostDataExcepetion {
+	public Post(
+			String title, 
+			String description, 
+			int price, 
+			LocalDate dateOfPosting, 
+			Type type, 
+			int hostID) throws InvalidPostDataExcepetion {
 		this.setTitle(title);
 		this.setDescription(description);
 		this.setPrice(price);
@@ -53,8 +58,15 @@ public class Post {
 		this.setHostID(hostID);
 	}
 
-	public Post(String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID,
-			String country, String city) throws InvalidPostDataExcepetion {
+	public Post(
+			String title, 
+			String description, 
+			int price, 
+			LocalDate dateOfPosting, 
+			Type type, 
+			int hostID,
+			String country, 
+			String city) throws InvalidPostDataExcepetion {
 		
 		this.setTitle(title);
 		this.setDescription(description);
@@ -66,13 +78,28 @@ public class Post {
 		setCity(city);
 	}
 
-	public Post(int postID, String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID,
-			String country, String city) throws InvalidPostDataExcepetion {
+	public Post(
+			int postID, 
+			String title, 
+			String description, 
+			int price, 
+			LocalDate dateOfPosting, 
+			Type type, 
+			int hostID,
+			String country, 
+			String city) throws InvalidPostDataExcepetion {
 		this(title, description, price, dateOfPosting, type, hostID, country, city);
 		this.postID = postID;
 	}
 
-	public Post(int postID, String title, String description, int price, LocalDate dateOfPosting, Type type, int hostID) throws InvalidPostDataExcepetion {
+	public Post(
+			int postID, 
+			String title, 
+			String description, 
+			int price, 
+			LocalDate dateOfPosting, 
+			Type type, 
+			int hostID) throws InvalidPostDataExcepetion {
 		this(title, description, price, dateOfPosting, type, hostID);
 		this.postID = postID;
 	}
@@ -179,6 +206,10 @@ public class Post {
 
 	@Override
 	public String toString() {
-		return this.title + " " + this.description + " " + this.price + " " + this.type + " " + this.dateOfPosting;
+		return this.title + 
+				" " + this.description + 
+				" " + this.price + 
+				" " + this.type + 
+				" " + this.dateOfPosting;
 	}
 }

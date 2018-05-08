@@ -86,14 +86,14 @@
 			 
 			<div class="form-group" id="countries" style="display: inline">
 			<label for="countrySelector" style="display: inline">Select country:</label> 
-			<select class="form-control" id="countrySelector" name="country">
+			<select class="form-control" id="countrySelector" name="country" required="required">
 				<option>Show all</option>
 			</select>
 			</div>
 	
 			<div class="form-group" id="cities" style="display: none">
 				<label for="citySelector" style="display: inline">Select city:</label> 
-				<select class="form-control" id="citySelector" name="city">
+				<select class="form-control" id="citySelector" name="city" required="required">
 					<option>Show all</option>
 				</select>
 			</div>

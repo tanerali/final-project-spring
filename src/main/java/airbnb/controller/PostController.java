@@ -102,6 +102,10 @@ public class PostController {
 				e.printStackTrace();
 				m.addAttribute("error", e.getMessage());
 				return "error";
+			} catch (InvalidPostDataExcepetion e) {
+				e.printStackTrace();
+				m.addAttribute("error", e.getMessage());
+				return "error";
 			}
 
 			m.addAttribute("rating", postRating);

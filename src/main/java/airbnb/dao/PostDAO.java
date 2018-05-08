@@ -22,11 +22,13 @@ public enum PostDAO {
 	private Connection connection;
 
 	// Const. SQL statements
-	private static final String insertPost = "INSERT INTO POSTS(type_id,title,price,host_id,date_of_posting, city_id, description) "
+	private static final String insertPost = 
+			"INSERT INTO POSTS(type_id,title,price,host_id,date_of_posting, city_id, description) "
 			+ "VALUES(?,?,?,?,?, (SELECT ID FROM CITIES WHERE city_name=?), ?);";
 	private static final String deletePost = "DELETE FROM POSTS where ID=?;";
 
-	private static final String getAllPosts = "SELECT p.ID, p.type_id, p.title, p.description, p.host_id, p.price, p.date_of_posting, co.country_name, ci.city_name "
+	private static final String getAllPosts = 
+			"SELECT p.ID, p.type_id, p.title, p.description, p.host_id, p.price, p.date_of_posting, co.country_name, ci.city_name "
 			+ "FROM POSTS p " + "JOIN CITIES ci " + "ON p.city_id = ci.ID " + "JOIN COUNTRIES co "
 			+ "ON ci.country_code = co.code";
 
@@ -71,10 +73,17 @@ public enum PostDAO {
 	private List<Post> getResult(ResultSet result) throws InvalidPostDataExcepetion, SQLException {
 		List<Post> posts = new ArrayList<Post>();
 		while (result.next()) {
-			Post newPost = new Post(result.getInt("ID"), result.getString("title"), result.getString("description"),
-					result.getInt("price"), result.getDate("date_of_posting").toLocalDate(),
-					Post.Type.getType(result.getInt("type_id")), result.getInt("host_id"),
-					result.getString("country_name"), result.getString("city_name"));
+			Post newPost = new Post(
+					result.getInt("ID"), 
+					result.getString("title"), 
+					result.getString("description"),
+					result.getInt("price"), 
+					result.getDate("date_of_posting").toLocalDate(),
+					Post.Type.getType(result.getInt("type_id")), 
+					result.getInt("host_id"),
+					result.getString("country_name"), 
+					result.getString("city_name"));
+			
 			posts.add(newPost);
 		}
 		return posts;

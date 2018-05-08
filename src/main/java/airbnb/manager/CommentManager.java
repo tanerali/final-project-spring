@@ -4,6 +4,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import airbnb.dao.CommentDAO;
+import airbnb.exceptions.InvalidPostDataExcepetion;
 import airbnb.model.Comment;
 import airbnb.model.User;
 
@@ -12,7 +13,7 @@ public enum CommentManager {
 	INSTANCE;
 	private CommentDAO commentDAO = CommentDAO.INSTANCE;
 
-	public ArrayList<Comment> getCommentsForPost(int postID) throws SQLException {
+	public ArrayList<Comment> getCommentsForPost(int postID) throws SQLException, InvalidPostDataExcepetion {
 		return commentDAO.getCommentsByPostId(postID);
 	}
 

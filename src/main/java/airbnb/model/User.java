@@ -170,7 +170,7 @@ public class User {
 		return photo;
 	}
 
-	public void setPhoto(String photo) {
+	public void setPhoto(String photo) throws UserDataException {
 		this.photo = photo;
 	}
 
