@@ -162,74 +162,11 @@
 						</div>
 					</div>
 				</div>
-				<div class="box">
-					<div class="content registerBox" style="display: none;">
-						<div class="form">
-							<form class="form-signin" action="register" autocomplete="off"
-								method="post" enctype="multipart/form-data">
-								<h2 class="form-signin-heading">Please sign up</h2>
-
-								<%
-									Exception er = (Exception) request.getAttribute("error");
-									if (er != null) {
-								%>
-								<h4 class="form-signin-heading" style="color: red"><%=er.getMessage()%></h4>
-								<%
-									}
-								%>
-
-								First Name<input type="text" class="form-control"
-									name="firstName"> Last Name<input type="text"
-									class="form-control" name="lastName"> Email<input
-									type="email" class="form-control" name="email" required>
-								Password<input type="password" class="form-control" name="pass1">
-								Confirm Password<input type="password" class="form-control"
-									name="pass2"> Gender<select class="form-control"
-									name="gender" required>
-									<option>Male</option>
-									<option>Female</option>
-								</select>
-
-								<div class="form-group" id="countries" style="display: inline">
-									<label for="countrySelector" style="display: inline">Select
-										country:</label> <select class="form-control" id="countrySelector"
-										name="country">
-										<option>Show all</option>
-									</select>
-								</div>
-
-								<div class="form-group" id="cities" style="display: none">
-									<label for="citySelector" style="display: inline">Select
-										city:</label> <select class="form-control" id="citySelector"
-										name="city">
-										<option>Show all</option>
-									</select>
-								</div>
-
-								Photo<input type="file" class="form-control" name="photo"
-									accept="image/*" size="50" required /> Description
-								<textarea class="form-control" name="description"></textarea>
-								Birth date<input type="date" class="form-control"
-									name="birthDate" value="1990-01-01"> Telephone Number<input
-									type="tel" class="form-control" name="telNumber"> <br>
-								<button
-									style="background-color: #82b62d; border-color: #82b62d;"
-									class="btn btn-lg btn-primary btn-block" type="submit">Sign
-									up</button>
-							</form>
-						</div>
-					</div>
-				</div>
 			</div>
 			<div class="modal-footer">
 				<div class="forgot login-footer">
-					<span>Looking to <a href="javascript: showRegisterForm();">create
-							an account</a> ?
+					<span>Looking to <a href="register">create an account</a> ?
 					</span>
-				</div>
-				<div class="forgot register-footer" style="display: none">
-					<span>Already have an account?</span> <a
-						href="javascript: showLoginForm();">Login</a>
 				</div>
 			</div>
 		</div>
