@@ -83,14 +83,14 @@
 				<option>Male</option>
 				<option>Female</option>
 			</select>
-			 
+
 			<div class="form-group" id="countries" style="display: inline">
 			<label for="countrySelector" style="display: inline">Select country:</label> 
 			<select class="form-control" id="countrySelector" name="country" required="required">
 				<option>Show all</option>
 			</select>
 			</div>
-	
+
 			<div class="form-group" id="cities" style="display: none">
 				<label for="citySelector" style="display: inline">Select city:</label> 
 				<select class="form-control" id="citySelector" name="city" required="required">
@@ -98,18 +98,19 @@
 				</select>
 			</div>
 
-			Photo<input type="file" class="form-control" name="photo" accept="image/*" size="50" required /> 
-			Description<textarea class="form-control" name="description"></textarea> 
-			Birth date<input type="date" class="form-control" name="birthDate" value="1990-01-01">
+			Photo<input type="file" class="form-control" name="photo" accept="image/*" size="50" required/> 
+			Description<textarea class="form-control" name="description"></textarea>
+			Birth date<input type="date" class="form-control" name="birthDate" value="1990-01-01"> 
 			Telephone Number<input type="tel" class="form-control" name="telNumber"> <br>
-			<button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+			<button style="background-color: #82b62d"
+				class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
 		</form>
 
 
 	</div>
 	<!-- /container -->
 	<%@ include file="footer.jsp"%>
-	
+
 	<script type="text/javascript">
 		var req = new XMLHttpRequest();
 		var responseJSON;

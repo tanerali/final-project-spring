@@ -70,7 +70,7 @@
 			<h2 class="form-signin-heading">Please sign in</h2>
 			
 			<c:if test="${error != null}">
-				<h4 class="form-signin-heading" style="color: red">${ error }</h4>
+				<h4 class="form-signin-heading" style="color: red">${ error.message }</h4>
 			</c:if>
 			
 			<input type="email" required name="email" id="inputEmail"
