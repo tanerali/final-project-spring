@@ -72,7 +72,7 @@ public class UserController {
 
 				return "redirect:personalProfile";
 			} else {
-				request.setAttribute("error", "Wrong credentials");
+				request.setAttribute("error", new Exception("Wrong credentials"));
 				return "login";
 			}
 		} catch (UserDoesNotExistException e) {

@@ -55,9 +55,7 @@
 									<li class="nav-item"><a class="nav-link"
 										data-toggle="modal" href="javascript:void(0)"
 										onclick="openLoginModal();">Log in</a></li>
-									<li class="nav-item"><a class="nav-link"
-										data-toggle="modal" href="javascript:void(0)"
-										onclick="openRegisterModal();">Register</a></li>
+									<li class="nav-item"><a href="register">Register</a></li>
 								</c:if>
 
 
@@ -139,11 +137,12 @@
 					<div class="content">
 						<div class="error"></div>
 						<div class="form loginBox">
-							<form class="form-signin" action="login" method="post" autocomplete="off">
+							<form class="form-signin" action="login" method="post"
+								autocomplete="off">
 								<h2 class="form-signin-heading">Please sign in</h2>
 
 								<c:if test="${error != null}">
-									<h4 class="form-signin-heading" style="color: red">${ error }</h4>
+									<h4 class="form-signin-heading" style="color: red">${ error.message }</h4>
 								</c:if>
 
 								<input type="email" required name="email" id="inputEmail"
@@ -164,10 +163,10 @@
 					</div>
 				</div>
 				<div class="box">
-					<div class="content registerBox" style="display: none;" >
+					<div class="content registerBox" style="display: none;">
 						<div class="form">
-							<form class="form-signin" action="register" autocomplete="off" method="post"
-								enctype="multipart/form-data">
+							<form class="form-signin" action="register" autocomplete="off"
+								method="post" enctype="multipart/form-data">
 								<h2 class="form-signin-heading">Please sign up</h2>
 
 								<%
