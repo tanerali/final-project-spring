@@ -34,17 +34,15 @@ import airbnb.model.User;
 @RestController
 @MultipartConfig
 public class PostRestController {
-	
+
 	private PostManager postManager = PostManager.INSTANCE;
 	private BookingManager bookingManager = BookingManager.INSTANCE;
 	private CommentManager commentManager = CommentManager.INSTANCE;
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
-	public ResponseEntity<String> uploadPost(
-			HttpServletRequest request, 
-			HttpSession session,
+	public ResponseEntity<String> uploadPost(HttpServletRequest request, HttpSession session,
 			@RequestParam("file") MultipartFile file) throws SQLException {
-		
+
 		String title = request.getParameter("title");
 		String description = request.getParameter("description");
 		int price = Integer.valueOf(request.getParameter("price"));
@@ -52,24 +50,17 @@ public class PostRestController {
 		User user = (User) session.getAttribute("user");
 		String country = request.getParameter("country");
 		String city = request.getParameter("city");
-		
+
 		Post newPost;
 		int ID = -1;
-		//String uploadFolder = "/home/dnn/UPLOADAIRBNB";
+		// String uploadFolder = "/home/dnn/UPLOADAIRBNB";
 		String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
 		if (user != null) {
 			try {
 				// Create new post From PostForm
-				newPost = new Post(
-						title, 
-						description, 
-						price, 
-						LocalDate.now(),
-						Post.Type.getType(type), 
-						user.getUserID(),
-						country,
-						city);
-						
+				newPost = new Post(title, description, price, LocalDate.now(), Post.Type.getType(type),
+						user.getUserID(), country, city);
+
 				// insert new post in DB and cached
 				ID = postManager.insertPost(newPost);
 				// Save Image and insert into DB
@@ -85,7 +76,7 @@ public class PostRestController {
 
 		return new ResponseEntity<String>(Integer.toString(ID), HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/editPost", method = RequestMethod.POST)
 	public ResponseEntity editPost(HttpServletRequest request) throws SQLException {
 		// New data
@@ -101,21 +92,19 @@ public class PostRestController {
 		try {
 			post = new Post(postID, title, description, price, date, Post.Type.getType(type), userID);
 		} catch (InvalidPostDataExcepetion e1) {
-			// TODO Auto-generated catch block
+			request.setAttribute("error", e1.getMessage());
 			e1.printStackTrace();
 		}
-		
+
 		if (PostManager.INSTANCE.editPost(post)) {
 			return ResponseEntity.status(HttpStatus.OK).body(null);
 		} else {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		}
 	}
-	
+
 	@RequestMapping(value = "/comment", method = RequestMethod.POST)
-	public ResponseEntity leaveCommentOnPost(
-			HttpServletRequest request, 
-			HttpSession session,
+	public ResponseEntity leaveCommentOnPost(HttpServletRequest request, HttpSession session,
 			@RequestBody Comment comment) throws SQLException {
 
 		User user = (User) session.getAttribute("user");
@@ -134,40 +123,37 @@ public class PostRestController {
 					return ResponseEntity.status(HttpStatus.OK).body(comment);
 				}
 			} catch (InvalidPostDataExcepetion e) {
-				// TODO Auto-generated catch block
+
+				request.setAttribute("error", e.getMessage());
 				e.printStackTrace();
 			}
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 	}
-	
+
 	@RequestMapping(value = "/comment/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity deleteCommentOnPost(
-			HttpServletRequest request, 
-			HttpServletResponse response,
+	public ResponseEntity deleteCommentOnPost(HttpServletRequest request, HttpServletResponse response,
 			@PathVariable("id") int commentID) throws SQLException {
 
 		if (commentManager.deleteComment(commentID)) {
 			return ResponseEntity.status(HttpStatus.OK).body(null);
 		}
-		
+
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 	}
-	
+
 	@RequestMapping(value = "/rate", method = RequestMethod.POST)
-	public ResponseEntity ratePost(
-			HttpSession session,
-			@RequestParam("rating") int rating,
+	public ResponseEntity ratePost(HttpSession session, @RequestParam("rating") int rating,
 			@RequestParam("postID") int postID) throws SQLException {
-		
+
 		User user = (User) session.getAttribute("user");
-		
+
 		if (user != null && bookingManager.ratePost(postID, user.getUserID(), rating)) {
 			return ResponseEntity.status(HttpStatus.OK).body(null);
 		}
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 	}
-	
+
 	@RequestMapping(value = "/getRating", method = RequestMethod.GET)
 	public double getRating(@RequestParam("id") int postID) throws SQLException {
 		return postManager.getPostRating(postID);

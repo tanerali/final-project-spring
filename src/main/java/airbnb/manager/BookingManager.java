@@ -36,4 +36,12 @@ public enum BookingManager {
 	public boolean ratePost(int postID, int userID, int rating) throws SQLException {
 		return bookingDao.ratePost(postID, userID, rating);
 	}
+
+	public ArrayList<String> askUsersToRatePlaceAfterVisit() throws SQLException {
+		return bookingDao.askUsersToRatePlaceAfterVisit();
+	}
+
+	public void changeStatusToVisited() throws SQLException {
+		bookingDao.changeStatusToVisited();
+	}
 }

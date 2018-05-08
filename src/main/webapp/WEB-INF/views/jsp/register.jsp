@@ -73,11 +73,11 @@
 				}
 			%>
 
-			First Name<input type="text" class="form-control" name="firstName">
-			Last Name<input type="text" class="form-control" name="lastName">
+			First Name<input type="text" class="form-control" name="firstName" required="required">
+			Last Name<input type="text" class="form-control" name="lastName" required="required">
 			Email<input type="email" class="form-control" name="email" required>
-			Password<input type="password" class="form-control" name="pass1">
-			Confirm Password<input type="password" class="form-control" name="pass2"> 
+			Password<input type="password" class="form-control" name="pass1" required>
+			Confirm Password<input type="password" class="form-control" name="pass2" required> 
 			
 			Gender<select class="form-control" name="gender" required>
 				<option>Male</option>

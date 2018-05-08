@@ -2,32 +2,19 @@ package airbnb.controller;
 
 import java.io.File;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import airbnb.dao.BookingDAO;
-import airbnb.exceptions.UserDataException;
 import airbnb.manager.BookingManager;
-import airbnb.model.Booking;
-import airbnb.model.User;
 
 @Controller
 public class BookingController {
@@ -40,14 +27,14 @@ public class BookingController {
 	//@Scheduled(cron="*/10 * * * * *")
 	@Scheduled(cron="0 0 12 * * *")
 	public void changeStatusToVisited() throws SQLException {
-		BookingDAO.INSTANCE.changeStatusToVisited();
+		bookingManager.changeStatusToVisited();
 	}
 	
 	//after checkout ask users to rate
 	//@Scheduled(cron="*/10 * * * * *")
 	@Scheduled(cron="0 30 12 * * *")
 	public void askUsersToRatePlaceAfterVisit() throws SQLException {
-		ArrayList<String> emails = BookingDAO.INSTANCE.askUsersToRatePlaceAfterVisit();
+		ArrayList<String> emails = bookingManager.askUsersToRatePlaceAfterVisit();
 		
 		for (String email : emails) {
 			MimeMessage mimeMessage = mailSender.createMimeMessage();

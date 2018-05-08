@@ -2,6 +2,7 @@ package airbnb.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
+//NOT IN USE !
 public class AddPostForm {
 
 	private String title;
