@@ -118,6 +118,7 @@
 			<c:if test="${(loop.index+1) % 3 == 0}">
 	</div>
 	</c:if>
+	
 	</c:forEach>
 	</div>
 	<c:if test="${empty posts}">

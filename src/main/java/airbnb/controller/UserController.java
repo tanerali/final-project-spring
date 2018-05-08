@@ -41,17 +41,14 @@ public class UserController {
 	private PostManager postManager = PostManager.INSTANCE;
 
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
-	public String login(
-			@RequestParam("email") String email, 
-			@RequestParam("password") String password,
-			HttpServletRequest request, 
-			HttpSession session) throws SQLException {
+	public String login(@RequestParam("email") String email, @RequestParam("password") String password,
+			HttpServletRequest request, HttpSession session) throws SQLException {
 
 		try {
 			User user = userManager.login(email, password);
 			if (user != null) {
 				session.setAttribute("user", user);
-				
+
 				ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(user.getEmail());
 				if (reviewsFromHosts != null) {
 					session.setAttribute("reviewsFromHosts", reviewsFromHosts);
@@ -67,11 +64,12 @@ public class UserController {
 					session.setAttribute("hostedPosts", hostedPosts);
 				}
 
-				ArrayList<Notification> bookingRequestNotifications = bookingManager.checkNotifications(user.getEmail());
+				ArrayList<Notification> bookingRequestNotifications = bookingManager
+						.checkNotifications(user.getEmail());
 				if (bookingRequestNotifications != null) {
 					session.setAttribute("bookingRequests", bookingRequestNotifications);
 				}
-				
+
 				return "redirect:personalProfile";
 			} else {
 				request.setAttribute("error", "Wrong credentials");
@@ -83,15 +81,15 @@ public class UserController {
 			return "login";
 		} catch (UserDataException e) {
 			e.printStackTrace();
-			request.setAttribute("error", e);
+			request.setAttribute("error", e.getMessage());
 			return "error";
 		}
 	}
 
 	@RequestMapping(value = "/register", method = RequestMethod.POST)
-	public String register(HttpServletRequest request, @RequestParam("photo") MultipartFile file)
-			throws SQLException {
-		
+	public String register(HttpServletRequest request,
+						   @RequestParam("photo") MultipartFile file) throws SQLException {
+
 		try {
 			// if date is empty, or not exactly as it has to be it
 			// throws a parsing exception
@@ -107,7 +105,7 @@ public class UserController {
 				throw new UserDataException("Password mismatch");
 			}
 
-			//String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
+			// String uploadFolder = "/Users/tanerali/Desktop/ServerUploads/";
 			String uploadFolder = "/home/dnn/UPLOADAIRBNB/";
 
 			if (file.isEmpty()) {
@@ -118,18 +116,11 @@ public class UserController {
 			byte[] bytes = file.getBytes();
 			Path path = Paths.get(uploadFolder + file.getOriginalFilename());
 			Files.write(path, bytes);
-			
-			User newUser = new User(request.getParameter("firstName"), 
-					request.getParameter("lastName"),
-					request.getParameter("email"),
-					request.getParameter("pass1"),
-					request.getParameter("gender"),
-					request.getParameter("city"),
-					request.getParameter("country"),
-					path.toString(),
-					request.getParameter("description"), 
-					birthDate,
-					request.getParameter("telNumber"));
+
+			User newUser = new User(request.getParameter("firstName"), request.getParameter("lastName"),
+					request.getParameter("email"), request.getParameter("pass1"), request.getParameter("gender"),
+					request.getParameter("city"), request.getParameter("country"), path.toString(),
+					request.getParameter("description"), birthDate, request.getParameter("telNumber"));
 
 			if (userManager.register(newUser)) {
 				return "login";
@@ -142,7 +133,7 @@ public class UserController {
 			e.printStackTrace();
 			request.setAttribute("error", e.getMessage());
 			return "error";
-		} 
+		}
 		return "register";
 	}
 
@@ -161,7 +152,7 @@ public class UserController {
 	@RequestMapping(value = "/personalProfile", method = RequestMethod.POST)
 	public String editUser(HttpSession session, HttpServletRequest request) throws SQLException {
 		User user = (User) session.getAttribute("user");
-		
+
 		try {
 			if (user != null) {
 				LocalDate birthDate = null;
@@ -170,7 +161,7 @@ public class UserController {
 				} catch (Exception e) {
 					throw new UserDataException("Invalid birth date entered");
 				}
-				
+
 				user.setFirstName(request.getParameter("firstName"));
 				user.setLastName(request.getParameter("lastName"));
 				user.setEmail(request.getParameter("email"));
@@ -199,17 +190,14 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/getProfilePic", method = RequestMethod.GET)
-	public String getProfilePic(
-			HttpServletRequest req, 
-			HttpServletResponse resp, 
-			@RequestParam("id") int userID) throws SQLException {
+	public String getProfilePic(HttpServletRequest req, HttpServletResponse resp, @RequestParam("id") int userID)
+			throws SQLException {
 
 		String path = userManager.getPhoto(userID);
-		
+
 		if (path != null) {
 			File file = new File(path);
-			try (InputStream filecontent = new FileInputStream(file); 
-				 OutputStream out = resp.getOutputStream()) {
+			try (InputStream filecontent = new FileInputStream(file); OutputStream out = resp.getOutputStream()) {
 
 				byte[] bytes = new byte[1024];
 
@@ -226,15 +214,14 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
-	public String getProfilePage(HttpServletRequest request, @RequestParam("id") int userID) 
-			throws SQLException {
+	public String getProfilePage(HttpServletRequest request, @RequestParam("id") int userID) throws SQLException {
 
 		try {
 			User user = userManager.getUserByID(userID);
 			ArrayList<Review> reviewsFromHosts = userManager.getReviewsFromHosts(user.getEmail());
 			ArrayList<Review> reviewsFromGuests = userManager.getReviewsFromGuests(user.getEmail());
 			ArrayList<Post> hostedPosts = (ArrayList<Post>) postManager.getPostsByUsers().get(user.getUserID());
-			
+
 			request.setAttribute("user", user);
 			request.setAttribute("reviewsFromHosts", reviewsFromHosts);
 			request.setAttribute("reviewsFromGuests", reviewsFromGuests);
