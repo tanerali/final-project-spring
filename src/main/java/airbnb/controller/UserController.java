@@ -82,7 +82,7 @@ public class UserController {
 			return "login";
 		} catch (UserDataException e) {
 			e.printStackTrace();
-			request.setAttribute("error", e);
+			request.setAttribute("error", e.getMessage());
 			return "error";
 		}
 	}
@@ -117,17 +117,25 @@ public class UserController {
 			Path path = Paths.get(uploadFolder + file.getOriginalFilename());
 			Files.write(path, bytes);
 
-			User newUser = new User(request.getParameter("firstName"), request.getParameter("lastName"),
-					request.getParameter("email"), request.getParameter("pass1"), request.getParameter("gender"),
-					request.getParameter("city"), request.getParameter("country"), path.toString(),
-					request.getParameter("description"), birthDate, request.getParameter("telNumber"));
+			User newUser = new User(
+					request.getParameter("firstName"), 
+					request.getParameter("lastName"),
+					request.getParameter("email"), 
+					request.getParameter("pass1"), 
+					request.getParameter("gender"),
+					request.getParameter("city"), 
+					request.getParameter("country"), 
+					path.toString(),
+					request.getParameter("description"), 
+					birthDate, 
+					request.getParameter("telNumber"));
 
 			if (userManager.register(newUser)) {
 				return "login";
 			}
 		} catch (UserDataException e) {
 			e.printStackTrace();
-			request.setAttribute("error", e);
+			request.setAttribute("error", e.getMessage());
 			return "register";
 		} catch (IOException e) {
 			e.printStackTrace();

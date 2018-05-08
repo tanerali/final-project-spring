@@ -71,8 +71,7 @@
 							<div id="myCarousel" class="carousel slide" data-ride="carousel">
 								<div class="carousel-inner">
 									<div class="item carousel-item active">
-										<img src=<c:url value="getThumbnail?id=${post.postID}"/>
-											alt="">
+										<img src=<c:url value="getThumbnail?id=${post.postID}"/> class="img-responsive">
 									</div>
 									<c:forEach items="${photos}" var="item">
 										<div class="item carousel-item">

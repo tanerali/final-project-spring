@@ -141,10 +141,6 @@
 								autocomplete="off">
 								<h2 class="form-signin-heading">Please sign in</h2>
 
-								<c:if test="${error != null}">
-									<h4 class="form-signin-heading" style="color: red">${ error.message }</h4>
-								</c:if>
-
 								<input type="email" required name="email" id="inputEmail"
 									class="form-control" placeholder="Email address" autofocus>
 								<input type="password" required name="password"

@@ -90,7 +90,7 @@ public enum UserDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new UserDataException("Unable to register. "
-					+ "User with this email may already exist. Please try again with a different email");
+					+ "User may already exist or you may not have entered all details. Please try again.");
 		}
 	}
 

@@ -50,12 +50,13 @@ public class Post {
 			LocalDate dateOfPosting, 
 			Type type, 
 			int hostID) throws InvalidPostDataExcepetion {
-		this.setTitle(title);
-		this.setDescription(description);
-		this.setPrice(price);
-		this.setDateOfPosting(dateOfPosting);
-		this.setType(type);
-		this.setHostID(hostID);
+		
+		setTitle(title);
+		setDescription(description);
+		setPrice(price);
+		setDateOfPosting(dateOfPosting);
+		setType(type);
+		setHostID(hostID);
 	}
 
 	public Post(
@@ -68,12 +69,7 @@ public class Post {
 			String country, 
 			String city) throws InvalidPostDataExcepetion {
 		
-		this.setTitle(title);
-		this.setDescription(description);
-		this.setPrice(price);
-		this.setDateOfPosting(dateOfPosting);
-		this.setType(type);
-		this.setHostID(hostID);
+		this(title, description, price, dateOfPosting, type, hostID);
 		setCountry(country);
 		setCity(city);
 	}
@@ -88,8 +84,9 @@ public class Post {
 			int hostID,
 			String country, 
 			String city) throws InvalidPostDataExcepetion {
+		
 		this(title, description, price, dateOfPosting, type, hostID, country, city);
-		this.postID = postID;
+		setPostID(postID);
 	}
 
 	public Post(
@@ -100,35 +97,39 @@ public class Post {
 			LocalDate dateOfPosting, 
 			Type type, 
 			int hostID) throws InvalidPostDataExcepetion {
+		
 		this(title, description, price, dateOfPosting, type, hostID);
-		this.postID = postID;
-	}
-
-	public void setType(Type type) {
-		this.type = type;
+		setPostID(postID);
 	}
 
 	public Type getType() {
 		return type;
 	}
+	
+	public void setType(Type type) {
+		this.type = type;
+	}
 
 	public String getTitle() {
 		return title;
 	}
-
-	public void setPostID(int postID) {
-		this.postID = postID;
+	
+	public void setTitle(String title) throws InvalidPostDataExcepetion {
+		if (title == null || title.isEmpty()) {
+			throw new InvalidPostDataExcepetion("Title empty");
+		}
+		this.title = title;
 	}
 
 	public int getPostID() {
 		return postID;
 	}
-
-	public void setTitle(String title) throws InvalidPostDataExcepetion {
-		if (title.isEmpty()) {
-			throw new InvalidPostDataExcepetion("Title empty");
+	
+	public void setPostID(int postID) throws InvalidPostDataExcepetion {
+		if (postID < 1) {
+			throw new InvalidPostDataExcepetion("Error setting post id");
 		}
-		this.title = title;
+		this.postID = postID;
 	}
 
 	public String getDescription() {
@@ -136,7 +137,7 @@ public class Post {
 	}
 
 	public void setDescription(String description) throws InvalidPostDataExcepetion {
-		if (description.isEmpty()) {
+		if (description == null || description.isEmpty()) {
 			throw new InvalidPostDataExcepetion("Description empty");
 		}
 		this.description = description;
@@ -158,7 +159,47 @@ public class Post {
 	}
 
 	public void setDateOfPosting(LocalDate dateOfPosting) throws InvalidPostDataExcepetion {
+		if (dateOfPosting == null) {
+			throw new InvalidPostDataExcepetion("Error setting date of posting");
+		}
 		this.dateOfPosting = dateOfPosting;
+	}
+
+	public int getHostID() {
+		return hostID;
+	}
+	
+	public void setHostID(int hostID) throws InvalidPostDataExcepetion {
+		if (hostID < 1) {
+			throw new InvalidPostDataExcepetion("Error setting host id");
+		}
+		this.hostID = hostID;
+	}
+
+	public int getRating() {
+		return rating;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) throws InvalidPostDataExcepetion {
+		if (country == null || country.isEmpty()) {
+			throw new InvalidPostDataExcepetion("Country not specified");
+		}
+		this.country = country;
+	}
+
+	public String getCity() {
+		return city;
+	}
+
+	public void setCity(String city) throws InvalidPostDataExcepetion {
+		if (city == null || city.isEmpty()) {
+			throw new InvalidPostDataExcepetion("City not specified");
+		}
+		this.city = city;
 	}
 
 	public int getTypeLikeID() {
@@ -175,35 +216,7 @@ public class Post {
 			return -1;
 		}
 	}
-
-	public void setHostID(int hostID) {
-		this.hostID = hostID;
-	}
-
-	public int getHostID() {
-		return hostID;
-	}
-
-	public int getRating() {
-		return rating;
-	}
-
-	public String getCountry() {
-		return country;
-	}
-
-	public void setCountry(String country) {
-		this.country = country;
-	}
-
-	public String getCity() {
-		return city;
-	}
-
-	public void setCity(String city) {
-		this.city = city;
-	}
-
+	
 	@Override
 	public String toString() {
 		return this.title + 

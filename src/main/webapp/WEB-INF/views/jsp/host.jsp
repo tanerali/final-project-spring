@@ -32,6 +32,7 @@
 
 <script src="js/jquery-1.11.1.min.js"></script>
 <script src="js/bootstrap.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <body>
 	<!-- banner -->
 	<div id="top" class="banner">
@@ -62,9 +63,9 @@
 								<tr>
 									<td><select class="form-control" name="type" id="type">
 											<option id="opt1" value="Hotel">Hotel</option>
-											<option id="opt2" value="Hotel">Apartment</option>
-											<option id="opt3" value="Hotel">House</option>
-											<option id="opt4" value="Hotel">Cottage</option>
+											<option id="opt2" value="Apartment">Apartment</option>
+											<option id="opt3" value="House">House</option>
+											<option id="opt4" value="Cottage">Cottage</option>
 									</select></td>
 								</tr>
 								<tr>
@@ -195,7 +196,7 @@
 					formData.append("country", document.getElementById("country").value);
 					formData.append("city", document.getElementById("city").value);
 
-				$("#upload").prop("disabled", true);
+				/* $("#upload").prop("disabled", true); */
 
 				$.ajax({
 					type : "POST",
@@ -214,7 +215,10 @@
 					},
 					error : function(e) {
 						$("#upload").prop("disabled", false);
-						window.location.href = 'host';
+						swal("Error", "Could not create your listing. Please make sure you enter "+
+								"all details correctly.", "error", {
+							button : "OK",
+						});
 					}
 				});
 

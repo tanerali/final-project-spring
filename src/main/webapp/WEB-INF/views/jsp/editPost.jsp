@@ -66,9 +66,9 @@
 								<tr>
 									<td><select class="form-control" name="type" id="type">
 											<option id="opt1" value="Hotel">Hotel</option>
-											<option id="opt2" value="Hotel">Apartment</option>
-											<option id="opt3" value="Hotel">House</option>
-											<option id="opt4" value="Hotel">Cottage</option>
+											<option id="opt2" value="Apartment">Apartment</option>
+											<option id="opt3" value="House">House</option>
+											<option id="opt4" value="Cottage">Cottage</option>
 									</select></td>
 								</tr>
 								<tr>

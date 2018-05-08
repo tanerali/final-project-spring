@@ -144,30 +144,30 @@
 									<tr>
 										<td>First Name</td>
 										<td><input type="text" name="firstName"
-											value="${user.firstName }"></td>
+											value="${user.firstName }" required></td>
 									</tr>
 									<tr>
 										<td>Last Name</td>
 										<td><input type="text" name="lastName"
-											value="${user.lastName }"></td>
+											value="${user.lastName }" required></td>
 									</tr>
 									<tr>
 										<td>Email</td>
 										<td><input type="email" name="email"
-											value="${user.email }"></td>
+											value="${user.email }" required></td>
 									</tr>
 									<tr>
 										<td>Gender</td>
 										<td><input type="text" name="gender"
-											value="${user.gender }"></td>
+											value="${user.gender }" required></td>
 									</tr>
 									<tr>
 										<td>Country</td>
 										<td>
 											<div class="form-group" id="countries" style="display: inline">
 												<label for="countrySelector" style="display: inline">Select country:</label> 
-												<select class="form-control" id="countrySelector" name="country" value="${user.country }">
-													<option>Show all</option>
+												<select class="form-control" id="countrySelector" name="country" required>
+													<option></option>
 												</select>
 											</div>
 										</td>
@@ -177,8 +177,8 @@
 										<td>
 											<div class="form-group" id="cities" style="display: none">
 												<label for="citySelector" style="display: inline">Select city:</label> 
-												<select class="form-control" id="citySelector" name="city" value="${user.city }">
-													<option>Show all</option>
+												<select class="form-control" id="citySelector" name="city" required>
+													<option></option>
 												</select>
 											</div>
 										</td>
@@ -191,7 +191,7 @@
 									<tr>
 										<td>Birth Date</td>
 										<td><input type="date" name="birthDate"
-											value="${user.birthDate }"></td>
+											value="${user.birthDate }" required></td>
 									</tr>
 									<tr>
 										<td>Telephone Number</td>
@@ -307,7 +307,7 @@
 		
 		
 		$('#countrySelector').change(function() {
-			if($(this).val() == "Show all") {
+			if($(this).val() == "") {
 				document.getElementById('cities').style = 'display: none';
 				
 				var posts = document.getElementsByClassName("filterDiv");
@@ -350,7 +350,7 @@
 		$('#citySelector').change(function() {
 			var posts = document.getElementsByClassName("filterDiv");
 			for (div of posts) {
-				if($(this).val() == "Show all") {
+				if($(this).val() == "") {
 					div.classList.add("show");
 				} else {
 					div.classList.remove("show");

@@ -91,8 +91,8 @@
 			<div class="col-md-4 filterDiv ${post.type} show"
 				id="post${post.postID }">
 				<div class="thumbnail">
-					<a href="post?id=${post.postID}"> <img
-						src="getThumbnail?id=${post.postID}" alt="" style="height: 200px">
+					<a href="post?id=${post.postID}"> 
+						<img src="getThumbnail?id=${post.postID}" alt="" style="height: 200px">
 						<div class="row">
 							<div class="col-md-6">
 								<div class="caption">

@@ -59,11 +59,18 @@ public class User {
 
 		this(firstName, lastName, email, password, gender, city, 
 				country, photo, description, birthDate, telNumber);
-		this.userID = userID;
+		setUserID(userID);
 	}
 
 	public int getUserID() {
 		return userID;
+	}
+
+	public void setUserID(int userID) throws UserDataException {
+		if (userID < 1) {
+			throw new UserDataException("Error setting user id");
+		}
+		this.userID = userID;
 	}
 
 	public String getFirstName() {
@@ -71,8 +78,10 @@ public class User {
 	}
 
 	public void setFirstName(String first_name) throws UserDataException {
-		if (first_name.isEmpty() || !first_name.matches("[a-zA-Z]+") || first_name.length()>45) {
-			throw new UserDataException("Error setting first name. Can't be longer than 45 characters.");
+		if (first_name == null || first_name.isEmpty() || 
+			!first_name.matches("[a-zA-Z]+") || first_name.length()>45) {
+			throw new UserDataException("Error setting first name. "
+					+ "Can contain only letters and can't be longer than 45 characters.");
 		}
 		this.firstName = first_name;
 	}
@@ -82,8 +91,10 @@ public class User {
 	}
 
 	public void setLastName(String last_name) throws UserDataException {
-		if (last_name.isEmpty() || !last_name.matches("[a-zA-Z]+") || last_name.length()>45) {
-			throw new UserDataException("Error setting last name. Can't be longer than 45 characters.");
+		if (last_name == null || last_name.isEmpty() || 
+			!last_name.matches("[a-zA-Z]+") || last_name.length()>45) {
+			throw new UserDataException("Error setting last name. "
+					+ "Can contain only letters and can't be longer than 45 characters.");
 		}
 		this.lastName = last_name;
 	}
@@ -104,7 +115,7 @@ public class User {
 		 */
 		String regex = "^[A-Za-z0-9+._-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$";
 
-		if (email.isEmpty() || !email.matches(regex)) {
+		if (email == null || email.isEmpty() || !email.matches(regex)) {
 			throw new UserDataException("Error setting email. Email can contain letters, dots, dashes "
 					+ "and underscored. An @ symbol is requried betwwen the username and the domain name. "
 					+ "The domain name must include at least one top-level domain like .com or .bg");
@@ -129,7 +140,7 @@ public class User {
 		 */
 		String regex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$";
 
-		if (password.isEmpty() || !password.matches(regex)) {
+		if (password == null || password.isEmpty() || !password.matches(regex)) {
 			throw new UserDataException("Error setting password. Password must consist of at least 1 "
 					+ "lowercase letter, 1 uppercase letter, 1 digit, 1 special character, contain no "
 					+ "whitespace and be at least 8 characters long");
@@ -142,7 +153,7 @@ public class User {
 	}
 
 	public void setGender(String gender) throws UserDataException {
-		if (gender.isEmpty() || !(gender.equals("Male") || gender.equals("Female"))) {
+		if (gender == null || gender.isEmpty() || !(gender.equals("Male") || gender.equals("Female"))) {
 			throw new UserDataException("Error setting gender");
 		}
 		this.gender = gender;
@@ -153,7 +164,10 @@ public class User {
 	}
 
 	// TODO drop down menu for the given country
-	public void setCity(String city) {
+	public void setCity(String city) throws UserDataException {
+		if (city == null || city.isEmpty()) {
+			throw new UserDataException("City must be specified");
+		}
 		this.city = city;
 	}
 
@@ -162,7 +176,10 @@ public class User {
 	}
 
 	// TODO drop down menu
-	public void setCountry(String country) {
+	public void setCountry(String country) throws UserDataException {
+		if (country == null || country.isEmpty()) {
+			throw new UserDataException("Country must be specified");
+		}
 		this.country = country;
 	}
 
@@ -171,6 +188,9 @@ public class User {
 	}
 
 	public void setPhoto(String photo) throws UserDataException {
+		if (photo == null || photo.isEmpty()) {
+			throw new UserDataException("No photo specified for upload");
+		}
 		this.photo = photo;
 	}
 
@@ -201,7 +221,7 @@ public class User {
 
 	public void setTelNumber(String telNumber) throws UserDataException {
 		String regex = "[0-9+]+";
-		if (telNumber.isEmpty() || !telNumber.matches(regex)) {
+		if (!telNumber.matches(regex)) {
 			throw new UserDataException("Error setting telephone number");
 		}
 		this.telNumber = telNumber;

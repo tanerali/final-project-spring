@@ -12,7 +12,13 @@ public class Notification {
 	private int postID;
 	private int customerID;
 	
-	public Notification(String title, String email, String fullName, LocalDate dateFrom, LocalDate dateTo) {
+	public Notification(
+			String title, 
+			String email, 
+			String fullName, 
+			LocalDate dateFrom, 
+			LocalDate dateTo) {
+		
 		this.title = title;
 		this.email = email;
 		this.fullName = fullName;
@@ -29,6 +35,7 @@ public class Notification {
 			int postID, 
 			int customerID,
 			int notificationID) {
+		
 		this(title, email, fullName, dateFrom, dateTo);
 		this.postID = postID;
 		this.customerID = customerID;

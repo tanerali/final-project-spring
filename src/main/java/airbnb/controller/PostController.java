@@ -98,11 +98,7 @@ public class PostController {
 
 					request.setAttribute("unavailableDatesString", unavailableDatesString);
 				}
-			} catch (UserDataException e) {
-				e.printStackTrace();
-				m.addAttribute("error", e.getMessage());
-				return "error";
-			} catch (InvalidPostDataExcepetion e) {
+			} catch (UserDataException | InvalidPostDataExcepetion e) {
 				e.printStackTrace();
 				m.addAttribute("error", e.getMessage());
 				return "error";

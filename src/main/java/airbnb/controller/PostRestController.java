@@ -41,7 +41,7 @@ public class PostRestController {
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<String> uploadPost(HttpServletRequest request, HttpSession session,
-			@RequestParam("file") MultipartFile file) throws SQLException {
+			@RequestParam("file") MultipartFile file) throws SQLException, IOException {
 
 		String title = request.getParameter("title");
 		String description = request.getParameter("description");
@@ -69,8 +69,9 @@ public class PostRestController {
 				Files.copy(file.getInputStream(), fileOnDisk.toPath(), StandardCopyOption.REPLACE_EXISTING);
 				// 2.Insert
 				PostDAO.INSTANCE.insertImageToPost(fileOnDisk.toPath().toString(), ID);
-			} catch (InvalidPostDataExcepetion | IOException e) {
+			} catch (InvalidPostDataExcepetion e) {
 				e.printStackTrace();
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 			}
 		}
 
@@ -91,9 +92,9 @@ public class PostRestController {
 		Post post = null;
 		try {
 			post = new Post(postID, title, description, price, date, Post.Type.getType(type), userID);
-		} catch (InvalidPostDataExcepetion e1) {
-			request.setAttribute("error", e1.getMessage());
-			e1.printStackTrace();
+		} catch (InvalidPostDataExcepetion e) {
+			e.printStackTrace();
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 		}
 
 		if (PostManager.INSTANCE.editPost(post)) {

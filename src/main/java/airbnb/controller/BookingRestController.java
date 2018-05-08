@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import airbnb.dao.LocationDao;
+import airbnb.exceptions.BookingRequestDataException;
 import airbnb.exceptions.UserDataException;
 import airbnb.manager.BookingManager;
 import airbnb.model.Booking;
@@ -48,7 +49,7 @@ public class BookingRestController {
 				Booking booking = new Booking(postID, user.getUserID(), dateFrom, dateTo);
 				bookingManager.requestBooking(booking);
 
-			} catch (UserDataException e) {
+			} catch (BookingRequestDataException e) {
 				e.printStackTrace();
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 			}
