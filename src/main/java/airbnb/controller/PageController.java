@@ -10,6 +10,11 @@ import airbnb.model.User;
 
 @Controller
 public class PageController {
+	@RequestMapping(value = "*", method = RequestMethod.GET)
+	public String escapeWrongURLs() {
+		return "index";
+	}
+	
 	@RequestMapping(value = "/index", method = RequestMethod.GET)
 	public String homePage() {
 		return "index";

@@ -220,7 +220,7 @@ public class User {
 	}
 
 	public void setTelNumber(String telNumber) throws UserDataException {
-		String regex = "[0-9+]+";
+		String regex = "[0-9]+";
 		if (!telNumber.matches(regex)) {
 			throw new UserDataException("Error setting telephone number");
 		}

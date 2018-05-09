@@ -45,7 +45,7 @@ public class BookingController {
 				mailMsg.setTo(email);
 				mailMsg.setSubject("Test mail");
 				mailMsg.setText("Dear User, now you can rate the place you stayed at", true);
-				String logoPath = "/Users/tanerali/Desktop/finalProject Photos/logo.png";
+				String logoPath = "/Users/tanerali/Desktop/final-project photos/logo.png";
 				FileSystemResource file = new FileSystemResource(new File(logoPath));
 				mailMsg.addAttachment("myPic.jpg", file);
 				mailSender.send(mimeMessage);

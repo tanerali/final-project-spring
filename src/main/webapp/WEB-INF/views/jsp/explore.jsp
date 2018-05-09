@@ -96,7 +96,7 @@
 						<div class="row">
 							<div class="col-md-6">
 								<div class="caption">
-									<p>${post.title}</p>
+									<p><c:out value="${post.title}" escapeXml="true"></c:out></p>
 									<p>${post.type}</p>
 								</div>
 								<div class="caption">

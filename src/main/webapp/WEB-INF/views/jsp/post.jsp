@@ -5,6 +5,7 @@
 <%@page import="airbnb.model.Post"%>
 <%@page import="airbnb.model.User"%>
 <%@page import="java.time.LocalDate"%>
+<%@page import="groovy.json.StringEscapeUtils"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -91,7 +92,7 @@
 					</div>
 				</div>
 				<!-- POST'S PICTURES -->
-				<h4>${ post.title}</h4>
+				<h4><c:out value="${post.title}" escapeXml="true"></c:out></h4>
 				<div class="agileinfo-single-icons">
 					<ul>
 						<li>
@@ -151,64 +152,44 @@
 
 				</div>
 				<h3>Description</h3>
-				<p>${post.description }</p>
+				<p><c:out value="${post.description}" escapeXml="true"></c:out></p>
 				<p>
 					Price: <b>${post.price }</b>
 				</p>
 			</div>
 
-			<%
-				ArrayList<Comment> comments = new ArrayList();
-				if (request.getAttribute("comments") != null) {
-					comments = (ArrayList<Comment>) request.getAttribute("comments");
-				}
-			%>
-
 			<!-- comments -->
 			<div class="agileits_three_comments" id="comments">
 				<h3>Comments</h3>
 
-				<%
-					for (Comment comment : comments) {
-						int commentID = comment.getCommentID();
-						int userID = comment.getUserID();
-						String fullName = comment.getFullName();
-						LocalDate date = comment.getDate();
-						String content = comment.getContent();
-						int postID = comment.getPostID();
-				%>
+				<c:forEach var="comment" items="${comments }">
+				
 
-				<div class="agileits_three_comment_grid" id="comment<%=commentID%>">
-					<div class="agileits_tom" id="profilePic">
-						<a href="profile?id=<%=userID%>"> <img
-							src="getProfilePic?id=<%=userID%>"
-							class="img-responsive img-circle"></a>
-					</div>
-					<div class="agileits_tom_right">
-						<div class="hardy" id="commenterAndDate">
-							<a href="profile?id=<%=userID%>"><h4><%=fullName%></h4></a>
-							<p><%=date%></p>
+					<div class="agileits_three_comment_grid" id="comment${comment.commentID }">
+						<div class="agileits_tom" id="profilePic">
+							<a href="profile?id=${comment.userID }"> <img
+								src="getProfilePic?id=${comment.userID }"
+								class="img-responsive img-circle"></a>
 						</div>
-						<div class="clearfix"></div>
-						<p class="lorem"><%=content%></p>
+						<div class="agileits_tom_right">
+							<div class="hardy" id="commenterAndDate">
+								<a href="profile?id=${comment.userID }"><h4>${comment.fullName }</h4></a>
+								<p>${comment.date }</p>
+							</div>
+							<div class="clearfix"></div>
+							<p class="lorem"><c:out value="${comment.content}" escapeXml="true"></c:out></p>
+						</div>
+						<div class="clearfix">
+							
+							<c:if test="${sessionScope.user != null && sessionScope.user.userID == comment.userID}">
+							<button
+								style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
+								onclick="deleteComment(${comment.commentID }, ${comment.postID })">DELETE
+								COMMENT</button>
+							</c:if>
+						</div>
 					</div>
-					<div class="clearfix">
-						<%
-							if (session.getAttribute("user") != null
-										&& ((User) session.getAttribute("user")).getUserID() == userID) {
-						%>
-						<button
-							style="float: right; background-color: #4CAF50; border: none; color: white; padding: 15px 32px;"
-							onclick="deleteComment(<%=commentID%>, <%=postID%>)">DELETE
-							COMMENT</button>
-						<%
-							}
-						%>
-					</div>
-				</div>
-				<%
-					}
-				%>
+				</c:forEach>
 			</div>
 			<!-- //comments -->
 

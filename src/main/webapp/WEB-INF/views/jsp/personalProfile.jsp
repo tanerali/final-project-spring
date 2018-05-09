@@ -80,7 +80,7 @@
 						<a href="post?id=${ listing.postID }" class="list-group-item">
 							<img class="img-responsive"
 							src="getThumbnail?id=${ listing.postID }">
-							<p>${ listing.title }</p>
+							<p><c:out value="${listing.title}" escapeXml="true"></c:out></p>
 						</a>
 					</c:forEach>
 				</div>

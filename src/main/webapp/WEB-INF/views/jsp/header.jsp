@@ -5,7 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <link rel="stylesheet" type="text/css" href="css/loginRegister.css">
-<!-- <script src="js/artyom.window.js"></script> -->
+<script src="js/artyom.window.js"></script>
 <div class="header">
 	<div class="container">
 		<div class="header-left">
